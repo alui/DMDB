@@ -1,0 +1,18 @@
+
+#Ignore builds and doc from apache-ant.
+
+build/
+doc/
+
+
+# Package Files #
+
+!junit.jar
+!hamcrest-core.jar
+*.jar
+
+
+#System dependent.
+.DS_Store
+src/mx/unam/ciencias/.DS_Store
+src/mx/unam/ciencias/edd/.DS_Store
