@@ -5,8 +5,16 @@
   <property name="src.dir"   value="src" />
   <property name="lib.dir"   value="lib" />
   <property name="doc.dir"   value="doc" />
+  
+  <property name="bin.dir"   value="bin" />
 
   <target name="proyecto1.jar" depends="compile.proyecto1">
+
+      <copy todir="${build.dir}" >
+          <fileset dir="${bin.dir}" includes="**"/>
+      </copy>
+
+      
     <jar jarfile="proyecto1.jar">
       <zipfileset dir="${build.dir}" prefix="" />
       <manifest>
