@@ -1,96 +1,53 @@
-<?xml version="1.0" encoding="utf-8"?>
-<project name="proyecto1" default="proyecto1.jar" basedir="." >
+<?xml version="1.0" encoding="UTF-8"?><!-- You may freely edit this file. See commented blocks below for --><!-- some examples of how to customize the build. --><!-- (If you delete it and reopen the project it will be recreated.) --><!-- By default, only the Clean and Build commands use this build script. --><project name="DMDB" default="default" basedir="." xmlns:fx="javafx:com.sun.javafx.tools.ant">
+    <description>Builds, tests, and runs the project DMDB.</description>
+    <import file="nbproject/build-impl.xml"/>
+    <!--
 
-  <property name="build.dir" value="build" />
-  <property name="src.dir"   value="src" />
-  <property name="lib.dir"   value="lib" />
-  <property name="doc.dir"   value="doc" />
-  
-  <property name="bin.dir"   value="bin" />
+    There exist several targets which are by default empty and which can be 
+    used for execution of your tasks. These targets are usually executed 
+    before and after some main targets. Those of them relevant for JavaFX project are: 
 
-  <target name="proyecto1.jar" depends="compile.proyecto1">
+      -pre-init:                 called before initialization of project properties
+      -post-init:                called after initialization of project properties
+      -pre-compile:              called before javac compilation
+      -post-compile:             called after javac compilation
+      -pre-compile-test:         called before javac compilation of JUnit tests
+      -post-compile-test:        called after javac compilation of JUnit tests
+      -pre-jfx-jar:              called before FX SDK specific <fx:jar> task
+      -post-jfx-jar:             called after FX SDK specific <fx:jar> task
+      -pre-jfx-deploy:           called before FX SDK specific <fx:deploy> task
+      -post-jfx-deploy:          called after FX SDK specific <fx:deploy> task
+      -pre-jfx-native:           called just after -pre-jfx-deploy if <fx:deploy> runs in native packaging mode
+      -post-jfx-native:          called just after -post-jfx-deploy if <fx:deploy> runs in native packaging mode
+      -post-clean:               called after cleaning build products
 
-      <copy todir="${build.dir}" >
-          <fileset dir="${bin.dir}" includes="**"/>
-      </copy>
+    (Targets beginning with '-' are not intended to be called on their own.)
 
-      
-    <jar jarfile="proyecto1.jar">
-      <zipfileset dir="${build.dir}" prefix="" />
-      <manifest>
-        <attribute name="Main-Class" value="mx.unam.ciencias.edd.Proyecto1"/>
-      </manifest>
-    </jar>
-  </target>
+    Example of inserting a HTML postprocessor after javaFX SDK deployment:
 
-  <target name="compile.proyecto1">
-    <mkdir dir="${build.dir}"/>
-    <javac srcdir="${src.dir}"
-           destdir="${build.dir}"
-           debug="true"
-           debuglevel="lines,vars,source"
-           includeantruntime="false"
-           deprecation="true"
-           nowarn="off">
-      <classpath>
-        <fileset dir="${lib.dir}">
-          <include name="*.jar"/>
-        </fileset>
-      </classpath>
-      <compilerarg value="-Xlint:unchecked"/>
-    </javac>
-  </target>
+        <target name="-post-jfx-deploy">
+            <basename property="jfx.deployment.base" file="${jfx.deployment.jar}" suffix=".jar"/>
+            <property name="jfx.deployment.html" location="${jfx.deployment.dir}${file.separator}${jfx.deployment.base}.html"/>
+            <custompostprocess>
+                <fileset dir="${jfx.deployment.html}"/>
+            </custompostprocess>
+        </target>
 
-  <target name="doc" depends="proyecto1.jar">
-    <mkdir dir="${doc.dir}"/>
-    <javadoc packagenames="mx.unam.ciencias.edd.*"
-             sourcepath="src"
-             defaultexcludes="yes"
-             destdir="${doc.dir}"
-             charset="UTF-8"
-             author="false"
-             version="false"
-             use="true"
-             windowtitle="Estructuras de Datos">
-      <doctitle><![CDATA[<h1>Estructuras de Datos</h1>]]></doctitle>
-      <link href="http://docs.oracle.com/javase/7/docs/api/" />
-      <classpath>
-        <pathelement location="${lib.dir}/junit.jar" />
-        <pathelement location="${lib.dir}/hamcrest-core.jar" />
-      </classpath>
-    </javadoc>
-  </target>
+    Example of calling an Ant task from JavaFX SDK. Note that access to JavaFX SDK Ant tasks must be
+    initialized; to ensure this is done add the dependence on -check-jfx-sdk-version target:
 
-  <target name="clean">
-    <delete file="proyecto1.jar"/>
-    <delete dir="${build.dir}"/>
-    <delete dir="${doc.dir}"/>
-  </target>
+        <target name="-post-jfx-jar" depends="-check-jfx-sdk-version">
+            <echo message="Calling jar task from JavaFX SDK"/>
+            <fx:jar ...>
+                ...
+            </fx:jar>
+        </target>
 
-  <target name="test" depends="proyecto1.jar">
-    <junit printsummary="yes" haltonfailure="no">
-      <formatter type="plain" usefile="false" />
-      <classpath>
-        <pathelement path="${build.dir}" />
-        <pathelement location="${lib.dir}/junit.jar" />
-        <pathelement location="${lib.dir}/hamcrest-core.jar" />
-      </classpath>
-      <batchtest fork="yes">
-        <fileset dir="${src.dir}">
-          <include name="**/*Test*.java" />
-        </fileset>
-      </batchtest>
-    </junit>
-  </target>
-  
-<!--  <target name="jar" depends="proyecto1.jar">-->
-<!--      <mkdir dir="${release.dir}" />-->
-<!--      <jarbundler-->
-<!--      dir="${release.dir}"-->
-<!--      -->
-<!--      name="${jarbundler.name}"-->
-<!--      mainclass="mx.unam.ciencias.edd.proyecto1"-->
-<!--      jar="proyecto1.jar" />-->
-<!--    </target>-->
+    For more details about JavaFX SDK Ant tasks go to
+    http://docs.oracle.com/javafx/2/deployment/jfxpub-deployment.htm
 
+    For list of available properties check the files
+    nbproject/build-impl.xml and nbproject/jfx-impl.xml.
+
+    -->
 </project>

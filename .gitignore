@@ -18,3 +18,6 @@ doc/
 .DS_Store
 src/mx/unam/ciencias/.DS_Store
 src/mx/unam/ciencias/edd/.DS_Store
+/DMDB2/nbproject/private/
+/DMDB/nbproject/private/
+/dist/
