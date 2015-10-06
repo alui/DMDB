@@ -11,9 +11,10 @@
    <top>
       <ToolBar prefHeight="41.0" prefWidth="707.0" BorderPane.alignment="CENTER">
         <items>
-            <ChoiceBox prefHeight="26.0" prefWidth="107.0" />
-            <TextField prefHeight="26.0" prefWidth="201.0" promptText="Search for movies and more!" />
-            <Separator prefHeight="29.0" prefWidth="159.0" />
+            <ChoiceBox fx:id="choiceBox" prefHeight="26.0" prefWidth="107.0" />
+            <TextField fx:id="searchBox" prefHeight="26.0" prefWidth="201.0" promptText="Search for movies and more!" />
+            <Button fx:id="searchButton" mnemonicParsing="false" text="Search" />
+            <Separator prefHeight="29.0" prefWidth="82.0" />
             <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="60.0" text="New" />
             <ToggleButton mnemonicParsing="false" prefHeight="26.0" prefWidth="60.0" text="Edit" />
             <Button mnemonicParsing="false" prefWidth="60.0" text="Delete" />
@@ -23,13 +24,19 @@
    <center>
       <SplitPane dividerPositions="0.3, 0.6" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" BorderPane.alignment="CENTER">
         <items>
-            <TableView prefHeight="200.0" prefWidth="200.0">
+            <TableView fx:id="tableArtists" prefHeight="200.0" prefWidth="200.0">
               <columns>
                 <TableColumn prefWidth="75.0" text="Image" />
                 <TableColumn prefWidth="441.0" text="Artist" />
               </columns>
             </TableView>
-            <TableView prefHeight="200.0" prefWidth="200.0">
+            <TableView fx:id="tableDirectors" prefHeight="179.0" prefWidth="592.0">
+              <columns>
+                <TableColumn prefWidth="75.0" text="Image" />
+                <TableColumn prefWidth="460.0" text="Director" />
+              </columns>
+            </TableView>
+            <TableView fx:id="tableTitles" prefHeight="200.0" prefWidth="200.0">
               <columns>
                 <TableColumn prefWidth="75.0" text="Image" />
                 <TableColumn prefWidth="441.0" text="Title" />
@@ -38,19 +45,13 @@
                   <Insets />
                </opaqueInsets>
             </TableView>
-            <TableView prefHeight="179.0" prefWidth="592.0">
-              <columns>
-                <TableColumn prefWidth="75.0" text="Image" />
-                <TableColumn prefWidth="460.0" text="Director" />
-              </columns>
-            </TableView>
         </items>
       </SplitPane>
    </center>
    <bottom>
       <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <items>
-            <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="127.0" text="Advanced Search" />
+            <Button fx:id="advancedSearch" mnemonicParsing="false" prefHeight="26.0" prefWidth="127.0" text="Advanced Search" />
          </items>
       </ToolBar>
    </bottom>
