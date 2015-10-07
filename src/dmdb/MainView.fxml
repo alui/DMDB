@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import javafx.geometry.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
@@ -9,12 +10,11 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="586.0" prefWidth="692.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="dmdb.MainViewController">
    <top>
-      <ToolBar prefHeight="41.0" prefWidth="707.0" BorderPane.alignment="CENTER">
+      <ToolBar prefHeight="30.0" prefWidth="692.0" BorderPane.alignment="CENTER">
         <items>
             <ChoiceBox fx:id="choiceBox" prefHeight="26.0" prefWidth="107.0" />
             <TextField fx:id="searchBox" prefHeight="26.0" prefWidth="201.0" promptText="Search for movies and more!" />
-            <Button fx:id="searchButton" mnemonicParsing="false" text="Search" />
-            <Separator prefHeight="29.0" prefWidth="82.0" />
+            <Separator prefHeight="29.0" prefWidth="158.0" />
             <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="60.0" text="New" />
             <ToggleButton mnemonicParsing="false" prefHeight="26.0" prefWidth="60.0" text="Edit" />
             <Button mnemonicParsing="false" prefWidth="60.0" text="Delete" />
@@ -22,36 +22,48 @@
       </ToolBar>
    </top>
    <center>
-      <SplitPane dividerPositions="0.3, 0.6" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0" BorderPane.alignment="CENTER">
-        <items>
-            <TableView fx:id="tableArtists" prefHeight="200.0" prefWidth="200.0">
-              <columns>
-                <TableColumn prefWidth="75.0" text="Image" />
-                <TableColumn prefWidth="441.0" text="Artist" />
-              </columns>
-            </TableView>
-            <TableView fx:id="tableDirectors" prefHeight="179.0" prefWidth="592.0">
-              <columns>
-                <TableColumn prefWidth="75.0" text="Image" />
-                <TableColumn prefWidth="460.0" text="Director" />
-              </columns>
-            </TableView>
-            <TableView fx:id="tableTitles" prefHeight="200.0" prefWidth="200.0">
-              <columns>
-                <TableColumn prefWidth="75.0" text="Image" />
-                <TableColumn prefWidth="441.0" text="Title" />
-              </columns>
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-            </TableView>
-        </items>
-      </SplitPane>
+      <TabPane fx:id="tabPane">
+         <tabs>
+            <Tab fx:id="tabTitles" closable="false" text="Movies">
+               <content>
+                  <TableView fx:id="tableTitles" prefHeight="472.0" prefWidth="692.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <columns>
+                      <TableColumn prefWidth="75.0" text="Image" />
+                      <TableColumn prefWidth="441.0" text="Title" />
+                    </columns>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </TableView>
+               </content>
+            </Tab>
+            <Tab fx:id="tabArtists" closable="false" text="Artists">
+               <content>
+                  <TableView fx:id="tableArtists" prefHeight="200.0" prefWidth="200.0">
+                    <columns>
+                      <TableColumn prefWidth="75.0" text="C1" />
+                      <TableColumn prefWidth="75.0" text="C2" />
+                    </columns>
+                  </TableView>
+               </content>
+            </Tab>
+            <Tab fx:id="tabDirectors" closable="false" text="Directors">
+              <content>
+                  <TableView fx:id="tableDirectors" prefHeight="472.0" prefWidth="692.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <columns>
+                      <TableColumn prefWidth="75.0" text="Image" />
+                      <TableColumn prefWidth="460.0" text="Director" />
+                    </columns>
+                  </TableView>
+              </content>
+            </Tab>
+         </tabs>
+      </TabPane>
    </center>
    <bottom>
       <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <items>
-            <Button fx:id="advancedSearch" mnemonicParsing="false" prefHeight="26.0" prefWidth="127.0" text="Advanced Search" />
+            <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="127.0" text="Advanced Search" />
          </items>
       </ToolBar>
    </bottom>

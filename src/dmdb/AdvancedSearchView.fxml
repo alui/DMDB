@@ -8,36 +8,39 @@
 <?import javafx.scene.paint.*?>
 <?import javafx.scene.text.*?>
 
-<VBox prefHeight="466.0" prefWidth="627.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<VBox prefHeight="515.0" prefWidth="646.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
   <children>
-      <Accordion prefHeight="610.0" prefWidth="621.0">
+      <Accordion prefHeight="526.0" prefWidth="646.0">
         <panes>
-          <TitledPane animated="false" text="Search for: Artists that have worked with director.">
+          <TitledPane animated="false" text="Advanced Search for: Artists that have worked with director.">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Button layoutX="554.0" layoutY="271.0" mnemonicParsing="false" text="Search" />
+                     </children></AnchorPane>
+            </content>
+          </TitledPane>
+          <TitledPane animated="false" text="Advanced Search for: Directors that have worked with actor.">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
             </content>
           </TitledPane>
-          <TitledPane animated="false" text="Search for: Directors that have worked with actor.">
+          <TitledPane animated="false" text="Advanced Search for: Movies with two artist working.">
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
             </content>
           </TitledPane>
-          <TitledPane animated="false" text="Search for: Movies with two people working.">
-            <content>
-              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-            </content>
-          </TitledPane>
-            <TitledPane animated="false" text="Search for: Particular artist.">
+            <TitledPane animated="false" text="Advanced Search for: Movies with one artist and one director.">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                </content>
             </TitledPane>
-            <TitledPane animated="false" text="Search for: Particular director.">
+            <TitledPane animated="false" text="Advanced Search for: Particular director.">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                </content>
             </TitledPane>
-            <TitledPane animated="false" text="Search for: Particular movie.">
+            <TitledPane animated="false" text="Advanced Search for: Particular movie.">
                <content>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                </content>
