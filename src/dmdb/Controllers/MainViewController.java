@@ -11,6 +11,7 @@ import dmdb.Thread.SearchDirectorsTask;
 
 import dmdb.Registers.Person;
 import dmdb.Registers.Register;
+import dmdb.Registers.Title;
 import dmdb.Thread.SQLThread;
 
 import java.io.IOException;
@@ -68,6 +69,8 @@ public class MainViewController implements Initializable, NewRegisterDelegate {
     
     @FXML 
     private Tab tabTitles;
+    
+            
     @FXML 
     private Tab tabArtists;
     @FXML 
@@ -86,6 +89,9 @@ public class MainViewController implements Initializable, NewRegisterDelegate {
 //    
     @FXML
     private TableView tableTitles;
+    
+    @FXML 
+    private TableColumn<Title,String> movieColumnTitle;
 //    
 //    @FXML
     private TableView<Person> tableDirectors;
@@ -214,9 +220,8 @@ public class MainViewController implements Initializable, NewRegisterDelegate {
                     tabPane.getTabs().add(tabDirectors);
                  
                 sqlThread.updateArtistsSimpleSearch(tableArtists.getItems(), searchBox.getText());
-                
                 sqlThread.updateDirectorsSimpleSearch(tableDirectors.getItems(), searchBox.getText());
-                
+                sqlThread.updateTitlesSimpleSearch(tableTitles.getItems(), searchBox.getText());
                 
                 break;
             case "Titles":
@@ -224,6 +229,9 @@ public class MainViewController implements Initializable, NewRegisterDelegate {
                     tabPane.getTabs().add(tabTitles);
                 tabPane.getTabs().remove(tabArtists);
                 tabPane.getTabs().remove(tabDirectors);
+                
+                sqlThread.updateTitlesSimpleSearch(tableTitles.getItems(), searchBox.getText());
+                
                 
                 break;
             case "Directors":
@@ -233,15 +241,7 @@ public class MainViewController implements Initializable, NewRegisterDelegate {
                 tabPane.getTabs().remove(tabTitles);
                 tabPane.getTabs().remove(tabArtists);
                 
-                
-                
-                ///SEarch for directors
-//                if(sdt!=null)
-//                    sdt.cancel();
-//               
-//                sdt = new SearchDirectorsTask(tableDirectors.getItems(),searchBox.getText(), DBConnection);
-//                th = new Thread(sdt);
-//                th.start();
+                sqlThread.updateDirectorsSimpleSearch(tableDirectors.getItems(), searchBox.getText());
                 
                 break;
             case "Artists":
@@ -251,13 +251,8 @@ public class MainViewController implements Initializable, NewRegisterDelegate {
                 tabPane.getTabs().remove(tabTitles);
                 tabPane.getTabs().remove(tabDirectors);
                 
-//                 if(sat!=null)
-//                    sat.cancel();
-//               
-//                sat = new SearchArtistsTask(tableArtists.getItems(),searchBox.getText(), DBConnection);
-//                th = new Thread(sat);
-//                th.start();
-//                
+                sqlThread.updateArtistsSimpleSearch(tableArtists.getItems(), searchBox.getText());
+
                 
                 break;
         }
@@ -274,6 +269,7 @@ public class MainViewController implements Initializable, NewRegisterDelegate {
     private void connectTableViews(){
         
         
+        //+++++++++ARTTISTS
           tableArtists= new TableView<>();
           
           
@@ -294,10 +290,9 @@ public class MainViewController implements Initializable, NewRegisterDelegate {
         tabArtists.setContent(tableArtists);
         
         
-        
+        //+++++++++DIRECTORS
         
         tableDirectors= new TableView<>();
-          
           
     firstNameCol = new TableColumn<>("First Name");
     firstNameCol.setCellValueFactory(new PropertyValueFactory("firstName"));
@@ -314,6 +309,17 @@ public class MainViewController implements Initializable, NewRegisterDelegate {
 //        obs.add(r);
 //        tableDirectors.setItems(obs);
         tabDirectors.setContent(tableDirectors);
+        
+        
+        //+++++++++TTLES
+//        movieColumnTitle = new TableColumn<>("Name");
+        
+    movieColumnTitle.setCellValueFactory(new PropertyValueFactory("name"));
+    
+    
+        
+        
+      
         
         
     }

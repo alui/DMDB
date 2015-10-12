@@ -6,6 +6,7 @@
 package dmdb.Thread;
 
 import dmdb.Registers.Person;
+import dmdb.Registers.Title;
 import javafx.collections.ObservableList;
 
 import java.sql.*;
@@ -181,7 +182,56 @@ public class SQLThread extends Thread{
         }            
     }
           
+     
+    public void updateTitlesSimpleSearch(ObservableList<Title> obs,String search)
+    {
+        
+        obs.removeAll(obs);
+        
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        
+        try{
     
+         pstmt = conn.prepareStatement("SELECT * FROM Titles WHERE Name LIKE ?");     
+               
+                    pstmt.setString(1,search); 
+                    
+                    
+          rs = pstmt.executeQuery();
+             
+            while (rs.next()) {
+                
+            Integer ID = rs.getInt("TitleID");
+            String firstName = rs.getString("Name");
+//            String lastName = rs.getString("LastName");
+//            String biogra = rs.getString("Biography");
+            Date date = rs.getDate("ReleaseDate");
+            
+            
+              Title r = new Title(ID, firstName,date);
+              obs.add(r);  
+            }
+        }
+        catch(SQLException se){
+                 System.out.println(se);
+        }
+        finally{
+            
+            try{
+                if(pstmt!=null)
+                    pstmt.close();
+            }catch(SQLException se2){
+                
+            }// nothing we can do
+            
+            try{
+                if(rs!=null)
+                    rs.close();
+            }catch(SQLException se){
+            }
+        }            
+    }
 }
 
 

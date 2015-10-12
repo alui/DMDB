@@ -37,7 +37,7 @@
                         <TableView fx:id="tableTitles" prefHeight="472.0" prefWidth="692.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                           <columns>
                             <TableColumn prefWidth="75.0" text="Image" />
-                            <TableColumn prefWidth="441.0" text="Title" />
+                            <TableColumn fx:id="movieColumnTitle" prefWidth="273.0" text="Title" />
                           </columns>
                            <opaqueInsets>
                               <Insets />

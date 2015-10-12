@@ -48,8 +48,8 @@ public class Title extends Register {
         
     }
     
-    public String getFirstName(){return name;};
-    public void setFirstName(String f){ name = f;};
+    public String getName(){return name;};
+    public void setName(String f){ name = f;};
     
     
     
