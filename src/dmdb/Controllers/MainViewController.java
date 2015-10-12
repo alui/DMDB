@@ -11,6 +11,8 @@ import dmdb.Thread.SearchDirectorsTask;
 
 import dmdb.Registers.Person;
 import dmdb.Registers.Register;
+import dmdb.Thread.SQLThread;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -18,28 +20,24 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 
-import javafx.scene.control.Label;
-import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 
 import javafx.scene.control.TextField;
 import javafx.scene.control.TableView;
 
 
-import java.sql.*;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.MenuButton;
-import javafx.scene.control.SingleSelectionModel;
-import javafx.scene.control.SplitPane;
+//import javafx.scene.control.MenuButton;
+
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
 
 
 /**
@@ -49,31 +47,37 @@ import javafx.scene.layout.StackPane;
 public class MainViewController implements Initializable, NewRegisterDelegate {
     
     
-    //Controls.
-    @FXML
-    private TextField searchBox;
     
+    //Most important panes.
+    @FXML 
+    private AnchorPane mainPane;
     
     @FXML
-    private ChoiceBox choiceBox;
+    private BorderPane searchBorderPane;
     
     @FXML
     private TabPane tabPane;
     
+    
+    //Controls.
+    @FXML
+    private TextField searchBox;
+    @FXML
+    private ChoiceBox choiceBox;
+    
+    
     @FXML 
     private Tab tabTitles;
-    
-    
-    @FXML 
-    private MenuButton newRegister;
-//    
     @FXML 
     private Tab tabArtists;
-    
-    
     @FXML 
     private Tab tabDirectors;
 
+    
+//    
+//    @FXML 
+//    private MenuButton newRegister;
+////    
 
     //Tables.
 //    @FXML
@@ -86,18 +90,14 @@ public class MainViewController implements Initializable, NewRegisterDelegate {
 //    @FXML
     private TableView<Person> tableDirectors;
     
-    @FXML
-    private BorderPane searchBorderPane;
     
-    @FXML 
-    private StackPane mainPane;
-    
+    private SQLThread sqlThread;
     
     
     
     
 //    //Conneciton to the main Data Base.
-    private  Connection DBConnection;
+//    private  Connection DBConnection;
 
     
     
@@ -110,10 +110,21 @@ public class MainViewController implements Initializable, NewRegisterDelegate {
 //        static final String PASS = "password";
     
     
+    
+    //Esto no deberia estar aqui... pero me ahorra tiempo.
+    static final protected String DbURL = "jdbc:sqlite:movie.db";
+    static final protected String DbPassword= "password";
+    static final protected String DbUser ="username";
+    static final protected String DbJDBC ="org.sqlite.JDBC";  
+    
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
         
+        //Set up Sql Thread.
+        sqlThread = new SQLThread( DbUser,DbPassword,DbURL,DbJDBC );
+        sqlThread.start();
         //The DBConneciton will be performed by this mainViewController.
 //        connectDB();
 //        connect the TableViews.
@@ -125,8 +136,8 @@ public class MainViewController implements Initializable, NewRegisterDelegate {
         //Set choiseBox Ready.
         choiceBox.setItems(FXCollections.observableArrayList("All", "Artists", "Titles", "Directors"));
         choiceBox.getSelectionModel().selectFirst();
-        
-        
+//        
+//        
         //The AdvanceSearchController should be loaded before hand, with the DBconneciton, and so its delegate.
         //The ApplicationDelegate will be more focused on to dealing with the system.
         //Code before this is to prepare independecy for the other methods.
@@ -186,21 +197,15 @@ public class MainViewController implements Initializable, NewRegisterDelegate {
     
     }
     
-    
-    SearchArtistsTask sat;
-    SearchDirectorsTask sdt;
 //    SearchDirectorsTask
     private void performSimpleSearch(){
-//        System.out.println(searchBox.getText());
         
          
-        Thread th;
-        
         String s = (String) choiceBox.getSelectionModel().selectedItemProperty().get();
         ObservableList<Tab> tabs =  tabPane.getTabs();
         switch (s) {
             case "All":
-                
+//                
                 if (!tabs.contains(tabTitles))
                     tabPane.getTabs().add(tabTitles);                
                 if (!tabs.contains(tabArtists))
@@ -208,22 +213,9 @@ public class MainViewController implements Initializable, NewRegisterDelegate {
                 if (!tabs.contains(tabDirectors))
                     tabPane.getTabs().add(tabDirectors);
                  
-               if(sat!=null)
-                    sat.cancel();
-               
-                sat = new SearchArtistsTask(tableArtists.getItems(),searchBox.getText(), DBConnection);
-                th = new Thread(sat);
-                th.start();
+                sqlThread.updateArtistsSimpleSearch(tableArtists.getItems(), searchBox.getText());
                 
-                
-                
-                ///SEarch for directors
-                if(sdt!=null)
-                    sdt.cancel();
-               
-                sdt = new SearchDirectorsTask(tableDirectors.getItems(),searchBox.getText(), DBConnection);
-                th = new Thread(sdt);
-                th.start();
+                sqlThread.updateDirectorsSimpleSearch(tableDirectors.getItems(), searchBox.getText());
                 
                 
                 break;
@@ -244,12 +236,12 @@ public class MainViewController implements Initializable, NewRegisterDelegate {
                 
                 
                 ///SEarch for directors
-                if(sdt!=null)
-                    sdt.cancel();
-               
-                sdt = new SearchDirectorsTask(tableDirectors.getItems(),searchBox.getText(), DBConnection);
-                th = new Thread(sdt);
-                th.start();
+//                if(sdt!=null)
+//                    sdt.cancel();
+//               
+//                sdt = new SearchDirectorsTask(tableDirectors.getItems(),searchBox.getText(), DBConnection);
+//                th = new Thread(sdt);
+//                th.start();
                 
                 break;
             case "Artists":
@@ -259,17 +251,17 @@ public class MainViewController implements Initializable, NewRegisterDelegate {
                 tabPane.getTabs().remove(tabTitles);
                 tabPane.getTabs().remove(tabDirectors);
                 
-                 if(sat!=null)
-                    sat.cancel();
-               
-                sat = new SearchArtistsTask(tableArtists.getItems(),searchBox.getText(), DBConnection);
-                th = new Thread(sat);
-                th.start();
-                
+//                 if(sat!=null)
+//                    sat.cancel();
+//               
+//                sat = new SearchArtistsTask(tableArtists.getItems(),searchBox.getText(), DBConnection);
+//                th = new Thread(sat);
+//                th.start();
+//                
                 
                 break;
         }
-            
+//            
         
             
         
@@ -333,16 +325,16 @@ public class MainViewController implements Initializable, NewRegisterDelegate {
         
         
         
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("NewArtist.fxml"));     
+//        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("NewArtist.fxml"));     
+////
+//        GridPane sp = (GridPane)fxmlLoader.load();          
+//        NewArtistController controller = fxmlLoader.<NewArtistController>getController();
+//        
+//        
+//        mainPane.getChildren().remove(searchBorderPane);
+//        mainPane.getChildren().add(sp);
 //
-        GridPane sp = (GridPane)fxmlLoader.load();          
-        NewArtistController controller = fxmlLoader.<NewArtistController>getController();
-        
-        
-        mainPane.getChildren().remove(searchBorderPane);
-        mainPane.getChildren().add(sp);
-
-    
+//    
   
         
         

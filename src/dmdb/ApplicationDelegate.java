@@ -20,7 +20,7 @@ public class ApplicationDelegate extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MainView.fxml"));     
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Views/MainView.fxml"));     
 
         Parent root = (Parent)fxmlLoader.load();          
 //    MainViewController controller = fxmlLoader.<MainViewController>getController();
