@@ -3,19 +3,30 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dmdb;
+package dmdb.Registers;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+//import dmdb.Register;
+import java.util.Date;
+//import javafx.beans.property.SimpleStringProperty;
+//import javafx.beans.property.StringProperty;
 
 /**
  *
  * @author Alfonso
  */
-public class RegisterArtist {
+public class Person extends Register {
 //    
+        private Integer personID;
+        
     private String firstName;
     private String lastName;
+    
+    
+    private String biography;
+    
+    private Date birthDate;
+    
+
     
     
 //    
@@ -37,17 +48,29 @@ public class RegisterArtist {
 //         return lastName; 
 //     }
      
-    public RegisterArtist(){
+    public Person(){
+        personID = null;
         firstName = "";
-        lastName="";        
+        lastName="";   
+        biography = "";
+        birthDate = null;
+        
         
     }
     
-    public RegisterArtist(String f, String l){
+    public Person(Integer id, String f, String l, String b, Date d){
+        
+        personID = id;
         firstName = f;
-        lastName=l;        
+        lastName=l;   
+        biography = b;
+        birthDate = d;     
         
     }
+    
+    
+    public String getBiography(){return biography;};
+    public void setBiography(String f){ biography = f;};
     
     public String getFirstName(){return firstName;};
     public void setFirstName(String f){ firstName = f;};
@@ -56,4 +79,12 @@ public class RegisterArtist {
     public String getLastName(){return lastName;};
     public void setLastName(String f){ lastName = f;};
 
+    
+    public Integer getPersonID(){return personID;};
+    public void setPersonID(Integer f){ personID = f;};
+    
+    
+    public Date getBirthDate(){return birthDate;};
+    public void getBirthDate(Date f){ birthDate = f;};
+    
 }

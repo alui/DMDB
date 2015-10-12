@@ -19,10 +19,13 @@ public class ApplicationDelegate extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("MainView.fxml"));
         
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("MainView.fxml"));     
+
+        Parent root = (Parent)fxmlLoader.load();          
+//    MainViewController controller = fxmlLoader.<MainViewController>getController();
+
         Scene scene = new Scene(root);
-        
         stage.setScene(scene);
         stage.show();
     }

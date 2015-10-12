@@ -13,8 +13,8 @@
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
    </columnConstraints>
    <rowConstraints>
-      <RowConstraints maxHeight="250.0" minHeight="10.0" prefHeight="56.0" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="306.0" minHeight="10.0" prefHeight="280.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="250.0" minHeight="10.0" prefHeight="36.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="306.0" minHeight="10.0" prefHeight="275.0" vgrow="SOMETIMES" />
       <RowConstraints maxHeight="205.0" minHeight="0.0" prefHeight="52.0" vgrow="SOMETIMES" />
       <RowConstraints maxHeight="308.0" minHeight="10.0" prefHeight="207.0" vgrow="SOMETIMES" />
    </rowConstraints>
@@ -78,7 +78,7 @@
       </GridPane>
       <ToolBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="52.0" prefWidth="605.0">
         <items>
-          <Button disable="true" mnemonicParsing="false" prefHeight="26.0" prefWidth="56.0" text="Edit" GridPane.columnIndex="1" />
+          <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="56.0" text="Edit" GridPane.columnIndex="1" />
         </items>
       </ToolBar>
    </children>

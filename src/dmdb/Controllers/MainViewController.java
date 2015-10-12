@@ -4,8 +4,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package dmdb;
+package dmdb.Controllers;
 
+import dmdb.Thread.SearchArtistsTask;
+import dmdb.Thread.SearchDirectorsTask;
+
+import dmdb.Registers.Person;
+import dmdb.Registers.Register;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -23,19 +29,24 @@ import javafx.scene.control.TableView;
 import java.sql.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.MenuButton;
 import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.StackPane;
 
 
 /**
  *
  * @author Alfonso
  */
-public class MainViewController implements Initializable {
+public class MainViewController implements Initializable, NewRegisterDelegate {
     
     
     //Controls.
@@ -52,6 +63,9 @@ public class MainViewController implements Initializable {
     @FXML 
     private Tab tabTitles;
     
+    
+    @FXML 
+    private MenuButton newRegister;
 //    
     @FXML 
     private Tab tabArtists;
@@ -63,14 +77,23 @@ public class MainViewController implements Initializable {
 
     //Tables.
 //    @FXML
-    private TableView<RegisterArtist> tableArtists;
+    private TableView<Person> tableArtists;
 //
 //    
     @FXML
     private TableView tableTitles;
 //    
+//    @FXML
+    private TableView<Person> tableDirectors;
+    
     @FXML
-    private TableView tableDirectors;
+    private BorderPane searchBorderPane;
+    
+    @FXML 
+    private StackPane mainPane;
+    
+    
+    
     
     
 //    //Conneciton to the main Data Base.
@@ -122,7 +145,6 @@ public class MainViewController implements Initializable {
         searchBox.setOnAction(e -> performSimpleSearch());
             //With that text search for Movies, Directors, Artists in same service. Hence im going to be using multiple simple searches.
         
-            
             //Such service shall update the tables.
             //It has to know about: DBConnection, choiseBox, tableViews, searchText.
             //And be cancelable for new searches.
@@ -139,7 +161,7 @@ public class MainViewController implements Initializable {
                     //Just as it would with a simple serach.
         
         //*****Set listener for New Button.
-        
+//        newRegister.setOnAction(e -> newRegisterAction() );
             // NewRegisterInterface.
             // At the center of the application, should diable -not pause- any other button.
             //Will probably new interface to communicate back NewRegisterInterface.
@@ -164,9 +186,15 @@ public class MainViewController implements Initializable {
     
     }
     
+    
+    SearchArtistsTask sat;
+    SearchDirectorsTask sdt;
+//    SearchDirectorsTask
     private void performSimpleSearch(){
 //        System.out.println(searchBox.getText());
         
+         
+        Thread th;
         
         String s = (String) choiceBox.getSelectionModel().selectedItemProperty().get();
         ObservableList<Tab> tabs =  tabPane.getTabs();
@@ -179,6 +207,24 @@ public class MainViewController implements Initializable {
                     tabPane.getTabs().add(tabArtists);
                 if (!tabs.contains(tabDirectors))
                     tabPane.getTabs().add(tabDirectors);
+                 
+               if(sat!=null)
+                    sat.cancel();
+               
+                sat = new SearchArtistsTask(tableArtists.getItems(),searchBox.getText(), DBConnection);
+                th = new Thread(sat);
+                th.start();
+                
+                
+                
+                ///SEarch for directors
+                if(sdt!=null)
+                    sdt.cancel();
+               
+                sdt = new SearchDirectorsTask(tableDirectors.getItems(),searchBox.getText(), DBConnection);
+                th = new Thread(sdt);
+                th.start();
+                
                 
                 break;
             case "Titles":
@@ -194,6 +240,17 @@ public class MainViewController implements Initializable {
                     tabPane.getTabs().add(tabDirectors);
                 tabPane.getTabs().remove(tabTitles);
                 tabPane.getTabs().remove(tabArtists);
+                
+                
+                
+                ///SEarch for directors
+                if(sdt!=null)
+                    sdt.cancel();
+               
+                sdt = new SearchDirectorsTask(tableDirectors.getItems(),searchBox.getText(), DBConnection);
+                th = new Thread(sdt);
+                th.start();
+                
                 break;
             case "Artists":
                 
@@ -202,8 +259,13 @@ public class MainViewController implements Initializable {
                 tabPane.getTabs().remove(tabTitles);
                 tabPane.getTabs().remove(tabDirectors);
                 
-                SearchArtistsTask sat = new SearchArtistsTask(tableArtists.getItems(),"Some", DBConnection);
-                sat.run();
+                 if(sat!=null)
+                    sat.cancel();
+               
+                sat = new SearchArtistsTask(tableArtists.getItems(),searchBox.getText(), DBConnection);
+                th = new Thread(sat);
+                th.start();
+                
                 
                 break;
         }
@@ -223,23 +285,81 @@ public class MainViewController implements Initializable {
           tableArtists= new TableView<>();
           
           
-    TableColumn<RegisterArtist,String> firstNameCol = new TableColumn<>("First Name");
+    TableColumn<Person,String> firstNameCol = new TableColumn<>("First Name");
     firstNameCol.setCellValueFactory(new PropertyValueFactory("firstName"));
-    TableColumn<RegisterArtist,String> lastNameCol = new TableColumn<>("Last Name");
+    
+    TableColumn<Person,String> lastNameCol = new TableColumn<>("Last Name");
     lastNameCol.setCellValueFactory(new PropertyValueFactory("lastName"));
  
         tableArtists.getColumns().setAll(firstNameCol, lastNameCol);
         
-        ObservableList<RegisterArtist> obs = FXCollections.observableArrayList();
-        RegisterArtist r = new RegisterArtist("Sam","Wrothington");
+        ObservableList<Person> obs = FXCollections.observableArrayList();
+//        Person r = new Person("Sam","Wrothington");
                
                 
-        obs.add(r);
+//        obs.add(r);
         tableArtists.setItems(obs);
         tabArtists.setContent(tableArtists);
         
         
+        
+        
+        tableDirectors= new TableView<>();
+          
+          
+    firstNameCol = new TableColumn<>("First Name");
+    firstNameCol.setCellValueFactory(new PropertyValueFactory("firstName"));
+    
+   lastNameCol = new TableColumn<>("Last Name");
+    lastNameCol.setCellValueFactory(new PropertyValueFactory("lastName"));
+ 
+        tableDirectors.getColumns().setAll(firstNameCol, lastNameCol);
+        
+//        ObservableList<Person> obs = FXCollections.observableArrayList();
+//        Person r = new Person("Sam","Wrothington");
+//               
+                
+//        obs.add(r);
+//        tableDirectors.setItems(obs);
+        tabDirectors.setContent(tableDirectors);
+        
+        
     }
+
+    public void newArtistRegister() throws IOException {
+            
+            
+            
+        
+        
+        
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("NewArtist.fxml"));     
+//
+        GridPane sp = (GridPane)fxmlLoader.load();          
+        NewArtistController controller = fxmlLoader.<NewArtistController>getController();
+        
+        
+        mainPane.getChildren().remove(searchBorderPane);
+        mainPane.getChildren().add(sp);
+
+    
+  
+        
+        
+    }
+
+    
+    //Methods from new register
+    @Override
+    public void close() {
+        
+    }
+
+    @Override
+    public void doneEditing(Register r) {
+        
+    }
+    
     
     
 }
