@@ -14,6 +14,8 @@ import dmdb.Thread.SQLThread;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 
@@ -26,6 +28,7 @@ import javafx.scene.control.TableView;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 //import javafx.scene.control.MenuButton;
@@ -33,7 +36,9 @@ import javafx.scene.Node;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 
@@ -270,6 +275,8 @@ public class MainViewController implements Initializable, RegisterDelegate {
         
         
         //+++++++++ARTTISTS
+        
+        
           tableArtists= new TableView<>();
           
           
@@ -292,6 +299,30 @@ public class MainViewController implements Initializable, RegisterDelegate {
 //        obs.add(r);
         tableArtists.setItems(obs);
         tabArtists.setContent(tableArtists);
+        
+        tableArtists.setOnMousePressed(new EventHandler<MouseEvent>() {
+         @Override 
+         public void handle(MouseEvent event) {
+        if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+            Node node = ((Node) event.getTarget()).getParent();
+            TableRow row;
+            if (node instanceof TableRow) {
+                row = (TableRow) node;
+            } else {
+                // clicking on text part
+                row = (TableRow) node.getParent();
+            }
+            
+            System.out.println(row.getItem());
+            try {
+                editArtistRegister((Person)row.getItem());
+            } catch (IOException ex) {
+                Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+} );
+        
         
         
         //+++++++++DIRECTORS
@@ -328,6 +359,22 @@ public class MainViewController implements Initializable, RegisterDelegate {
         
     }
 
+    public void editArtistRegister(Person p) throws IOException {
+        
+
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("NewArtist.fxml"));     
+
+        AnchorPane n = (AnchorPane)fxmlLoader.load(); 
+        NewArtistController controller = fxmlLoader.<NewArtistController>getController();
+        controller.setRegisterDelegate(this);
+        controller.setSQLThread(sqlThread);
+        controller.setArtist(p);
+
+        lastTemporaryNode = n;
+        mainPane.getChildren().remove(searchBorderPane);
+        mainPane.getChildren().add(n);
+    
+    }
     public void newArtistRegister() throws IOException {
             
           

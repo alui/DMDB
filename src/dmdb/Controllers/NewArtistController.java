@@ -49,6 +49,8 @@ import javafx.scene.control.TextField;
  */
 public class NewArtistController implements Initializable {
     
+    private boolean isEditingOld =false;
+    private Person oldPerson;
     private MainViewController delegate;
     private SQLThread sqlThread;
     
@@ -73,6 +75,7 @@ public class NewArtistController implements Initializable {
         sqlThread =null;
     }
      public void save(){
+         
          if(firstName.getText()==null || firstName.getText().equals(""))
              return;
 
@@ -82,10 +85,18 @@ public class NewArtistController implements Initializable {
         java.sql.Date sqlDate = new java.sql.Date(d.getTime());
         System.out.print(sqlDate);
         
-        
-       Person p = new Person(0,firstName.getText(),lastName.getText(),biography.getText(),sqlDate); 
+        int id = 0;
+        if(oldPerson!=null)
+            id = oldPerson.getPersonID();
+       Person p = new Person(id,firstName.getText(),lastName.getText(),biography.getText(),sqlDate); 
        
-       sqlThread.insertArtist(p);
+       
+        
+        if(oldPerson!=null)
+        {
+            sqlThread.updateArtist(p);
+        }else 
+            sqlThread.insertArtist(p);
 
          
        if(delegate!=null)
@@ -118,6 +129,20 @@ public class NewArtistController implements Initializable {
 
     void setSQLThread(SQLThread sqlThread) {
         this.sqlThread = sqlThread;
+    }
+
+    void setArtist(Person p) {
+        isEditingOld = true;
+        
+        firstName.setText(p.getFirstName());
+        lastName.setText(p.getLastName());
+        biography.setText(p.getBiography());
+        date.setValue(p.getBirthDate().toLocalDate());
+        
+        oldPerson = p;
+        
+        //Load from db relations.
+        
     }
     
 }

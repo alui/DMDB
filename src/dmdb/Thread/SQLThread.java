@@ -276,9 +276,51 @@ public class SQLThread extends Thread{
         
         
     }
+
+
+//UPDATE Customers
+//SET ContactName='Alfred Schmidt', City='Hamburg'
+//WHERE CustomerName='Alfreds Futterkiste';
+    public void updateArtist(Person r) {
+                  
+        PreparedStatement pstmt = null;
+        try{
+    
+         pstmt = conn.prepareStatement(
+                 "UPDATE Artists \n"+
+            "SET FirstName= ?, LastName= ?, Biography=?, BirthDate = ? \n"+
+           " WHERE ArtistID= ? "); 
+         
+                    pstmt.setString(1,r.getFirstName());
+                    pstmt.setString(2,r.getLastName());
+                    pstmt.setString(3,r.getBiography());
+                    pstmt.setString(4,r.getBirthDate().toString());
+                    pstmt.setInt(5,r.getPersonID());
+                    
+          pstmt.execute();
+        }
+        catch(SQLException se){
+                 System.out.println(se);
+        }
+        finally{
+            
+            try{
+                if(pstmt!=null)
+                    pstmt.close();
+            }catch(SQLException se2){
+                
+            }// nothing we can do
+            
+//            try{
+//                if(rs!=null)
+//                    rs.close();
+//            }catch(SQLException se){
+//            }
+        }  
+        
+        
+    }
 }
-
-
         
     
 //    
