@@ -251,7 +251,10 @@ public class SQLThread extends Thread{
                     pstmt.setString(1,r.getFirstName());
                     pstmt.setString(2,r.getLastName());
                     pstmt.setString(3,r.getBiography());
+//                    if(r.getBirthDate()!=null)
                     pstmt.setString(4,r.getBirthDate().toString());
+//                    else 
+//                    pstmt.setString(4,"");
                     
           pstmt.execute();
         }

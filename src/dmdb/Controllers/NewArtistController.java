@@ -50,7 +50,7 @@ import javafx.scene.control.TextField;
 public class NewArtistController implements Initializable {
     
     private boolean isEditingOld =false;
-    private Person oldPerson;
+    private Person oldPerson = null;
     private MainViewController delegate;
     private SQLThread sqlThread;
     
@@ -74,16 +74,23 @@ public class NewArtistController implements Initializable {
             delegate.close();   
         sqlThread =null;
     }
-     public void save(){
+    public void save(){
          
          if(firstName.getText()==null || firstName.getText().equals(""))
              return;
 
          
+         
         LocalDate ld = date.getValue();
-        Date d = Date.from(ld.atStartOfDay(ZoneId.systemDefault()).toInstant());
-        java.sql.Date sqlDate = new java.sql.Date(d.getTime());
-        System.out.print(sqlDate);
+        if(ld==null)
+            return;
+        java.sql.Date sqlDate = null;
+//        if(ld != null)
+        {Date d = Date.from(ld.atStartOfDay(ZoneId.systemDefault()).toInstant());
+             sqlDate = new java.sql.Date(d.getTime());
+             
+        }
+        
         
         int id = 0;
         if(oldPerson!=null)
