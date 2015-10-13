@@ -5,18 +5,16 @@
  */
 package dmdb.Controllers;
 
-import dmdb.Registers.Register;
-
 /**
  *
  * @author Alfonso
  */
-public interface NewRegisterDelegate {
+public interface RegisterDelegate {
     
     //When the New Register Window should close.
     public void close();
-    
-    
-    //
-    public void doneEditing(Register r); 
+//    
+//    public void doneEditing(Register r); 
+//    
+//    public void createNewRegister(Register r);
 }

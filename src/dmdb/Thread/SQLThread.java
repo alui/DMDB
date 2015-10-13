@@ -6,6 +6,7 @@
 package dmdb.Thread;
 
 import dmdb.Registers.Person;
+import dmdb.Registers.Register;
 import dmdb.Registers.Title;
 import javafx.collections.ObservableList;
 
@@ -81,7 +82,7 @@ public class SQLThread extends Thread{
             }
     }
     
-    public void updateArtistsSimpleSearch(ObservableList<Person> obs,String search)
+    public void selectArtists(ObservableList<Person> obs,String search)
     {
         
         obs.removeAll(obs);
@@ -104,10 +105,17 @@ public class SQLThread extends Thread{
             String firstName = rs.getString("FirstName");
             String lastName = rs.getString("LastName");
             String biogra = rs.getString("Biography");
-            Date date = rs.getDate("BirthDate");
+            String dateString = rs.getString("BirthDate");
+            java.sql.Date d;
+//            java.sql.Date;
+//            long longDate = rs.getLong("BirthDate");
+            d =  java.sql.Date.valueOf(dateString);
             
             
-              Person r = new Person(personID, firstName,lastName,biogra,date);
+//            java.sql.Date sqlDate = new java.sql.Date(d.getTime());
+            
+            
+              Person r = new Person(personID, firstName,lastName,biogra,d);
               obs.add(r);  
             }
         }
@@ -132,7 +140,7 @@ public class SQLThread extends Thread{
     }
         
     
-     public void updateDirectorsSimpleSearch(ObservableList<Person> obs,String search)
+     public void selectDirectors(ObservableList<Person> obs,String search)
     {
         
         obs.removeAll(obs);
@@ -155,10 +163,10 @@ public class SQLThread extends Thread{
             String firstName = rs.getString("FirstName");
             String lastName = rs.getString("LastName");
             String biogra = rs.getString("Biography");
-            Date date = rs.getDate("BirthDate");
+//            Date date = rs.getDate("BirthDate");
             
             
-              Person r = new Person(personID, firstName,lastName,biogra,date);
+              Person r = new Person(personID, firstName,lastName,biogra,null);
               obs.add(r);  
             }
         }
@@ -183,7 +191,7 @@ public class SQLThread extends Thread{
     }
           
      
-    public void updateTitlesSimpleSearch(ObservableList<Title> obs,String search)
+    public void selectTitles(ObservableList<Title> obs,String search)
     {
         
         obs.removeAll(obs);
@@ -231,6 +239,42 @@ public class SQLThread extends Thread{
             }catch(SQLException se){
             }
         }            
+    }
+
+    public void insertArtist(Person r) {
+                  
+        PreparedStatement pstmt = null;
+        try{
+    
+         pstmt = conn.prepareStatement("INSERT INTO Artists (FirstName, LastName, Biography,BirthDate)\n" +
+        "VALUES (?,?,?,?)");   
+                    pstmt.setString(1,r.getFirstName());
+                    pstmt.setString(2,r.getLastName());
+                    pstmt.setString(3,r.getBiography());
+                    pstmt.setString(4,r.getBirthDate().toString());
+                    
+          pstmt.execute();
+        }
+        catch(SQLException se){
+                 System.out.println(se);
+        }
+        finally{
+            
+            try{
+                if(pstmt!=null)
+                    pstmt.close();
+            }catch(SQLException se2){
+                
+            }// nothing we can do
+            
+//            try{
+//                if(rs!=null)
+//                    rs.close();
+//            }catch(SQLException se){
+//            }
+        }  
+        
+        
     }
 }
 

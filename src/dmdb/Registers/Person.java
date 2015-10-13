@@ -6,7 +6,12 @@
 package dmdb.Registers;
 
 //import dmdb.Register;
-import java.util.Date;
+
+import java.sql.Date;
+
+
+
+
 //import javafx.beans.property.SimpleStringProperty;
 //import javafx.beans.property.StringProperty;
 
@@ -86,5 +91,6 @@ public class Person extends Register {
     
     public Date getBirthDate(){return birthDate;};
     public void getBirthDate(Date f){ birthDate = f;};
-    
+
+   
 }

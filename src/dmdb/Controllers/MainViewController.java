@@ -6,18 +6,14 @@
  */
 package dmdb.Controllers;
 
-import dmdb.Thread.SearchArtistsTask;
-import dmdb.Thread.SearchDirectorsTask;
 
 import dmdb.Registers.Person;
-import dmdb.Registers.Register;
 import dmdb.Registers.Title;
 import dmdb.Thread.SQLThread;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 
@@ -31,6 +27,7 @@ import javafx.scene.control.TableView;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 //import javafx.scene.control.MenuButton;
 
 import javafx.scene.control.Tab;
@@ -45,7 +42,7 @@ import javafx.scene.layout.BorderPane;
  *
  * @author Alfonso
  */
-public class MainViewController implements Initializable, NewRegisterDelegate {
+public class MainViewController implements Initializable, RegisterDelegate {
     
     
     
@@ -75,6 +72,9 @@ public class MainViewController implements Initializable, NewRegisterDelegate {
     private Tab tabArtists;
     @FXML 
     private Tab tabDirectors;
+    
+    
+    private Node lastTemporaryNode;
 
     
 //    
@@ -219,9 +219,9 @@ public class MainViewController implements Initializable, NewRegisterDelegate {
                 if (!tabs.contains(tabDirectors))
                     tabPane.getTabs().add(tabDirectors);
                  
-                sqlThread.updateArtistsSimpleSearch(tableArtists.getItems(), searchBox.getText());
-                sqlThread.updateDirectorsSimpleSearch(tableDirectors.getItems(), searchBox.getText());
-                sqlThread.updateTitlesSimpleSearch(tableTitles.getItems(), searchBox.getText());
+                sqlThread.selectArtists(tableArtists.getItems(), searchBox.getText());
+                sqlThread.selectDirectors(tableDirectors.getItems(), searchBox.getText());
+                sqlThread.selectTitles(tableTitles.getItems(), searchBox.getText());
                 
                 break;
             case "Titles":
@@ -230,7 +230,7 @@ public class MainViewController implements Initializable, NewRegisterDelegate {
                 tabPane.getTabs().remove(tabArtists);
                 tabPane.getTabs().remove(tabDirectors);
                 
-                sqlThread.updateTitlesSimpleSearch(tableTitles.getItems(), searchBox.getText());
+                sqlThread.selectTitles(tableTitles.getItems(), searchBox.getText());
                 
                 
                 break;
@@ -241,7 +241,7 @@ public class MainViewController implements Initializable, NewRegisterDelegate {
                 tabPane.getTabs().remove(tabTitles);
                 tabPane.getTabs().remove(tabArtists);
                 
-                sqlThread.updateDirectorsSimpleSearch(tableDirectors.getItems(), searchBox.getText());
+                sqlThread.selectDirectors(tableDirectors.getItems(), searchBox.getText());
                 
                 break;
             case "Artists":
@@ -251,7 +251,7 @@ public class MainViewController implements Initializable, NewRegisterDelegate {
                 tabPane.getTabs().remove(tabTitles);
                 tabPane.getTabs().remove(tabDirectors);
                 
-                sqlThread.updateArtistsSimpleSearch(tableArtists.getItems(), searchBox.getText());
+                sqlThread.selectArtists(tableArtists.getItems(), searchBox.getText());
 
                 
                 break;
@@ -278,8 +278,12 @@ public class MainViewController implements Initializable, NewRegisterDelegate {
     
     TableColumn<Person,String> lastNameCol = new TableColumn<>("Last Name");
     lastNameCol.setCellValueFactory(new PropertyValueFactory("lastName"));
+    
+    
+    TableColumn<Person,String> dateCol = new TableColumn<>("BirthDate");
+    dateCol.setCellValueFactory(new PropertyValueFactory("birthDate"));
  
-        tableArtists.getColumns().setAll(firstNameCol, lastNameCol);
+        tableArtists.getColumns().setAll(firstNameCol, lastNameCol,dateCol);
         
         ObservableList<Person> obs = FXCollections.observableArrayList();
 //        Person r = new Person("Sam","Wrothington");
@@ -326,22 +330,21 @@ public class MainViewController implements Initializable, NewRegisterDelegate {
 
     public void newArtistRegister() throws IOException {
             
-            
-            
+          
+
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("NewArtist.fxml"));     
+
+        AnchorPane n = (AnchorPane)fxmlLoader.load(); 
+        NewArtistController controller = fxmlLoader.<NewArtistController>getController();
+        controller.setRegisterDelegate(this);
+        controller.setSQLThread(sqlThread);
+
+        lastTemporaryNode = n;
+        mainPane.getChildren().remove(searchBorderPane);
+        mainPane.getChildren().add(n);
         
         
         
-//        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("NewArtist.fxml"));     
-////
-//        GridPane sp = (GridPane)fxmlLoader.load();          
-//        NewArtistController controller = fxmlLoader.<NewArtistController>getController();
-//        
-//        
-//        mainPane.getChildren().remove(searchBorderPane);
-//        mainPane.getChildren().add(sp);
-//
-//    
-  
         
         
     }
@@ -351,12 +354,24 @@ public class MainViewController implements Initializable, NewRegisterDelegate {
     @Override
     public void close() {
         
-    }
-
-    @Override
-    public void doneEditing(Register r) {
+        if(lastTemporaryNode!=null)
+        {
+            mainPane.getChildren().remove(lastTemporaryNode);
+        }
+        mainPane.getChildren().add(searchBorderPane);
+        
         
     }
+
+//    @Override
+//    public void doneEditing(Register r) {
+//        
+//    }
+//    
+//     @Override
+//    public void createNewRegister(Register r) {
+//        
+//    }
     
     
     
