@@ -7,9 +7,11 @@
 package dmdb.Controllers;
 
 import dmdb.Registers.Person;
+import dmdb.Registers.Title;
 import dmdb.Thread.SQLThread;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.ResourceBundle;
@@ -103,9 +105,9 @@ public class NewPersonController implements Initializable {
         
         if(oldPerson!=null)
         {
-            sqlThread.updatePersonInTableName(p,kindName);
+            sqlThread.updatePersonKind(p,kindName);
         }else 
-            sqlThread.insertPersonInTableName(p,kindName);
+            sqlThread.insertPersonKind(p,kindName);
 
          
        if(delegate!=null)
@@ -121,6 +123,7 @@ public class NewPersonController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         
+        date.setValue(LocalDate.of(2000, Month.JANUARY, 1));
     }
 
     
@@ -154,5 +157,6 @@ public class NewPersonController implements Initializable {
     void setIsDirector(boolean director) {
         this.isDirector = director;
     }
+
     
 }

@@ -205,9 +205,11 @@ public class SQLThread extends Thread{
         
         try{
     
-         pstmt = conn.prepareStatement("SELECT * FROM Titles WHERE Name LIKE ?");     
+         pstmt = conn.prepareStatement("SELECT * FROM Titles WHERE Name LIKE ? OR Genere LIKE ?");     
                
                     pstmt.setString(1,search); 
+                    
+                    pstmt.setString(2,search); 
                     
                     
           rs = pstmt.executeQuery();
@@ -217,11 +219,16 @@ public class SQLThread extends Thread{
             Integer ID = rs.getInt("TitleID");
             String firstName = rs.getString("Name");
 //            String lastName = rs.getString("LastName");
-//            String biogra = rs.getString("Biography");
-            Date date = rs.getDate("ReleaseDate");
+            String summary = rs.getString("Summary");
             
+            String dateString = rs.getString("ReleaseDate");
             
-              Title r = new Title(ID, firstName,date);
+            java.sql.Date d;
+            d =  java.sql.Date.valueOf(dateString);
+            
+            String genere = rs.getString("Genere");
+            
+              Title r = new Title(ID, firstName,summary,d,genere);
               obs.add(r);  
             }
         }
@@ -245,7 +252,7 @@ public class SQLThread extends Thread{
         }            
     }
 
-    public void insertPersonInTableName(Person r,String kindName) {
+    public void insertPersonKind(Person r,String kindName) {
                   
         PreparedStatement pstmt = null;
         try{
@@ -257,6 +264,7 @@ public class SQLThread extends Thread{
                     pstmt.setString(3,r.getBiography());
 //                    if(r.getBirthDate()!=null)
                     pstmt.setString(4,r.getBirthDate().toString());
+//                    pstmt.setString(4,r);
 //                    else 
 //                    pstmt.setString(4,"");
                     
@@ -288,7 +296,7 @@ public class SQLThread extends Thread{
 //UPDATE Customers
 //SET ContactName='Alfred Schmidt', City='Hamburg'
 //WHERE CustomerName='Alfreds Futterkiste';
-    public void updatePersonInTableName(Person r,String kindName) {
+    public void updatePersonKind(Person r,String kindName) {
                   
         PreparedStatement pstmt = null;
         try{
@@ -364,6 +372,76 @@ public class SQLThread extends Thread{
         }  
         
         
+    }
+
+    public void updateTitle(Title r) {
+          PreparedStatement pstmt = null;
+        try{
+    
+          pstmt = conn.prepareStatement(
+                 "UPDATE Titles \n"+
+            "SET Name= ?, Summary= ?, ReleaseDate = ?, Genere=? \n"+
+           " WHERE TitleID= ? "); 
+          
+                    pstmt.setString(1,r.getName());
+                    pstmt.setString(2,r.getSummary());
+                    pstmt.setString(3,r.getReleaseDate().toString());
+                    pstmt.setString(4,r.getGenere());
+                    pstmt.setInt(5,r.getTitleID());
+//                    else 
+//                    pstmt.setString(4,"");
+                    
+          pstmt.execute();
+        }
+        catch(SQLException se){
+                 System.out.println(se);
+        }
+        finally{
+            
+            try{
+                if(pstmt!=null)
+                    pstmt.close();
+            }catch(SQLException se2){
+                
+            }// nothing we can do
+        
+    }
+
+    }public void insertTitle(Title r) {
+        PreparedStatement pstmt = null;
+        try{
+    
+         pstmt = conn.prepareStatement("INSERT INTO Titles (Name, Summary,ReleaseDate,Genere)\n" +
+        "VALUES (?,?,?,?)");   
+                    pstmt.setString(1,r.getName());
+                    pstmt.setString(2,r.getSummary());
+                    pstmt.setString(3,r.getReleaseDate().toString());
+                    pstmt.setString(4,r.getGenere());
+//                    else 
+//                    pstmt.setString(4,"");
+                    
+          pstmt.execute();
+        }
+        catch(SQLException se){
+                 System.out.println(se);
+        }
+        finally{
+            
+            try{
+                if(pstmt!=null)
+                    pstmt.close();
+            }catch(SQLException se2){
+                
+            }// nothing we can do
+            
+//            try{
+//                if(rs!=null)
+//                    rs.close();
+//            }catch(SQLException se){
+//            }
+        }  
+        
+//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
         

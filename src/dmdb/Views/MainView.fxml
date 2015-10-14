@@ -21,7 +21,7 @@
                     <items>
                       <MenuItem mnemonicParsing="false" onAction="#newArtistRegister" text="Artist" />
                       <MenuItem mnemonicParsing="false" onAction="#newDirectorRegister" text="Director" />
-                        <MenuItem mnemonicParsing="false" text="Title" />
+                        <MenuItem mnemonicParsing="false" onAction="#newTitleRegister" text="Title" />
                     </items>
                   </MenuButton>
                   <Button mnemonicParsing="false" onAction="#delete" prefWidth="60.0" text="Delete" />
@@ -48,12 +48,17 @@
                         <TableView fx:id="tableTitles" prefHeight="472.0" prefWidth="692.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                           <columns>
                             <TableColumn prefWidth="75.0" text="Image" />
-                            <TableColumn fx:id="movieColumnTitle" prefWidth="273.0" text="Title" />
-                              <TableColumn prefWidth="126.0" text="Released Date" />
+                            <TableColumn fx:id="t_nameCol" prefWidth="172.0" text="Title" />
+                              <TableColumn fx:id="t_genereCol" prefWidth="112.0" text="Genere" />
+                              <TableColumn fx:id="t_relDateCol" prefWidth="122.0" text="Released Date" />
+                              <TableColumn fx:id="t_summaryCol" prefWidth="125.0" text="Summary" />
                           </columns>
                            <opaqueInsets>
                               <Insets />
                            </opaqueInsets>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
                         </TableView>
                      </content>
                   </Tab>
@@ -67,6 +72,9 @@
                               <TableColumn fx:id="d_bioCol" prefWidth="89.0" text="Biography" />
                               <TableColumn fx:id="d_birthDateCol" minWidth="0.0" prefWidth="83.0" text="Birth Date" />
                            </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
                         </TableView>
                      </content></Tab>
                </tabs>

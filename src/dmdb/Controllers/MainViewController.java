@@ -109,8 +109,18 @@ public class MainViewController implements Initializable, RegisterDelegate {
     private TableView tableTitles;
     
              @FXML 
-             private TableColumn<Title,String> movieColumnTitle;
+             private TableColumn<Title,String> t_nameCol;
+             @FXML 
+             private TableColumn<Title,String> t_relDateCol;
+             
+             @FXML 
+             private TableColumn<Title,String> t_summaryCol;
+             
+             @FXML 
+             private TableColumn<Title,String> t_genereCol;
+             
 //    
+             
              
              
              
@@ -422,7 +432,36 @@ public class MainViewController implements Initializable, RegisterDelegate {
         //+++++++++TTLES
 //        movieColumnTitle = new TableColumn<>("Name");
         
-    movieColumnTitle.setCellValueFactory(new PropertyValueFactory("name"));
+    t_nameCol.setCellValueFactory(new PropertyValueFactory("name"));
+    t_relDateCol.setCellValueFactory(new PropertyValueFactory("releaseDate"));
+    
+    
+        
+    t_genereCol.setCellValueFactory(new PropertyValueFactory("genere"));
+    t_summaryCol.setCellValueFactory(new PropertyValueFactory("summary"));
+    
+    tableTitles.setOnMousePressed((MouseEvent event) -> {
+            if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+                Node node = ((Node) event.getTarget()).getParent();
+                TableRow row;
+                if (node instanceof TableRow) {
+                    row = (TableRow) node;
+                } else {
+                    // clicking on text part
+                    row = (TableRow) node.getParent();
+                }
+                
+                System.out.println(row.getItem());
+                try {
+                    editTitleRegister((Title)row.getItem());
+                } catch (IOException ex) {
+                    Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+          });
+        tableTitles.getSelectionModel().setSelectionMode(
+                 SelectionMode.MULTIPLE
+        );
     
     
         
@@ -432,6 +471,24 @@ public class MainViewController implements Initializable, RegisterDelegate {
         
     }
 
+        
+    private void editTitleRegister(Title t) throws IOException {
+        
+
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("NewTitle.fxml"));     
+
+        AnchorPane n = (AnchorPane)fxmlLoader.load(); 
+        NewTitleController controller = fxmlLoader.<NewTitleController>getController();
+        controller.setRegisterDelegate(this);
+        controller.setSQLThread(sqlThread);
+        controller.setTitle(t);
+        
+
+        lastTemporaryNode = n;
+        mainPane.getChildren().remove(searchBorderPane);
+        mainPane.getChildren().add(n);
+    
+    }
     private void editPersonRegister(Person p , boolean isDirector) throws IOException {
         
 
@@ -463,6 +520,31 @@ public class MainViewController implements Initializable, RegisterDelegate {
         } catch (IOException ex) {
             Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+    } 
+    public void newTitleRegister(){
+        try {
+            newTitle();
+        } catch (IOException ex) {
+            Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    private void newTitle() throws IOException {
+        
+          
+
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("NewTitle.fxml"));     
+
+        AnchorPane n = (AnchorPane)fxmlLoader.load(); 
+        NewTitleController controller = fxmlLoader.<NewTitleController>getController();
+        controller.setRegisterDelegate(this);
+        controller.setSQLThread(sqlThread);
+//        controller.setIsDirector(isDirector);
+
+        lastTemporaryNode = n;
+        mainPane.getChildren().remove(searchBorderPane);
+        mainPane.getChildren().add(n);
         
     }
     private void newPerson(boolean isDirector) throws IOException {

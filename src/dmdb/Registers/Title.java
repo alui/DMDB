@@ -24,7 +24,9 @@ public class Title extends Register {
     private Date releaseDate;
     
     private String name;
+    private String genere;
     
+    private String summary;
     private Image coverImage;
     
     
@@ -38,12 +40,14 @@ public class Title extends Register {
         
     }
     
-    public Title(Integer id,String f,Date d ){
+    public Title(Integer id,String f,String sum,Date d ,String genere){
         
         titleID=id;
         name = f;
         releaseDate = d;
+        summary  = sum;
         coverImage = null;
+        this.genere = genere;
                
         
     }
@@ -51,6 +55,13 @@ public class Title extends Register {
     public String getName(){return name;};
     public void setName(String f){ name = f;};
     
+    
+    
+    public String getGenere(){return genere;};
+    public void setGenere(String f){ genere = f;};
+    
+    public String getSummary(){return summary;};
+    public void setSummary(String f){ summary = f;};
     
     
     public Date getReleaseDate(){return releaseDate;};
