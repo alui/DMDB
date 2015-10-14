@@ -31,6 +31,7 @@ import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.control.SelectionMode;
 //import javafx.scene.control.MenuButton;
 
 import javafx.scene.control.Tab;
@@ -87,25 +88,44 @@ public class MainViewController implements Initializable, RegisterDelegate {
 //    private MenuButton newRegister;
 ////    
 
-    //Tables.
-//    @FXML
+    //Tables. ARTISTS
+    @FXML
     private TableView<Person> tableArtists;
+    
+    @FXML
+    private TableColumn<Person,String> a_firstNameCol;
+    @FXML
+    private TableColumn<Person,String> a_lastNameCol;
+    @FXML
+    private TableColumn<Person,String> a_birthDateCol;
+    @FXML
+    private TableColumn<Person,String> a_bioCol;
 //
 //    
     @FXML
     private TableView tableTitles;
     
-    @FXML 
-    private TableColumn<Title,String> movieColumnTitle;
+             @FXML 
+             private TableColumn<Title,String> movieColumnTitle;
 //    
-//    @FXML
+             
+             
+             
+    @FXML
     private TableView<Person> tableDirectors;
+    @FXML
+    private TableColumn<Person,String> d_firstNameCol;
+    @FXML
+    private TableColumn<Person,String> d_lastNameCol;
+    @FXML
+    private TableColumn<Person,String> d_birthDateCol;
+    @FXML
+    private TableColumn<Person,String> d_bioCol;
+    
+    
     
     
     private SQLThread sqlThread;
-    
-    
-    
     
 //    //Conneciton to the main Data Base.
 //    private  Connection DBConnection;
@@ -139,7 +159,7 @@ public class MainViewController implements Initializable, RegisterDelegate {
         //The DBConneciton will be performed by this mainViewController.
 //        connectDB();
 //        connect the TableViews.
-        connectTableViews();
+        setCellFactoryForColumns();
         //Perfomred by the FXML view.
         
         
@@ -271,79 +291,90 @@ public class MainViewController implements Initializable, RegisterDelegate {
     
    
     
-    private void connectTableViews(){
+    private void setCellFactoryForColumns(){
         
         
         //+++++++++ARTTISTS
         
-        
-          tableArtists= new TableView<>();
-          
-          
-    TableColumn<Person,String> firstNameCol = new TableColumn<>("First Name");
-    firstNameCol.setCellValueFactory(new PropertyValueFactory("firstName"));
-    
-    TableColumn<Person,String> lastNameCol = new TableColumn<>("Last Name");
-    lastNameCol.setCellValueFactory(new PropertyValueFactory("lastName"));
-    
-    
-    TableColumn<Person,String> dateCol = new TableColumn<>("BirthDate");
-    dateCol.setCellValueFactory(new PropertyValueFactory("birthDate"));
+    a_firstNameCol.setCellValueFactory(new PropertyValueFactory("firstName"));
+    a_lastNameCol.setCellValueFactory(new PropertyValueFactory("lastName"));
+    a_birthDateCol.setCellValueFactory(new PropertyValueFactory("birthDate"));
+    a_bioCol.setCellValueFactory(new PropertyValueFactory("biography"));
  
-        tableArtists.getColumns().setAll(firstNameCol, lastNameCol,dateCol);
+//        tableArtists.getColumns().setAll(firstNameCol, lastNameCol,dateCol);
         
-        ObservableList<Person> obs = FXCollections.observableArrayList();
+//        ObservableList<Person> obs = FXCollections.observableArrayList();
 //        Person r = new Person("Sam","Wrothington");
                
                 
 //        obs.add(r);
-        tableArtists.setItems(obs);
-        tabArtists.setContent(tableArtists);
+//        tableArtists.setItems(obs);
+//        tabArtists.setContent(tableArtists);
         
-        tableArtists.setOnMousePressed(new EventHandler<MouseEvent>() {
-         @Override 
-         public void handle(MouseEvent event) {
-        if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
-            Node node = ((Node) event.getTarget()).getParent();
-            TableRow row;
-            if (node instanceof TableRow) {
-                row = (TableRow) node;
-            } else {
-                // clicking on text part
-                row = (TableRow) node.getParent();
+        tableArtists.setOnMousePressed((MouseEvent event) -> {
+            if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+                Node node = ((Node) event.getTarget()).getParent();
+                TableRow row;
+                if (node instanceof TableRow) {
+                    row = (TableRow) node;
+                } else {
+                    // clicking on text part
+                    row = (TableRow) node.getParent();
+                }
+                
+                System.out.println(row.getItem());
+                try {
+                    this.editPersonRegister((Person)row.getItem(),false);
+                } catch (IOException ex) {
+                    Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
-            
-            System.out.println(row.getItem());
-            try {
-                editArtistRegister((Person)row.getItem());
-            } catch (IOException ex) {
-                Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-} );
+          });
         
+         tableArtists.getSelectionModel().setSelectionMode(
+                 SelectionMode.MULTIPLE
+        );
         
         
         //+++++++++DIRECTORS
         
-        tableDirectors= new TableView<>();
+//        tableDirectors= new TableView<>();
           
-    firstNameCol = new TableColumn<>("First Name");
-    firstNameCol.setCellValueFactory(new PropertyValueFactory("firstName"));
-    
-   lastNameCol = new TableColumn<>("Last Name");
-    lastNameCol.setCellValueFactory(new PropertyValueFactory("lastName"));
- 
-        tableDirectors.getColumns().setAll(firstNameCol, lastNameCol);
-        
+   
+    d_firstNameCol.setCellValueFactory(new PropertyValueFactory("firstName"));
+    d_lastNameCol.setCellValueFactory(new PropertyValueFactory("lastName"));
+    d_bioCol.setCellValueFactory(new PropertyValueFactory("biography"));
+    d_birthDateCol.setCellValueFactory(new PropertyValueFactory("birthDate"));
+   
+        tableDirectors.setOnMousePressed((MouseEvent event) -> {
+            if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
+                Node node = ((Node) event.getTarget()).getParent();
+                TableRow row;
+                if (node instanceof TableRow) {
+                    row = (TableRow) node;
+                } else {
+                    // clicking on text part
+                    row = (TableRow) node.getParent();
+                }
+                
+                System.out.println(row.getItem());
+                try {
+                    editPersonRegister((Person)row.getItem(),true);
+                } catch (IOException ex) {
+                    Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+          });
+        tableDirectors.getSelectionModel().setSelectionMode(
+                 SelectionMode.MULTIPLE
+        );
 //        ObservableList<Person> obs = FXCollections.observableArrayList();
 //        Person r = new Person("Sam","Wrothington");
 //               
                 
 //        obs.add(r);
 //        tableDirectors.setItems(obs);
-        tabDirectors.setContent(tableDirectors);
+//        tabDirectors.setContent(tableDirectors);
         
         
         //+++++++++TTLES
@@ -359,32 +390,50 @@ public class MainViewController implements Initializable, RegisterDelegate {
         
     }
 
-    public void editArtistRegister(Person p) throws IOException {
+    public void editPersonRegister(Person p , boolean isDirector) throws IOException {
         
 
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("NewArtist.fxml"));     
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("NewPerson.fxml"));     
 
         AnchorPane n = (AnchorPane)fxmlLoader.load(); 
-        NewArtistController controller = fxmlLoader.<NewArtistController>getController();
+        NewPersonController controller = fxmlLoader.<NewPersonController>getController();
         controller.setRegisterDelegate(this);
         controller.setSQLThread(sqlThread);
-        controller.setArtist(p);
+        controller.setPerson(p);
+        controller.setIsDirector(isDirector);
 
         lastTemporaryNode = n;
         mainPane.getChildren().remove(searchBorderPane);
         mainPane.getChildren().add(n);
     
     }
-    public void newArtistRegister() throws IOException {
+    
+    public void newDirectorRegister(){
+        try {
+            newPerson(true);
+        } catch (IOException ex) {
+            Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    public void newArtistRegister(){
+        try {
+            newPerson(false);
+        } catch (IOException ex) {
+            Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    private void newPerson(boolean isDirector) throws IOException {
             
           
 
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("NewArtist.fxml"));     
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("NewPerson.fxml"));     
 
         AnchorPane n = (AnchorPane)fxmlLoader.load(); 
-        NewArtistController controller = fxmlLoader.<NewArtistController>getController();
+        NewPersonController controller = fxmlLoader.<NewPersonController>getController();
         controller.setRegisterDelegate(this);
         controller.setSQLThread(sqlThread);
+        controller.setIsDirector(isDirector);
 
         lastTemporaryNode = n;
         mainPane.getChildren().remove(searchBorderPane);

@@ -163,10 +163,14 @@ public class SQLThread extends Thread{
             String firstName = rs.getString("FirstName");
             String lastName = rs.getString("LastName");
             String biogra = rs.getString("Biography");
-//            Date date = rs.getDate("BirthDate");
+            String dateString = rs.getString("BirthDate");
+            java.sql.Date d;
+//            java.sql.Date;
+//            long longDate = rs.getLong("BirthDate");
+            d =  java.sql.Date.valueOf(dateString);
             
             
-              Person r = new Person(personID, firstName,lastName,biogra,null);
+              Person r = new Person(personID, firstName,lastName,biogra,d);
               obs.add(r);  
             }
         }
@@ -241,12 +245,12 @@ public class SQLThread extends Thread{
         }            
     }
 
-    public void insertArtist(Person r) {
+    public void insertPersonInTableName(Person r,String kindName) {
                   
         PreparedStatement pstmt = null;
         try{
     
-         pstmt = conn.prepareStatement("INSERT INTO Artists (FirstName, LastName, Biography,BirthDate)\n" +
+         pstmt = conn.prepareStatement("INSERT INTO "+kindName +"s (FirstName, LastName, Biography,BirthDate)\n" +
         "VALUES (?,?,?,?)");   
                     pstmt.setString(1,r.getFirstName());
                     pstmt.setString(2,r.getLastName());
@@ -284,15 +288,15 @@ public class SQLThread extends Thread{
 //UPDATE Customers
 //SET ContactName='Alfred Schmidt', City='Hamburg'
 //WHERE CustomerName='Alfreds Futterkiste';
-    public void updateArtist(Person r) {
+    public void updatePersonInTableName(Person r,String kindName) {
                   
         PreparedStatement pstmt = null;
         try{
     
          pstmt = conn.prepareStatement(
-                 "UPDATE Artists \n"+
+                 "UPDATE "+ kindName+ "s \n"+
             "SET FirstName= ?, LastName= ?, Biography=?, BirthDate = ? \n"+
-           " WHERE ArtistID= ? "); 
+           " WHERE "+kindName+"ID= ? "); 
          
                     pstmt.setString(1,r.getFirstName());
                     pstmt.setString(2,r.getLastName());

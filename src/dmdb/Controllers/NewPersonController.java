@@ -47,9 +47,9 @@ import javafx.scene.control.TextField;
  *
  * @author Alfonso
  */
-public class NewArtistController implements Initializable {
+public class NewPersonController implements Initializable {
     
-    private boolean isEditingOld =false;
+    private boolean isDirector;
     private Person oldPerson = null;
     private MainViewController delegate;
     private SQLThread sqlThread;
@@ -97,13 +97,15 @@ public class NewArtistController implements Initializable {
             id = oldPerson.getPersonID();
        Person p = new Person(id,firstName.getText(),lastName.getText(),biography.getText(),sqlDate); 
        
-       
+       String kindName = "Artist";
+       if(isDirector)
+           kindName = "Director";
         
         if(oldPerson!=null)
         {
-            sqlThread.updateArtist(p);
+            sqlThread.updatePersonInTableName(p,kindName);
         }else 
-            sqlThread.insertArtist(p);
+            sqlThread.insertPersonInTableName(p,kindName);
 
          
        if(delegate!=null)
@@ -138,18 +140,19 @@ public class NewArtistController implements Initializable {
         this.sqlThread = sqlThread;
     }
 
-    void setArtist(Person p) {
-        isEditingOld = true;
+    void setPerson(Person p) {
         
         firstName.setText(p.getFirstName());
         lastName.setText(p.getLastName());
         biography.setText(p.getBiography());
         date.setValue(p.getBirthDate().toLocalDate());
-        
         oldPerson = p;
         
-        //Load from db relations.
         
+    }
+
+    void setIsDirector(boolean director) {
+        this.isDirector = director;
     }
     
 }

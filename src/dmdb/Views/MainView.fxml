@@ -20,7 +20,7 @@
                   <MenuButton mnemonicParsing="false" text="New">
                     <items>
                       <MenuItem mnemonicParsing="false" onAction="#newArtistRegister" text="Artist" />
-                      <MenuItem mnemonicParsing="false" text="Director" />
+                      <MenuItem mnemonicParsing="false" onAction="#newDirectorRegister" text="Director" />
                         <MenuItem mnemonicParsing="false" text="Title" />
                     </items>
                   </MenuButton>
@@ -31,13 +31,25 @@
          <center>
             <TabPane fx:id="tabPane">
                <tabs>
-                  <Tab fx:id="tabArtists" closable="false" text="Artists" />
+                  <Tab fx:id="tabArtists" closable="false" text="Artists">
+                     <content>
+                        <TableView fx:id="tableArtists" prefHeight="200.0" prefWidth="200.0">
+                          <columns>
+                              <TableColumn prefWidth="95.0" text="Image" />
+                            <TableColumn fx:id="a_firstNameCol" prefWidth="87.0" text="First Name" />
+                            <TableColumn fx:id="a_lastNameCol" prefWidth="109.0" text="Last Name" />
+                              <TableColumn fx:id="a_bioCol" prefWidth="146.0" text="Biography" />
+                              <TableColumn fx:id="a_birthDateCol" prefWidth="88.0" text="Birth Date" />
+                          </columns>
+                        </TableView>
+                     </content></Tab>
                   <Tab fx:id="tabTitles" closable="false" text="Movies">
                      <content>
                         <TableView fx:id="tableTitles" prefHeight="472.0" prefWidth="692.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                           <columns>
                             <TableColumn prefWidth="75.0" text="Image" />
                             <TableColumn fx:id="movieColumnTitle" prefWidth="273.0" text="Title" />
+                              <TableColumn prefWidth="126.0" text="Released Date" />
                           </columns>
                            <opaqueInsets>
                               <Insets />
@@ -45,7 +57,18 @@
                         </TableView>
                      </content>
                   </Tab>
-                  <Tab fx:id="tabDirectors" closable="false" text="Directors" />
+                  <Tab fx:id="tabDirectors" closable="false" text="Directors">
+                     <content>
+                        <TableView fx:id="tableDirectors" prefHeight="200.0" prefWidth="200.0">
+                           <columns>
+                              <TableColumn prefWidth="111.0" text="Image" />
+                              <TableColumn fx:id="d_firstNameCol" prefWidth="114.0" text="First Name" />
+                              <TableColumn fx:id="d_lastNameCol" minWidth="0.0" prefWidth="86.0" text="Last Name" />
+                              <TableColumn fx:id="d_bioCol" prefWidth="89.0" text="Biography" />
+                              <TableColumn fx:id="d_birthDateCol" minWidth="0.0" prefWidth="83.0" text="Birth Date" />
+                           </columns>
+                        </TableView>
+                     </content></Tab>
                </tabs>
             </TabPane>
          </center>
