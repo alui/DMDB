@@ -12,7 +12,10 @@ import dmdb.Registers.Title;
 import dmdb.Thread.SQLThread;
 
 import java.io.IOException;
+import static java.lang.System.in;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -228,6 +231,45 @@ public class MainViewController implements Initializable, RegisterDelegate {
     
     }
     
+    public void delete(){
+        this.deleteRowsFromCurrentVisibleTable();
+    }
+    private void deleteRowsFromCurrentVisibleTable(){
+        
+        if(tabTitles.isSelected()){
+            
+                    List items =  new ArrayList (tableTitles.getSelectionModel().getSelectedItems());  
+                    
+                    tableTitles.getItems().removeAll(items);
+                    tableTitles.getSelectionModel().clearSelection();
+                    //Missing real deletion
+            
+            
+        }else if (tabArtists.isSelected()){
+            
+                    List items =  new ArrayList (tableArtists.getSelectionModel().getSelectedItems());
+                    
+                    tableArtists.getItems().removeAll(items);
+                    for(Object p : items ){
+                        sqlThread.deleteKindOfPerson("Artist", (Person) p);
+                    }
+                    
+                    tableArtists.getSelectionModel().clearSelection();
+
+            
+        }else if (tabDirectors.isSelected()){
+            
+            
+                    List items =  new ArrayList (tableDirectors.getSelectionModel().getSelectedItems());  
+                    tableDirectors.getItems().removeAll(items);
+                     for(Object p : items ){
+                        sqlThread.deleteKindOfPerson("Director", (Person) p);
+                    }
+                    tableDirectors.getSelectionModel().clearSelection();
+        }
+        
+    }
+    
 //    SearchDirectorsTask
     private void performSimpleSearch(){
         
@@ -390,7 +432,7 @@ public class MainViewController implements Initializable, RegisterDelegate {
         
     }
 
-    public void editPersonRegister(Person p , boolean isDirector) throws IOException {
+    private void editPersonRegister(Person p , boolean isDirector) throws IOException {
         
 
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("NewPerson.fxml"));     

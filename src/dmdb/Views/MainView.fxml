@@ -24,7 +24,7 @@
                         <MenuItem mnemonicParsing="false" text="Title" />
                     </items>
                   </MenuButton>
-                  <Button mnemonicParsing="false" prefWidth="60.0" text="Delete" />
+                  <Button mnemonicParsing="false" onAction="#delete" prefWidth="60.0" text="Delete" />
               </items>
             </ToolBar>
          </top>
