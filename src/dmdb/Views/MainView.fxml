@@ -41,6 +41,9 @@
                               <TableColumn fx:id="a_bioCol" prefWidth="146.0" text="Biography" />
                               <TableColumn fx:id="a_birthDateCol" prefWidth="88.0" text="Birth Date" />
                           </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
                         </TableView>
                      </content></Tab>
                   <Tab fx:id="tabTitles" closable="false" text="Movies">

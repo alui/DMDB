@@ -70,6 +70,11 @@ public class Title extends Register {
     
     public Integer getTitleID(){return titleID;};
     public void setTitleID(Integer f){ titleID = f;};
+
+    @Override
+    public int getID() {
+        return this.getTitleID();
+    }
     
     
     

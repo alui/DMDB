@@ -336,42 +336,26 @@ public class SQLThread extends Thread{
         
     }
     
-    public void deleteKindOfPerson(String kindName, Person r )
+    public void deleteRegisterKind(String kindName, Register r )
     {
         PreparedStatement pstmt = null;
         try{
     
          pstmt = conn.prepareStatement("DELETE FROM "+kindName+"s \n"+
         "WHERE "+kindName +"ID =?"); 
-         
-//                    pstmt.setString(1,r.getFirstName());
-//                    pstmt.setString(2,r.getLastName());
-//                    pstmt.setString(3,r.getBiography());
-//                    pstmt.setString(4,r.getBirthDate().toString());
-                    pstmt.setInt(1,r.getPersonID());
-                    
+                    pstmt.setInt(1,r.getID());  
           pstmt.execute();
         }
         catch(SQLException se){
                  System.out.println(se);
         }
         finally{
-            
             try{
                 if(pstmt!=null)
                     pstmt.close();
             }catch(SQLException se2){
-                
-            }// nothing we can do
-            
-//            try{
-//                if(rs!=null)
-//                    rs.close();
-//            }catch(SQLException se){
-//            }
+            }
         }  
-        
-        
     }
 
     public void updateTitle(Title r) {

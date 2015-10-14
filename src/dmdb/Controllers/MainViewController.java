@@ -251,6 +251,9 @@ public class MainViewController implements Initializable, RegisterDelegate {
                     List items =  new ArrayList (tableTitles.getSelectionModel().getSelectedItems());  
                     
                     tableTitles.getItems().removeAll(items);
+                     for(Object p : items ){
+                        sqlThread.deleteRegisterKind("Title", (Title) p);
+                    }
                     tableTitles.getSelectionModel().clearSelection();
                     //Missing real deletion
             
@@ -261,7 +264,7 @@ public class MainViewController implements Initializable, RegisterDelegate {
                     
                     tableArtists.getItems().removeAll(items);
                     for(Object p : items ){
-                        sqlThread.deleteKindOfPerson("Artist", (Person) p);
+                        sqlThread.deleteRegisterKind("Artist", (Person) p);
                     }
                     
                     tableArtists.getSelectionModel().clearSelection();
@@ -273,7 +276,7 @@ public class MainViewController implements Initializable, RegisterDelegate {
                     List items =  new ArrayList (tableDirectors.getSelectionModel().getSelectedItems());  
                     tableDirectors.getItems().removeAll(items);
                      for(Object p : items ){
-                        sqlThread.deleteKindOfPerson("Director", (Person) p);
+                        sqlThread.deleteRegisterKind("Director", (Person) p);
                     }
                     tableDirectors.getSelectionModel().clearSelection();
         }
@@ -434,9 +437,6 @@ public class MainViewController implements Initializable, RegisterDelegate {
         
     t_nameCol.setCellValueFactory(new PropertyValueFactory("name"));
     t_relDateCol.setCellValueFactory(new PropertyValueFactory("releaseDate"));
-    
-    
-        
     t_genereCol.setCellValueFactory(new PropertyValueFactory("genere"));
     t_summaryCol.setCellValueFactory(new PropertyValueFactory("summary"));
     

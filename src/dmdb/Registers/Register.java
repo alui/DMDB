@@ -9,6 +9,9 @@ package dmdb.Registers;
  *
  * @author Alfonso
  */
-public class Register {
+public abstract class Register {
+    
+    
+    abstract public int getID();
     
 }
