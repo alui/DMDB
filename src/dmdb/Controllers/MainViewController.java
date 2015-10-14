@@ -299,8 +299,8 @@ public class MainViewController implements Initializable, RegisterDelegate {
                 if (!tabs.contains(tabDirectors))
                     tabPane.getTabs().add(tabDirectors);
                  
-                sqlThread.selectArtists(tableArtists.getItems(), searchBox.getText());
-                sqlThread.selectDirectors(tableDirectors.getItems(), searchBox.getText());
+                sqlThread.selectPersonsKind("Artist",tableArtists.getItems(), searchBox.getText());
+                sqlThread.selectPersonsKind("Director",tableDirectors.getItems(), searchBox.getText());
                 sqlThread.selectTitles(tableTitles.getItems(), searchBox.getText());
                 
                 break;
@@ -321,7 +321,7 @@ public class MainViewController implements Initializable, RegisterDelegate {
                 tabPane.getTabs().remove(tabTitles);
                 tabPane.getTabs().remove(tabArtists);
                 
-                sqlThread.selectDirectors(tableDirectors.getItems(), searchBox.getText());
+                sqlThread.selectPersonsKind("Director",tableDirectors.getItems(), searchBox.getText());
                 
                 break;
             case "Artists":
@@ -331,7 +331,7 @@ public class MainViewController implements Initializable, RegisterDelegate {
                 tabPane.getTabs().remove(tabTitles);
                 tabPane.getTabs().remove(tabDirectors);
                 
-                sqlThread.selectArtists(tableArtists.getItems(), searchBox.getText());
+                sqlThread.selectPersonsKind("Artist",tableArtists.getItems(), searchBox.getText());
 
                 
                 break;
@@ -377,7 +377,6 @@ public class MainViewController implements Initializable, RegisterDelegate {
                     row = (TableRow) node.getParent();
                 }
                 
-                System.out.println(row.getItem());
                 try {
                     this.editPersonRegister((Person)row.getItem(),false);
                 } catch (IOException ex) {
@@ -411,8 +410,6 @@ public class MainViewController implements Initializable, RegisterDelegate {
                     // clicking on text part
                     row = (TableRow) node.getParent();
                 }
-                
-                System.out.println(row.getItem());
                 try {
                     editPersonRegister((Person)row.getItem(),true);
                 } catch (IOException ex) {
@@ -450,8 +447,6 @@ public class MainViewController implements Initializable, RegisterDelegate {
                     // clicking on text part
                     row = (TableRow) node.getParent();
                 }
-                
-                System.out.println(row.getItem());
                 try {
                     editTitleRegister((Title)row.getItem());
                 } catch (IOException ex) {
@@ -472,6 +467,11 @@ public class MainViewController implements Initializable, RegisterDelegate {
     }
 
         
+      private void newTitle() throws IOException {
+        
+        this.editTitleRegister(null);
+        
+    }
     private void editTitleRegister(Title t) throws IOException {
         
 
@@ -481,13 +481,18 @@ public class MainViewController implements Initializable, RegisterDelegate {
         NewTitleController controller = fxmlLoader.<NewTitleController>getController();
         controller.setRegisterDelegate(this);
         controller.setSQLThread(sqlThread);
-        controller.setTitle(t);
+        if(t!=null)
+         controller.setTitle(t);
         
 
         lastTemporaryNode = n;
         mainPane.getChildren().remove(searchBorderPane);
         mainPane.getChildren().add(n);
     
+    }
+    private void newPerson(boolean isDirector) throws IOException {
+        this.editPersonRegister(null, isDirector);
+        
     }
     private void editPersonRegister(Person p , boolean isDirector) throws IOException {
         
@@ -498,7 +503,10 @@ public class MainViewController implements Initializable, RegisterDelegate {
         NewPersonController controller = fxmlLoader.<NewPersonController>getController();
         controller.setRegisterDelegate(this);
         controller.setSQLThread(sqlThread);
-        controller.setPerson(p);
+        
+        if(p!=null)
+         controller.setPerson(p);
+        
         controller.setIsDirector(isDirector);
 
         lastTemporaryNode = n;
@@ -530,47 +538,10 @@ public class MainViewController implements Initializable, RegisterDelegate {
         }
         
     }
-    private void newTitle() throws IOException {
-        
-          
-
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("NewTitle.fxml"));     
-
-        AnchorPane n = (AnchorPane)fxmlLoader.load(); 
-        NewTitleController controller = fxmlLoader.<NewTitleController>getController();
-        controller.setRegisterDelegate(this);
-        controller.setSQLThread(sqlThread);
-//        controller.setIsDirector(isDirector);
-
-        lastTemporaryNode = n;
-        mainPane.getChildren().remove(searchBorderPane);
-        mainPane.getChildren().add(n);
-        
-    }
-    private void newPerson(boolean isDirector) throws IOException {
-            
-          
-
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("NewPerson.fxml"));     
-
-        AnchorPane n = (AnchorPane)fxmlLoader.load(); 
-        NewPersonController controller = fxmlLoader.<NewPersonController>getController();
-        controller.setRegisterDelegate(this);
-        controller.setSQLThread(sqlThread);
-        controller.setIsDirector(isDirector);
-
-        lastTemporaryNode = n;
-        mainPane.getChildren().remove(searchBorderPane);
-        mainPane.getChildren().add(n);
-        
-        
-        
-        
-        
-    }
+  
 
     
-    //Methods from new register
+    //Methods from newController
     @Override
     public void close() {
         
@@ -580,19 +551,8 @@ public class MainViewController implements Initializable, RegisterDelegate {
         }
         mainPane.getChildren().add(searchBorderPane);
         
-        
     }
 
-//    @Override
-//    public void doneEditing(Register r) {
-//        
-//    }
-//    
-//     @Override
-//    public void createNewRegister(Register r) {
-//        
-//    }
-    
     
     
 }

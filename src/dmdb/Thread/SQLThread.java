@@ -81,8 +81,9 @@ public class SQLThread extends Thread{
             }catch(SQLException se){
             }
     }
+//        
     
-    public void selectArtists(ObservableList<Person> obs,String search)
+     public void selectPersonsKind(String kind,ObservableList<Person> obs,String search)
     {
         
         obs.removeAll(obs);
@@ -92,7 +93,7 @@ public class SQLThread extends Thread{
         
         try{
     
-         pstmt = conn.prepareStatement("SELECT * FROM Artists WHERE FirstName LIKE ? OR LastName LIKE ? ");                   
+         pstmt = conn.prepareStatement("SELECT * FROM "+kind+"s WHERE FirstName LIKE ? OR LastName LIKE ? ");                   
                
                     pstmt.setString(1,search); 
                     pstmt.setString(2,search);
@@ -101,72 +102,14 @@ public class SQLThread extends Thread{
              
             while (rs.next()) {
                 
-            Integer personID = rs.getInt("ArtistID");
+            Integer personID = rs.getInt(kind+"ID");
             String firstName = rs.getString("FirstName");
             String lastName = rs.getString("LastName");
             String biogra = rs.getString("Biography");
             String dateString = rs.getString("BirthDate");
             java.sql.Date d;
-//            java.sql.Date;
-//            long longDate = rs.getLong("BirthDate");
-            d =  java.sql.Date.valueOf(dateString);
-            
-            
-//            java.sql.Date sqlDate = new java.sql.Date(d.getTime());
-            
-            
-              Person r = new Person(personID, firstName,lastName,biogra,d);
-              obs.add(r);  
-            }
-        }
-        catch(SQLException se){
-                 System.out.println(se);
-        }
-        finally{
-            
-            try{
-                if(pstmt!=null)
-                    pstmt.close();
-            }catch(SQLException se2){
-                
-            }// nothing we can do
-            
-            try{
-                if(rs!=null)
-                    rs.close();
-            }catch(SQLException se){
-            }
-        }            
-    }
-        
-    
-     public void selectDirectors(ObservableList<Person> obs,String search)
-    {
-        
-        obs.removeAll(obs);
-        
-        PreparedStatement pstmt = null;
-        ResultSet rs = null;
-        
-        try{
-    
-         pstmt = conn.prepareStatement("SELECT * FROM Directors WHERE FirstName LIKE ? OR LastName LIKE ? ");                   
-               
-                    pstmt.setString(1,search); 
-                    pstmt.setString(2,search);
-                    
-          rs = pstmt.executeQuery();
-             
-            while (rs.next()) {
-                
-            Integer personID = rs.getInt("DirectorID");
-            String firstName = rs.getString("FirstName");
-            String lastName = rs.getString("LastName");
-            String biogra = rs.getString("Biography");
-            String dateString = rs.getString("BirthDate");
-            java.sql.Date d;
-//            java.sql.Date;
-//            long longDate = rs.getLong("BirthDate");
+
+
             d =  java.sql.Date.valueOf(dateString);
             
             
@@ -218,7 +161,6 @@ public class SQLThread extends Thread{
                 
             Integer ID = rs.getInt("TitleID");
             String firstName = rs.getString("Name");
-//            String lastName = rs.getString("LastName");
             String summary = rs.getString("Summary");
             
             String dateString = rs.getString("ReleaseDate");
@@ -262,11 +204,8 @@ public class SQLThread extends Thread{
                     pstmt.setString(1,r.getFirstName());
                     pstmt.setString(2,r.getLastName());
                     pstmt.setString(3,r.getBiography());
-//                    if(r.getBirthDate()!=null)
+
                     pstmt.setString(4,r.getBirthDate().toString());
-//                    pstmt.setString(4,r);
-//                    else 
-//                    pstmt.setString(4,"");
                     
           pstmt.execute();
         }
@@ -280,22 +219,12 @@ public class SQLThread extends Thread{
                     pstmt.close();
             }catch(SQLException se2){
                 
-            }// nothing we can do
-            
-//            try{
-//                if(rs!=null)
-//                    rs.close();
-//            }catch(SQLException se){
-//            }
+            }
         }  
         
         
     }
 
-
-//UPDATE Customers
-//SET ContactName='Alfred Schmidt', City='Hamburg'
-//WHERE CustomerName='Alfreds Futterkiste';
     public void updatePersonKind(Person r,String kindName) {
                   
         PreparedStatement pstmt = null;
@@ -324,19 +253,76 @@ public class SQLThread extends Thread{
                     pstmt.close();
             }catch(SQLException se2){
                 
-            }// nothing we can do
-            
-//            try{
-//                if(rs!=null)
-//                    rs.close();
-//            }catch(SQLException se){
-//            }
+            }
         }  
         
         
     }
     
-    public void deleteRegisterKind(String kindName, Register r )
+   
+
+    public void updateTitle(Title r) {
+          PreparedStatement pstmt = null;
+        try{
+    
+          pstmt = conn.prepareStatement(
+                 "UPDATE Titles \n"+
+            "SET Name= ?, Summary= ?, ReleaseDate = ?, Genere=? \n"+
+           " WHERE TitleID= ? "); 
+          
+                    pstmt.setString(1,r.getName());
+                    pstmt.setString(2,r.getSummary());
+                    pstmt.setString(3,r.getReleaseDate().toString());
+                    pstmt.setString(4,r.getGenere());
+                    pstmt.setInt(5,r.getTitleID());
+                    
+          pstmt.execute();
+        }
+        catch(SQLException se){
+                 System.out.println(se);
+        }
+        finally{
+            
+            try{
+                if(pstmt!=null)
+                    pstmt.close();
+            }catch(SQLException se2){
+                
+            }
+        
+    }
+
+    }public void insertTitle(Title r) {
+        PreparedStatement pstmt = null;
+        try{
+    
+         pstmt = conn.prepareStatement("INSERT INTO Titles (Name, Summary,ReleaseDate,Genere)\n" +
+        "VALUES (?,?,?,?)");   
+                    pstmt.setString(1,r.getName());
+                    pstmt.setString(2,r.getSummary());
+                    pstmt.setString(3,r.getReleaseDate().toString());
+                    pstmt.setString(4,r.getGenere());
+
+                    
+          pstmt.execute();
+        }
+        catch(SQLException se){
+                 System.out.println(se);
+        }
+        finally{
+            
+            try{
+                if(pstmt!=null)
+                    pstmt.close();
+            }catch(SQLException se2){
+                
+            }// 
+        }  
+        
+
+    }
+    
+     public void deleteRegisterKind(String kindName, Register r )
     {
         PreparedStatement pstmt = null;
         try{
@@ -357,98 +343,6 @@ public class SQLThread extends Thread{
             }
         }  
     }
-
-    public void updateTitle(Title r) {
-          PreparedStatement pstmt = null;
-        try{
-    
-          pstmt = conn.prepareStatement(
-                 "UPDATE Titles \n"+
-            "SET Name= ?, Summary= ?, ReleaseDate = ?, Genere=? \n"+
-           " WHERE TitleID= ? "); 
-          
-                    pstmt.setString(1,r.getName());
-                    pstmt.setString(2,r.getSummary());
-                    pstmt.setString(3,r.getReleaseDate().toString());
-                    pstmt.setString(4,r.getGenere());
-                    pstmt.setInt(5,r.getTitleID());
-//                    else 
-//                    pstmt.setString(4,"");
-                    
-          pstmt.execute();
-        }
-        catch(SQLException se){
-                 System.out.println(se);
-        }
-        finally{
-            
-            try{
-                if(pstmt!=null)
-                    pstmt.close();
-            }catch(SQLException se2){
-                
-            }// nothing we can do
-        
-    }
-
-    }public void insertTitle(Title r) {
-        PreparedStatement pstmt = null;
-        try{
-    
-         pstmt = conn.prepareStatement("INSERT INTO Titles (Name, Summary,ReleaseDate,Genere)\n" +
-        "VALUES (?,?,?,?)");   
-                    pstmt.setString(1,r.getName());
-                    pstmt.setString(2,r.getSummary());
-                    pstmt.setString(3,r.getReleaseDate().toString());
-                    pstmt.setString(4,r.getGenere());
-//                    else 
-//                    pstmt.setString(4,"");
-                    
-          pstmt.execute();
-        }
-        catch(SQLException se){
-                 System.out.println(se);
-        }
-        finally{
-            
-            try{
-                if(pstmt!=null)
-                    pstmt.close();
-            }catch(SQLException se2){
-                
-            }// nothing we can do
-            
-//            try{
-//                if(rs!=null)
-//                    rs.close();
-//            }catch(SQLException se){
-//            }
-        }  
-        
-//        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 }
         
-    
-//    
-//       
-//             pstmt = conn.prepareStatement("SELECT * FROM Artists WHERE FirstName LIKE ? OR LastName LIKE ? ");                   
-////               
-////                    pstmt.setString(1,search); 
-////                    pstmt.setString(2,search);
-//                    
-//             rs = pstmt.executeQuery();
-//            while (rs.next()) {
-//                
-//              
-//            Integer personID = rs.getInt("ArtistID");
-//            String firstName = rs.getString("FirstName");
-//            String lastName = rs.getString("LastName");
-//            String biogra = rs.getString("Biography");
-//            Date date = rs.getDate("BirthDate");
-//            }
-            
- 
-     
-    
     
