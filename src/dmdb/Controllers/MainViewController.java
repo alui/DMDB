@@ -93,7 +93,7 @@ public class MainViewController implements Initializable, RegisterDelegate {
 
     //Tables. ARTISTS
     @FXML
-    private TableView<Person> tableArtists;
+    private TableView<Person> artistsTable;
     
     @FXML
     private TableColumn<Person,String> a_firstNameCol;
@@ -106,7 +106,7 @@ public class MainViewController implements Initializable, RegisterDelegate {
 //
 //    
     @FXML
-    private TableView tableTitles;
+    private TableView titlesTable;
     
              @FXML 
              private TableColumn<Title,String> t_nameCol;
@@ -125,7 +125,7 @@ public class MainViewController implements Initializable, RegisterDelegate {
              
              
     @FXML
-    private TableView<Person> tableDirectors;
+    private TableView<Person> directorsTable;
     @FXML
     private TableColumn<Person,String> d_firstNameCol;
     @FXML
@@ -168,7 +168,12 @@ public class MainViewController implements Initializable, RegisterDelegate {
         
         //Set up Sql Thread.
         sqlThread = new SQLThread( DbUser,DbPassword,DbURL,DbJDBC );
+        sqlThread.setDaemon(true);
+        sqlThread.setArtistsTable(artistsTable);
+        sqlThread.setDirectorsTable(directorsTable);
+        sqlThread.setTitlesTable(titlesTable);
         sqlThread.start();
+        
         //The DBConneciton will be performed by this mainViewController.
 //        connectDB();
 //        connect the TableViews.
@@ -245,40 +250,36 @@ public class MainViewController implements Initializable, RegisterDelegate {
         this.deleteRowsFromCurrentVisibleTable();
     }
     private void deleteRowsFromCurrentVisibleTable(){
-        
         if(tabTitles.isSelected()){
-            
-                    List items =  new ArrayList (tableTitles.getSelectionModel().getSelectedItems());  
-                    
-                    tableTitles.getItems().removeAll(items);
-                     for(Object p : items ){
-                        sqlThread.deleteRegisterKind("Title", (Title) p);
+                    List items =  new ArrayList (titlesTable.getSelectionModel().getSelectedItems());  
+                    titlesTable.getItems().removeAll(items);
+                    for(Object p : items ){
+                        sqlThread.prepareStatementDelete("Title", (Title) p);
                     }
-                    tableTitles.getSelectionModel().clearSelection();
-                    //Missing real deletion
+                    
+                    titlesTable.getSelectionModel().clearSelection();
             
             
         }else if (tabArtists.isSelected()){
             
-                    List items =  new ArrayList (tableArtists.getSelectionModel().getSelectedItems());
-                    
-                    tableArtists.getItems().removeAll(items);
+                    List items =  new ArrayList (artistsTable.getSelectionModel().getSelectedItems());
+                    artistsTable.getItems().removeAll(items);
                     for(Object p : items ){
-                        sqlThread.deleteRegisterKind("Artist", (Person) p);
+                        sqlThread.prepareStatementDelete("Artist", (Person) p);
                     }
                     
-                    tableArtists.getSelectionModel().clearSelection();
+                    artistsTable.getSelectionModel().clearSelection();
 
             
         }else if (tabDirectors.isSelected()){
             
             
-                    List items =  new ArrayList (tableDirectors.getSelectionModel().getSelectedItems());  
-                    tableDirectors.getItems().removeAll(items);
+                    List items =  new ArrayList (directorsTable.getSelectionModel().getSelectedItems());  
+                    directorsTable.getItems().removeAll(items);
                      for(Object p : items ){
-                        sqlThread.deleteRegisterKind("Director", (Person) p);
+                        sqlThread.prepareStatementDelete("Director", (Person) p);
                     }
-                    tableDirectors.getSelectionModel().clearSelection();
+                    directorsTable.getSelectionModel().clearSelection();
         }
         
     }
@@ -286,6 +287,7 @@ public class MainViewController implements Initializable, RegisterDelegate {
 //    SearchDirectorsTask
     private void performSimpleSearch(){
         
+                    
          
         String s = (String) choiceBox.getSelectionModel().selectedItemProperty().get();
         ObservableList<Tab> tabs =  tabPane.getTabs();
@@ -299,9 +301,9 @@ public class MainViewController implements Initializable, RegisterDelegate {
                 if (!tabs.contains(tabDirectors))
                     tabPane.getTabs().add(tabDirectors);
                  
-                sqlThread.selectPersonsKind("Artist",tableArtists.getItems(), searchBox.getText());
-                sqlThread.selectPersonsKind("Director",tableDirectors.getItems(), searchBox.getText());
-                sqlThread.selectTitles(tableTitles.getItems(), searchBox.getText());
+                sqlThread.prepareStatementSelectArtists(searchBox.getText());
+                sqlThread.prepareStatementSelectDirectors(searchBox.getText());
+                sqlThread.prepareStatementSelectTitles(searchBox.getText());
                 
                 break;
             case "Titles":
@@ -310,7 +312,8 @@ public class MainViewController implements Initializable, RegisterDelegate {
                 tabPane.getTabs().remove(tabArtists);
                 tabPane.getTabs().remove(tabDirectors);
                 
-                sqlThread.selectTitles(tableTitles.getItems(), searchBox.getText());
+                
+                sqlThread.prepareStatementSelectTitles(searchBox.getText());
                 
                 
                 break;
@@ -321,7 +324,7 @@ public class MainViewController implements Initializable, RegisterDelegate {
                 tabPane.getTabs().remove(tabTitles);
                 tabPane.getTabs().remove(tabArtists);
                 
-                sqlThread.selectPersonsKind("Director",tableDirectors.getItems(), searchBox.getText());
+                sqlThread.prepareStatementSelectDirectors(searchBox.getText());
                 
                 break;
             case "Artists":
@@ -330,8 +333,7 @@ public class MainViewController implements Initializable, RegisterDelegate {
                     tabPane.getTabs().add(tabArtists);
                 tabPane.getTabs().remove(tabTitles);
                 tabPane.getTabs().remove(tabDirectors);
-                
-                sqlThread.selectPersonsKind("Artist",tableArtists.getItems(), searchBox.getText());
+                sqlThread.prepareStatementSelectArtists(searchBox.getText());
 
                 
                 break;
@@ -366,7 +368,7 @@ public class MainViewController implements Initializable, RegisterDelegate {
 //        tableArtists.setItems(obs);
 //        tabArtists.setContent(tableArtists);
         
-        tableArtists.setOnMousePressed((MouseEvent event) -> {
+        artistsTable.setOnMousePressed((MouseEvent event) -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
                 Node node = ((Node) event.getTarget()).getParent();
                 TableRow row;
@@ -385,7 +387,7 @@ public class MainViewController implements Initializable, RegisterDelegate {
             }
           });
         
-         tableArtists.getSelectionModel().setSelectionMode(
+         artistsTable.getSelectionModel().setSelectionMode(
                  SelectionMode.MULTIPLE
         );
         
@@ -400,7 +402,7 @@ public class MainViewController implements Initializable, RegisterDelegate {
     d_bioCol.setCellValueFactory(new PropertyValueFactory("biography"));
     d_birthDateCol.setCellValueFactory(new PropertyValueFactory("birthDate"));
    
-        tableDirectors.setOnMousePressed((MouseEvent event) -> {
+        directorsTable.setOnMousePressed((MouseEvent event) -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
                 Node node = ((Node) event.getTarget()).getParent();
                 TableRow row;
@@ -417,7 +419,7 @@ public class MainViewController implements Initializable, RegisterDelegate {
                 }
             }
           });
-        tableDirectors.getSelectionModel().setSelectionMode(
+        directorsTable.getSelectionModel().setSelectionMode(
                  SelectionMode.MULTIPLE
         );
 //        ObservableList<Person> obs = FXCollections.observableArrayList();
@@ -437,7 +439,7 @@ public class MainViewController implements Initializable, RegisterDelegate {
     t_genereCol.setCellValueFactory(new PropertyValueFactory("genere"));
     t_summaryCol.setCellValueFactory(new PropertyValueFactory("summary"));
     
-    tableTitles.setOnMousePressed((MouseEvent event) -> {
+    titlesTable.setOnMousePressed((MouseEvent event) -> {
             if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
                 Node node = ((Node) event.getTarget()).getParent();
                 TableRow row;
@@ -454,7 +456,7 @@ public class MainViewController implements Initializable, RegisterDelegate {
                 }
             }
           });
-        tableTitles.getSelectionModel().setSelectionMode(
+        titlesTable.getSelectionModel().setSelectionMode(
                  SelectionMode.MULTIPLE
         );
     
@@ -538,6 +540,16 @@ public class MainViewController implements Initializable, RegisterDelegate {
         }
         
     }
+    
+    public void advancedSearch(){
+        sqlThread.tryAgain();
+        
+        sqlThread.reload();
+
+        
+        
+    }
+    
   
 
     
@@ -551,8 +563,9 @@ public class MainViewController implements Initializable, RegisterDelegate {
         }
         mainPane.getChildren().add(searchBorderPane);
         
-    }
+        sqlThread.reload();
 
+    }
     
     
 }

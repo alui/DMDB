@@ -33,7 +33,7 @@
                <tabs>
                   <Tab fx:id="tabArtists" closable="false" text="Artists">
                      <content>
-                        <TableView fx:id="tableArtists" prefHeight="200.0" prefWidth="200.0">
+                        <TableView fx:id="artistsTable" prefHeight="200.0" prefWidth="200.0">
                           <columns>
                               <TableColumn prefWidth="95.0" text="Image" />
                             <TableColumn fx:id="a_firstNameCol" prefWidth="87.0" text="First Name" />
@@ -48,7 +48,7 @@
                      </content></Tab>
                   <Tab fx:id="tabTitles" closable="false" text="Movies">
                      <content>
-                        <TableView fx:id="tableTitles" prefHeight="472.0" prefWidth="692.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                        <TableView fx:id="titlesTable" prefHeight="472.0" prefWidth="692.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                           <columns>
                             <TableColumn prefWidth="75.0" text="Image" />
                             <TableColumn fx:id="t_nameCol" prefWidth="172.0" text="Title" />
@@ -67,7 +67,7 @@
                   </Tab>
                   <Tab fx:id="tabDirectors" closable="false" text="Directors">
                      <content>
-                        <TableView fx:id="tableDirectors" prefHeight="200.0" prefWidth="200.0">
+                        <TableView fx:id="directorsTable" prefHeight="200.0" prefWidth="200.0">
                            <columns>
                               <TableColumn prefWidth="111.0" text="Image" />
                               <TableColumn fx:id="d_firstNameCol" prefWidth="114.0" text="First Name" />
@@ -86,7 +86,7 @@
          <bottom>
             <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <items>
-                  <Button mnemonicParsing="false" prefHeight="26.0" prefWidth="127.0" text="Advanced Search" />
+                  <Button mnemonicParsing="false" onAction="#advancedSearch" prefHeight="26.0" prefWidth="127.0" text="Advanced Search" />
                </items>
             </ToolBar>
          </bottom>

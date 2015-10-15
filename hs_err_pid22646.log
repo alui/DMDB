@@ -1,0 +1,751 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGSEGV (0xb) at pc=0x000000010615940d, pid=22646, tid=1811
+#
+# JRE version: Java(TM) SE Runtime Environment (8.0_11-b12) (build 1.8.0_11-b12)
+# Java VM: Java HotSpot(TM) 64-Bit Server VM (25.11-b03 mixed mode bsd-amd64 compressed oops)
+# Problematic frame:
+# V  [libjvm.dylib+0x2f540d]  jni_GetStringUTFChars+0x64
+#
+# Failed to write core dump. Core dumps have been disabled. To enable core dumping, try "ulimit -c unlimited" before starting Java again
+#
+# If you would like to submit a bug report, please visit:
+#   http://bugreport.sun.com/bugreport/crash.jsp
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x00007fce138e1000):  JavaThread "JavaFX Application Thread" [_thread_in_vm, id=1811, stack(0x00007fff596cc000,0x00007fff59ecc000)]
+
+siginfo:si_signo=SIGSEGV: si_errno=0, si_code=1 (SEGV_MAPERR), si_addr=0x0000000000000000
+
+Registers:
+RAX=0x00000001066cb7b0, RBX=0x0000000000000000, RCX=0x0000000106614780, RDX=0x0000000000000000
+RSP=0x00007fff59ec56b0, RBP=0x00007fff59ec5700, RSI=0x0000000000000000, RDI=0x00007fce138e11e0
+R8 =0x0000000000000001, R9 =0x00000007803acda0, R10=0x000000000000002a, R11=0x00000001066cb9b8
+R12=0x00007fce138e1000, R13=0x00000001205e62e0, R14=0x0000000000000000, R15=0x00007fce138e11e0
+RIP=0x000000010615940d, EFLAGS=0x0000000000010246, ERR=0x0000000000000004
+  TRAPNO=0x000000000000000e
+
+Top of Stack: (sp=0x00007fff59ec56b0)
+0x00007fff59ec56b0:   00007fce138e1000 0000000000000000
+0x00007fff59ec56c0:   00000001205e62e8 00000001205e62e8
+0x00007fff59ec56d0:   00007fce138e1000 00007fce138e1000
+0x00007fff59ec56e0:   00000001205e62e8 0000000000000000
+0x00007fff59ec56f0:   00007fff59ec57f0 00007fce138e1000
+0x00007fff59ec5700:   00007fff59ec5750 0000000120a90101
+0x00007fff59ec5710:   00007fce138e1000 00000001205e62e8
+0x00007fff59ec5720:   00000001205e62e8 00007fce15042b40
+0x00007fff59ec5730:   0000000000000000 00007fff59ec57f0
+0x00007fff59ec5740:   00007fce138e11e0 000000010741342f
+0x00007fff59ec5750:   00007fff59ec57c8 0000000107413591
+0x00007fff59ec5760:   00000001205e62e8 00007fff59ec57f0
+0x00007fff59ec5770:   00007fff59ec57c8 0000000000000000
+0x00007fff59ec5780:   00000007803acda0 00007fff59ec5778
+0x00007fff59ec5790:   00000001205e62e0 00007fff59ec57f0
+0x00007fff59ec57a0:   0000000120666fb0 0000000000000000
+0x00007fff59ec57b0:   00000001205e62e8 0000000000000000
+0x00007fff59ec57c0:   00007fff59ec57e8 00007fff59ec5850
+0x00007fff59ec57d0:   0000000107406fa0 0000000000000000
+0x00007fff59ec57e0:   000000010740ec17 0000000000000000
+0x00007fff59ec57f0:   00000007803acda0 00000007aab29cc8
+0x00007fff59ec5800:   0000000000000009 00000007803acda0
+0x00007fff59ec5810:   00007fff59ec5800 00000001205e2b25
+0x00007fff59ec5820:   00007fff59ec5868 00000001206667c0
+0x00007fff59ec5830:   0000000000000000 00000001205e2b70
+0x00007fff59ec5840:   00007fff59ec57e8 00007fff59ec5860
+0x00007fff59ec5850:   00007fff59ec58b0 00000001074072e0
+0x00007fff59ec5860:   00000007aab29cc8 00000007803acda0
+0x00007fff59ec5870:   00007fff59ec5870 000000012095072f
+0x00007fff59ec5880:   00007fff59ec58d0 0000000120950ef8
+0x00007fff59ec5890:   0000000000000000 00000001209507a8
+0x00007fff59ec58a0:   00007fff59ec5860 00007fff59ec58c0 
+
+Instructions: (pc=0x000000010615940d)
+0x00000001061593ed:   00 49 83 7c 24 08 00 74 09 48 8d 7d b0 e8 35 c7
+0x00000001061593fd:   17 00 4c 89 ff 4c 89 f6 48 89 da 90 0f 1f 40 00
+0x000000010615940d:   4d 8b 36 4c 89 f7 e8 70 64 fa ff 48 85 c0 75 05
+0x000000010615941d:   45 31 ff eb 58 4c 89 f7 e8 da 79 fd ff 4c 63 e0 
+
+Register to memory mapping:
+
+RAX=0x00000001066cb7b0: _ZN20SafepointSynchronize6_stateE+0 in /Library/Java/JavaVirtualMachines/jdk1.8.0_11.jdk/Contents/Home/jre/lib/server/libjvm.dylib at 0x0000000105e64000
+RBX=0x0000000000000000 is an unknown value
+RCX=0x0000000106614780: UseMembar+0 in /Library/Java/JavaVirtualMachines/jdk1.8.0_11.jdk/Contents/Home/jre/lib/server/libjvm.dylib at 0x0000000105e64000
+RDX=0x0000000000000000 is an unknown value
+RSP=0x00007fff59ec56b0 is pointing into the stack for thread: 0x00007fce138e1000
+RBP=0x00007fff59ec5700 is pointing into the stack for thread: 0x00007fce138e1000
+RSI=0x0000000000000000 is an unknown value
+RDI=0x00007fce138e11e0 is an unknown value
+R8 =0x0000000000000001 is an unknown value
+R9 =0x00000007803acda0 is an oop
+org.sqlite.core.NativeDB 
+ - klass: 'org/sqlite/core/NativeDB'
+R10=0x000000000000002a is an unknown value
+R11=0x00000001066cb9b8: _ZN20SafepointSynchronize18_safepoint_counterE+0 in /Library/Java/JavaVirtualMachines/jdk1.8.0_11.jdk/Contents/Home/jre/lib/server/libjvm.dylib at 0x0000000105e64000
+R12=0x00007fce138e1000 is a thread
+R13=0x00000001205e62e0 is an unknown value
+R14=0x0000000000000000 is an unknown value
+R15=0x00007fce138e11e0 is an unknown value
+
+
+Stack: [0x00007fff596cc000,0x00007fff59ecc000],  sp=0x00007fff59ec56b0,  free space=8165k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+V  [libjvm.dylib+0x2f540d]  jni_GetStringUTFChars+0x64
+C  [sqlite-3.8.11.1-90058352-346f-458a-be90-3b98213d40a9-libsqlitejdbc.jnilib+0x2101]  Java_org_sqlite_core_NativeDB_prepare+0x41
+j  org.sqlite.core.NativeDB.prepare(Ljava/lang/String;)J+0
+j  org.sqlite.core.DB.prepare(Lorg/sqlite/core/CoreStatement;)V+21
+j  org.sqlite.core.CorePreparedStatement.<init>(Lorg/sqlite/SQLiteConnection;Ljava/lang/String;)V+15
+j  org.sqlite.jdbc3.JDBC3PreparedStatement.<init>(Lorg/sqlite/SQLiteConnection;Ljava/lang/String;)V+3
+j  org.sqlite.jdbc4.JDBC4PreparedStatement.<init>(Lorg/sqlite/SQLiteConnection;Ljava/lang/String;)V+3
+j  org.sqlite.jdbc4.JDBC4Connection.prepareStatement(Ljava/lang/String;III)Ljava/sql/PreparedStatement;+21
+j  org.sqlite.jdbc3.JDBC3Connection.prepareStatement(Ljava/lang/String;II)Ljava/sql/PreparedStatement;+5
+j  org.sqlite.jdbc3.JDBC3Connection.prepareStatement(Ljava/lang/String;)Ljava/sql/PreparedStatement;+8
+j  dmdb.Thread.SQLThread.reload()V+9
+j  dmdb.Controllers.MainViewController.advancedSearch()V+11
+v  ~StubRoutines::call_stub
+V  [libjvm.dylib+0x2c5d36]  JavaCalls::call_helper(JavaValue*, methodHandle*, JavaCallArguments*, Thread*)+0x6ae
+V  [libjvm.dylib+0x48ab3c]  Reflection::invoke(instanceKlassHandle, methodHandle, Handle, bool, objArrayHandle, BasicType, objArrayHandle, bool, Thread*)+0xdf8
+V  [libjvm.dylib+0x48b054]  Reflection::invoke_method(oopDesc*, Handle, objArrayHandle, Thread*)+0x16c
+V  [libjvm.dylib+0x3131b0]  JVM_InvokeMethod+0x166
+j  sun.reflect.NativeMethodAccessorImpl.invoke0(Ljava/lang/reflect/Method;Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+0
+j  sun.reflect.NativeMethodAccessorImpl.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+100
+j  sun.reflect.DelegatingMethodAccessorImpl.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+6
+J 626 C1 java.lang.reflect.Method.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object; (62 bytes) @ 0x00000001076a8af4 [0x00000001076a8780+0x374]
+j  sun.reflect.misc.Trampoline.invoke(Ljava/lang/reflect/Method;Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+7
+j  sun.reflect.GeneratedMethodAccessor1.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+40
+j  sun.reflect.DelegatingMethodAccessorImpl.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+6
+J 626 C1 java.lang.reflect.Method.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object; (62 bytes) @ 0x00000001076a8af4 [0x00000001076a8780+0x374]
+j  sun.reflect.misc.MethodUtil.invoke(Ljava/lang/reflect/Method;Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+20
+j  javafx.fxml.FXMLLoader$MethodHandler.invoke([Ljava/lang/Object;)V+38
+j  javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(Ljavafx/event/Event;)V+12
+j  com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(Ljavafx/event/Event;)V+51
+j  com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(Ljavafx/event/EventType;Ljavafx/event/Event;)Ljavafx/event/Event;+29
+j  com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(Ljavafx/event/Event;)Ljavafx/event/Event;+8
+j  com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(Ljavafx/event/Event;)Ljavafx/event/Event;+11
+j  com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(Ljavafx/event/Event;Ljavafx/event/EventDispatchChain;)Ljavafx/event/Event;+29
+j  com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(Ljavafx/event/Event;)Ljavafx/event/Event;+69
+j  com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(Ljavafx/event/Event;Ljavafx/event/EventDispatchChain;)Ljavafx/event/Event;+17
+j  com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(Ljavafx/event/Event;)Ljavafx/event/Event;+69
+j  com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(Ljavafx/event/Event;Ljavafx/event/EventDispatchChain;)Ljavafx/event/Event;+17
+j  com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(Ljavafx/event/Event;)Ljavafx/event/Event;+69
+j  com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(Ljavafx/event/Event;Ljavafx/event/EventDispatchChain;)Ljavafx/event/Event;+17
+j  com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(Ljavafx/event/Event;)Ljavafx/event/Event;+69
+j  com.sun.javafx.event.EventUtil.fireEventImpl(Ljavafx/event/EventDispatchChain;Ljavafx/event/EventTarget;Ljavafx/event/Event;)Ljavafx/event/Event;+10
+j  com.sun.javafx.event.EventUtil.fireEvent(Ljavafx/event/EventTarget;Ljavafx/event/Event;)Ljavafx/event/Event;+37
+j  javafx.event.Event.fireEvent(Ljavafx/event/EventTarget;Ljavafx/event/Event;)V+30
+j  javafx.scene.Node.fireEvent(Ljavafx/event/Event;)V+86
+j  javafx.scene.control.Button.fire()V+15
+j  com.sun.javafx.scene.control.behavior.ButtonBehavior.mouseReleased(Ljavafx/scene/input/MouseEvent;)V+23
+j  com.sun.javafx.scene.control.skin.BehaviorSkinBase$1.handle(Ljavafx/scene/input/MouseEvent;)V+83
+j  com.sun.javafx.scene.control.skin.BehaviorSkinBase$1.handle(Ljavafx/event/Event;)V+5
+j  com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(Ljavafx/event/Event;)V+5
+j  com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(Ljavafx/event/Event;)V+28
+j  com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(Ljavafx/event/EventType;Ljavafx/event/Event;)Ljavafx/event/Event;+29
+j  com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(Ljavafx/event/Event;)Ljavafx/event/Event;+8
+j  com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(Ljavafx/event/Event;)Ljavafx/event/Event;+11
+j  com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(Ljavafx/event/Event;Ljavafx/event/EventDispatchChain;)Ljavafx/event/Event;+29
+j  com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(Ljavafx/event/Event;)Ljavafx/event/Event;+69
+j  com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(Ljavafx/event/Event;Ljavafx/event/EventDispatchChain;)Ljavafx/event/Event;+17
+j  com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(Ljavafx/event/Event;)Ljavafx/event/Event;+69
+j  com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(Ljavafx/event/Event;Ljavafx/event/EventDispatchChain;)Ljavafx/event/Event;+17
+j  com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(Ljavafx/event/Event;)Ljavafx/event/Event;+69
+j  com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(Ljavafx/event/Event;Ljavafx/event/EventDispatchChain;)Ljavafx/event/Event;+17
+j  com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(Ljavafx/event/Event;)Ljavafx/event/Event;+69
+j  com.sun.javafx.event.EventUtil.fireEventImpl(Ljavafx/event/EventDispatchChain;Ljavafx/event/EventTarget;Ljavafx/event/Event;)Ljavafx/event/Event;+10
+j  com.sun.javafx.event.EventUtil.fireEvent(Ljavafx/event/EventTarget;Ljavafx/event/Event;)Ljavafx/event/Event;+46
+j  javafx.event.Event.fireEvent(Ljavafx/event/EventTarget;Ljavafx/event/Event;)V+30
+j  javafx.scene.Scene$MouseHandler.process(Ljavafx/scene/input/MouseEvent;Z)V+498
+j  javafx.scene.Scene$MouseHandler.access$1800(Ljavafx/scene/Scene$MouseHandler;Ljavafx/scene/input/MouseEvent;Z)V+3
+j  javafx.scene.Scene.impl_processMouseEvent(Ljavafx/scene/input/MouseEvent;)V+6
+j  javafx.scene.Scene$ScenePeerListener.mouseEvent(Ljavafx/event/EventType;DDDDLjavafx/scene/input/MouseButton;ZZZZZZZZZ)V+46
+j  com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run()Ljava/lang/Void;+422
+j  com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run()Ljava/lang/Object;+1
+v  ~StubRoutines::call_stub
+V  [libjvm.dylib+0x2c5d36]  JavaCalls::call_helper(JavaValue*, methodHandle*, JavaCallArguments*, Thread*)+0x6ae
+V  [libjvm.dylib+0x31b4c2]  JVM_DoPrivileged+0x4b6
+J 1505  java.security.AccessController.doPrivileged(Ljava/security/PrivilegedAction;Ljava/security/AccessControlContext;)Ljava/lang/Object; (0 bytes) @ 0x0000000107897295 [0x00000001078971c0+0xd5]
+j  com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(Lcom/sun/glass/ui/View;JIIIIIIIZZ)V+108
+j  com.sun.glass.ui.View.handleMouseEvent(JIIIIIIIZZ)V+30
+j  com.sun.glass.ui.View.notifyMouse(IIIIIIIZZ)V+181
+v  ~StubRoutines::call_stub
+V  [libjvm.dylib+0x2c5d36]  JavaCalls::call_helper(JavaValue*, methodHandle*, JavaCallArguments*, Thread*)+0x6ae
+V  [libjvm.dylib+0x2faba0]  jni_invoke_nonstatic(JNIEnv_*, JavaValue*, _jobject*, JNICallType, _jmethodID*, JNI_ArgumentPusher*, Thread*)+0x2fb
+V  [libjvm.dylib+0x2ed834]  jni_CallVoidMethod+0x16b
+C  [libglass.dylib+0x25624]  -[GlassViewDelegate sendJavaMouseEvent:]+0x794
+C  [AppKit+0x7cde37]  -[NSWindow _reallySendEvent:isDelayedEvent:]+0x288
+C  [AppKit+0x160c86]  -[NSWindow sendEvent:]+0x1d6
+C  [libglass.dylib+0x28320]  -[GlassWindow_Normal sendEvent:]+0x70
+C  [AppKit+0x15d212]  -[NSApplication sendEvent:]+0x9c8
+C  [AppKit+0x86b68]  -[NSApplication run]+0x2c7
+C  [libglass.dylib+0xbf95]  -[GlassApplication runLoop:]+0x6a5
+C  [Foundation+0x92dd0]  __NSThreadPerformPerform+0x125
+C  [CoreFoundation+0x80a01]  __CFRUNLOOP_IS_CALLING_OUT_TO_A_SOURCE0_PERFORM_FUNCTION__+0x11
+C  [CoreFoundation+0x72b8d]  __CFRunLoopDoSources0+0x10d
+C  [CoreFoundation+0x721bf]  __CFRunLoopRun+0x39f
+C  [CoreFoundation+0x71bd8]  CFRunLoopRunSpecific+0x128
+C  [java+0x56cb]  CreateExecutionEnvironment+0x367
+C  [java+0x166c]  JLI_Launch+0x7a0
+C  [java+0x7689]  main+0x65
+C  [java+0xec4]  start+0x34
+
+Java frames: (J=compiled Java code, j=interpreted, Vv=VM code)
+j  org.sqlite.core.NativeDB.prepare(Ljava/lang/String;)J+0
+j  org.sqlite.core.DB.prepare(Lorg/sqlite/core/CoreStatement;)V+21
+j  org.sqlite.core.CorePreparedStatement.<init>(Lorg/sqlite/SQLiteConnection;Ljava/lang/String;)V+15
+j  org.sqlite.jdbc3.JDBC3PreparedStatement.<init>(Lorg/sqlite/SQLiteConnection;Ljava/lang/String;)V+3
+j  org.sqlite.jdbc4.JDBC4PreparedStatement.<init>(Lorg/sqlite/SQLiteConnection;Ljava/lang/String;)V+3
+j  org.sqlite.jdbc4.JDBC4Connection.prepareStatement(Ljava/lang/String;III)Ljava/sql/PreparedStatement;+21
+j  org.sqlite.jdbc3.JDBC3Connection.prepareStatement(Ljava/lang/String;II)Ljava/sql/PreparedStatement;+5
+j  org.sqlite.jdbc3.JDBC3Connection.prepareStatement(Ljava/lang/String;)Ljava/sql/PreparedStatement;+8
+j  dmdb.Thread.SQLThread.reload()V+9
+j  dmdb.Controllers.MainViewController.advancedSearch()V+11
+v  ~StubRoutines::call_stub
+j  sun.reflect.NativeMethodAccessorImpl.invoke0(Ljava/lang/reflect/Method;Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+0
+j  sun.reflect.NativeMethodAccessorImpl.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+100
+j  sun.reflect.DelegatingMethodAccessorImpl.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+6
+J 626 C1 java.lang.reflect.Method.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object; (62 bytes) @ 0x00000001076a8af4 [0x00000001076a8780+0x374]
+j  sun.reflect.misc.Trampoline.invoke(Ljava/lang/reflect/Method;Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+7
+j  sun.reflect.GeneratedMethodAccessor1.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+40
+j  sun.reflect.DelegatingMethodAccessorImpl.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+6
+J 626 C1 java.lang.reflect.Method.invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object; (62 bytes) @ 0x00000001076a8af4 [0x00000001076a8780+0x374]
+j  sun.reflect.misc.MethodUtil.invoke(Ljava/lang/reflect/Method;Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;+20
+j  javafx.fxml.FXMLLoader$MethodHandler.invoke([Ljava/lang/Object;)V+38
+j  javafx.fxml.FXMLLoader$ControllerMethodEventHandler.handle(Ljavafx/event/Event;)V+12
+j  com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(Ljavafx/event/Event;)V+51
+j  com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(Ljavafx/event/EventType;Ljavafx/event/Event;)Ljavafx/event/Event;+29
+j  com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(Ljavafx/event/Event;)Ljavafx/event/Event;+8
+j  com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(Ljavafx/event/Event;)Ljavafx/event/Event;+11
+j  com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(Ljavafx/event/Event;Ljavafx/event/EventDispatchChain;)Ljavafx/event/Event;+29
+j  com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(Ljavafx/event/Event;)Ljavafx/event/Event;+69
+j  com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(Ljavafx/event/Event;Ljavafx/event/EventDispatchChain;)Ljavafx/event/Event;+17
+j  com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(Ljavafx/event/Event;)Ljavafx/event/Event;+69
+j  com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(Ljavafx/event/Event;Ljavafx/event/EventDispatchChain;)Ljavafx/event/Event;+17
+j  com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(Ljavafx/event/Event;)Ljavafx/event/Event;+69
+j  com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(Ljavafx/event/Event;Ljavafx/event/EventDispatchChain;)Ljavafx/event/Event;+17
+j  com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(Ljavafx/event/Event;)Ljavafx/event/Event;+69
+j  com.sun.javafx.event.EventUtil.fireEventImpl(Ljavafx/event/EventDispatchChain;Ljavafx/event/EventTarget;Ljavafx/event/Event;)Ljavafx/event/Event;+10
+j  com.sun.javafx.event.EventUtil.fireEvent(Ljavafx/event/EventTarget;Ljavafx/event/Event;)Ljavafx/event/Event;+37
+j  javafx.event.Event.fireEvent(Ljavafx/event/EventTarget;Ljavafx/event/Event;)V+30
+j  javafx.scene.Node.fireEvent(Ljavafx/event/Event;)V+86
+j  javafx.scene.control.Button.fire()V+15
+j  com.sun.javafx.scene.control.behavior.ButtonBehavior.mouseReleased(Ljavafx/scene/input/MouseEvent;)V+23
+j  com.sun.javafx.scene.control.skin.BehaviorSkinBase$1.handle(Ljavafx/scene/input/MouseEvent;)V+83
+j  com.sun.javafx.scene.control.skin.BehaviorSkinBase$1.handle(Ljavafx/event/Event;)V+5
+j  com.sun.javafx.event.CompositeEventHandler$NormalEventHandlerRecord.handleBubblingEvent(Ljavafx/event/Event;)V+5
+j  com.sun.javafx.event.CompositeEventHandler.dispatchBubblingEvent(Ljavafx/event/Event;)V+28
+j  com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(Ljavafx/event/EventType;Ljavafx/event/Event;)Ljavafx/event/Event;+29
+j  com.sun.javafx.event.EventHandlerManager.dispatchBubblingEvent(Ljavafx/event/Event;)Ljavafx/event/Event;+8
+j  com.sun.javafx.event.CompositeEventDispatcher.dispatchBubblingEvent(Ljavafx/event/Event;)Ljavafx/event/Event;+11
+j  com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(Ljavafx/event/Event;Ljavafx/event/EventDispatchChain;)Ljavafx/event/Event;+29
+j  com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(Ljavafx/event/Event;)Ljavafx/event/Event;+69
+j  com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(Ljavafx/event/Event;Ljavafx/event/EventDispatchChain;)Ljavafx/event/Event;+17
+j  com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(Ljavafx/event/Event;)Ljavafx/event/Event;+69
+j  com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(Ljavafx/event/Event;Ljavafx/event/EventDispatchChain;)Ljavafx/event/Event;+17
+j  com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(Ljavafx/event/Event;)Ljavafx/event/Event;+69
+j  com.sun.javafx.event.BasicEventDispatcher.dispatchEvent(Ljavafx/event/Event;Ljavafx/event/EventDispatchChain;)Ljavafx/event/Event;+17
+j  com.sun.javafx.event.EventDispatchChainImpl.dispatchEvent(Ljavafx/event/Event;)Ljavafx/event/Event;+69
+j  com.sun.javafx.event.EventUtil.fireEventImpl(Ljavafx/event/EventDispatchChain;Ljavafx/event/EventTarget;Ljavafx/event/Event;)Ljavafx/event/Event;+10
+j  com.sun.javafx.event.EventUtil.fireEvent(Ljavafx/event/EventTarget;Ljavafx/event/Event;)Ljavafx/event/Event;+46
+j  javafx.event.Event.fireEvent(Ljavafx/event/EventTarget;Ljavafx/event/Event;)V+30
+j  javafx.scene.Scene$MouseHandler.process(Ljavafx/scene/input/MouseEvent;Z)V+498
+j  javafx.scene.Scene$MouseHandler.access$1800(Ljavafx/scene/Scene$MouseHandler;Ljavafx/scene/input/MouseEvent;Z)V+3
+j  javafx.scene.Scene.impl_processMouseEvent(Ljavafx/scene/input/MouseEvent;)V+6
+j  javafx.scene.Scene$ScenePeerListener.mouseEvent(Ljavafx/event/EventType;DDDDLjavafx/scene/input/MouseButton;ZZZZZZZZZ)V+46
+j  com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run()Ljava/lang/Void;+422
+j  com.sun.javafx.tk.quantum.GlassViewEventHandler$MouseEventNotification.run()Ljava/lang/Object;+1
+v  ~StubRoutines::call_stub
+J 1505  java.security.AccessController.doPrivileged(Ljava/security/PrivilegedAction;Ljava/security/AccessControlContext;)Ljava/lang/Object; (0 bytes) @ 0x0000000107897223 [0x00000001078971c0+0x63]
+j  com.sun.javafx.tk.quantum.GlassViewEventHandler.handleMouseEvent(Lcom/sun/glass/ui/View;JIIIIIIIZZ)V+108
+j  com.sun.glass.ui.View.handleMouseEvent(JIIIIIIIZZ)V+30
+j  com.sun.glass.ui.View.notifyMouse(IIIIIIIZZ)V+181
+v  ~StubRoutines::call_stub
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+  0x00007fce13427800 JavaThread "Prism Font Disposer" daemon [_thread_blocked, id=48183, stack(0x00000001214d2000,0x00000001215d2000)]
+  0x00007fce1338e000 JavaThread "Thread-5" daemon [_thread_blocked, id=46855, stack(0x0000000120751000,0x0000000120851000)]
+  0x00007fce131d9800 JavaThread "JavaFX-Launcher" [_thread_blocked, id=46339, stack(0x000000012025e000,0x000000012035e000)]
+  0x00007fce13202000 JavaThread "Thread-3" daemon [_thread_in_native, id=34055, stack(0x000000011f090000,0x000000011f110000)]
+=>0x00007fce138e1000 JavaThread "JavaFX Application Thread" [_thread_in_vm, id=1811, stack(0x00007fff596cc000,0x00007fff59ecc000)]
+  0x00007fce138e4800 JavaThread "Thread-1" daemon [_thread_blocked, id=22291, stack(0x000000011cf48000,0x000000011d048000)]
+  0x00007fce138b9800 JavaThread "QuantumRenderer-0" daemon [_thread_blocked, id=17667, stack(0x000000011c446000,0x000000011c546000)]
+  0x00007fce13046000 JavaThread "Service Thread" daemon [_thread_blocked, id=16643, stack(0x000000011c15d000,0x000000011c25d000)]
+  0x00007fce13835800 JavaThread "C1 CompilerThread1" daemon [_thread_blocked, id=16131, stack(0x000000011c05a000,0x000000011c15a000)]
+  0x00007fce1303f800 JavaThread "C2 CompilerThread0" daemon [_thread_blocked, id=15619, stack(0x000000011bf57000,0x000000011c057000)]
+  0x00007fce1383e800 JavaThread "Signal Dispatcher" daemon [_thread_blocked, id=11279, stack(0x000000011be54000,0x000000011bf54000)]
+  0x00007fce13063800 JavaThread "Finalizer" daemon [_thread_blocked, id=9987, stack(0x000000011a431000,0x000000011a531000)]
+  0x00007fce1380d000 JavaThread "Reference Handler" daemon [_thread_blocked, id=9475, stack(0x000000011a32e000,0x000000011a42e000)]
+  0x00007fce13010800 JavaThread "main" [_thread_blocked, id=3331, stack(0x0000000106d26000,0x0000000106e26000)]
+
+Other Threads:
+  0x00007fce13808800 VMThread [stack: 0x000000011a22b000,0x000000011a32b000] [id=8963]
+  0x00007fce13848000 WatcherThread [stack: 0x000000011c260000,0x000000011c360000] [id=17155]
+
+VM state:not at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+Heap:
+ PSYoungGen      total 15360K, used 2074K [0x00000007aab00000, 0x00000007ac400000, 0x00000007c0000000)
+  eden space 12800K, 1% used [0x00000007aab00000,0x00000007aab31ff0,0x00000007ab780000)
+  from space 2560K, 73% used [0x00000007ab780000,0x00000007ab954a80,0x00000007aba00000)
+  to   space 2560K, 0% used [0x00000007ac180000,0x00000007ac180000,0x00000007ac400000)
+ ParOldGen       total 64000K, used 8888K [0x0000000780000000, 0x0000000783e80000, 0x00000007aab00000)
+  object space 64000K, 13% used [0x0000000780000000,0x00000007808ae088,0x0000000783e80000)
+ Metaspace       used 17336K, capacity 17472K, committed 17792K, reserved 1064960K
+  class space    used 2606K, capacity 2657K, committed 2688K, reserved 1048576K
+
+Card table byte_map: [0x00000001167c0000,0x00000001169c1000] byte_map_base: 0x0000000112bc0000
+
+Marking Bits: (ParMarkBitMap*) 0x00000001066cb0a0
+ Begin Bits: [0x0000000116bc7000, 0x0000000117bc7000)
+ End Bits:   [0x0000000117bc7000, 0x0000000118bc7000)
+
+Polling page: 0x0000000106e6a000
+
+CodeCache: size=245760Kb used=4766Kb max_used=4768Kb free=240993Kb
+ bounds [0x0000000107400000, 0x00000001078b0000, 0x0000000116400000]
+ total_blobs=2152 nmethods=1531 adapters=536
+ compilation: enabled
+
+Compilation events (10 events):
+Event: 5.831 Thread 0x00007fce1303f800 1513       4       javafx.scene.CssStyleHelper::resolveLookups (515 bytes)
+Event: 5.923 Thread 0x00007fce1303f800 nmethod 1513 0x00000001078a52d0 code [0x00000001078a5740, 0x00000001078a8170]
+Event: 5.992 Thread 0x00007fce13835800 1528       3       javafx.scene.Node::localToScene (21 bytes)
+Event: 5.993 Thread 0x00007fce13835800 nmethod 1528 0x000000010789ed10 code [0x000000010789efa0, 0x00000001078a0148]
+Event: 5.993 Thread 0x00007fce13835800 1529       3       javafx.scene.Node::localToParent (15 bytes)
+Event: 5.994 Thread 0x00007fce13835800 nmethod 1529 0x000000010789e850 code [0x000000010789e9c0, 0x000000010789ec38]
+Event: 5.994 Thread 0x00007fce13835800 1530       3       javafx.beans.property.ReadOnlyBooleanWrapper::<init> (5 bytes)
+Event: 5.994 Thread 0x00007fce13835800 nmethod 1530 0x000000010789dfd0 code [0x000000010789e160, 0x000000010789e5b0]
+Event: 5.994 Thread 0x00007fce13835800 1531       3       javafx.beans.property.SimpleBooleanProperty::<init> (10 bytes)
+Event: 5.994 Thread 0x00007fce13835800 nmethod 1531 0x000000010789d810 code [0x000000010789d9a0, 0x000000010789dd90]
+
+GC Heap History (10 events):
+Event: 1.292 GC heap before
+{Heap before GC invocations=7 (full 0):
+ PSYoungGen      total 5120K, used 4800K [0x00000007aab00000, 0x00000007ab100000, 0x00000007c0000000)
+  eden space 4096K, 100% used [0x00000007aab00000,0x00000007aaf00000,0x00000007aaf00000)
+  from space 1024K, 68% used [0x00000007ab000000,0x00000007ab0b0010,0x00000007ab100000)
+  to   space 1024K, 0% used [0x00000007aaf00000,0x00000007aaf00000,0x00000007ab000000)
+ ParOldGen       total 64000K, used 848K [0x0000000780000000, 0x0000000783e80000, 0x00000007aab00000)
+  object space 64000K, 1% used [0x0000000780000000,0x00000007800d4040,0x0000000783e80000)
+ Metaspace       used 8000K, capacity 8206K, committed 8448K, reserved 1056768K
+  class space    used 984K, capacity 1017K, committed 1024K, reserved 1048576K
+Event: 1.296 GC heap after
+Heap after GC invocations=7 (full 0):
+ PSYoungGen      total 5120K, used 960K [0x00000007aab00000, 0x00000007ab600000, 0x00000007c0000000)
+  eden space 4096K, 0% used [0x00000007aab00000,0x00000007aab00000,0x00000007aaf00000)
+  from space 1024K, 93% used [0x00000007aaf00000,0x00000007aaff0020,0x00000007ab000000)
+  to   space 1536K, 0% used [0x00000007ab480000,0x00000007ab480000,0x00000007ab600000)
+ ParOldGen       total 64000K, used 1064K [0x0000000780000000, 0x0000000783e80000, 0x00000007aab00000)
+  object space 64000K, 1% used [0x0000000780000000,0x000000078010a060,0x0000000783e80000)
+ Metaspace       used 8000K, capacity 8206K, committed 8448K, reserved 1056768K
+  class space    used 984K, capacity 1017K, committed 1024K, reserved 1048576K
+}
+Event: 1.456 GC heap before
+{Heap before GC invocations=8 (full 0):
+ PSYoungGen      total 5120K, used 5056K [0x00000007aab00000, 0x00000007ab600000, 0x00000007c0000000)
+  eden space 4096K, 100% used [0x00000007aab00000,0x00000007aaf00000,0x00000007aaf00000)
+  from space 1024K, 93% used [0x00000007aaf00000,0x00000007aaff0020,0x00000007ab000000)
+  to   space 1536K, 0% used [0x00000007ab480000,0x00000007ab480000,0x00000007ab600000)
+ ParOldGen       total 64000K, used 1064K [0x0000000780000000, 0x0000000783e80000, 0x00000007aab00000)
+  object space 64000K, 1% used [0x0000000780000000,0x000000078010a060,0x0000000783e80000)
+ Metaspace       used 8766K, capacity 8862K, committed 9088K, reserved 1056768K
+  class space    used 1113K, capacity 1145K, committed 1152K, reserved 1048576K
+Event: 1.461 GC heap after
+Heap after GC invocations=8 (full 0):
+ PSYoungGen      total 9728K, used 1504K [0x00000007aab00000, 0x00000007ab600000, 0x00000007c0000000)
+  eden space 8192K, 0% used [0x00000007aab00000,0x00000007aab00000,0x00000007ab300000)
+  from space 1536K, 97% used [0x00000007ab480000,0x00000007ab5f8020,0x00000007ab600000)
+  to   space 1536K, 0% used [0x00000007ab300000,0x00000007ab300000,0x00000007ab480000)
+ ParOldGen       total 64000K, used 1224K [0x0000000780000000, 0x0000000783e80000, 0x00000007aab00000)
+  object space 64000K, 1% used [0x0000000780000000,0x0000000780132060,0x0000000783e80000)
+ Metaspace       used 8766K, capacity 8862K, committed 9088K, reserved 1056768K
+  class space    used 1113K, capacity 1145K, committed 1152K, reserved 1048576K
+}
+Event: 1.831 GC heap before
+{Heap before GC invocations=9 (full 0):
+ PSYoungGen      total 9728K, used 9696K [0x00000007aab00000, 0x00000007ab600000, 0x00000007c0000000)
+  eden space 8192K, 100% used [0x00000007aab00000,0x00000007ab300000,0x00000007ab300000)
+  from space 1536K, 97% used [0x00000007ab480000,0x00000007ab5f8020,0x00000007ab600000)
+  to   space 1536K, 0% used [0x00000007ab300000,0x00000007ab300000,0x00000007ab480000)
+ ParOldGen       total 64000K, used 1224K [0x0000000780000000, 0x0000000783e80000, 0x00000007aab00000)
+  object space 64000K, 1% used [0x0000000780000000,0x0000000780132060,0x0000000783e80000)
+ Metaspace       used 10791K, capacity 10982K, committed 11008K, reserved 1058816K
+  class space    used 1458K, capacity 1532K, committed 1536K, reserved 1048576K
+Event: 1.840 GC heap after
+Heap after GC invocations=9 (full 0):
+ PSYoungGen      total 9728K, used 1504K [0x00000007aab00000, 0x00000007abc00000, 0x00000007c0000000)
+  eden space 8192K, 0% used [0x00000007aab00000,0x00000007aab00000,0x00000007ab300000)
+  from space 1536K, 97% used [0x00000007ab300000,0x00000007ab478010,0x00000007ab480000)
+  to   space 2048K, 0% used [0x00000007aba00000,0x00000007aba00000,0x00000007abc00000)
+ ParOldGen       total 64000K, used 2095K [0x0000000780000000, 0x0000000783e80000, 0x00000007aab00000)
+  object space 64000K, 3% used [0x0000000780000000,0x000000078020bf78,0x0000000783e80000)
+ Metaspace       used 10791K, capacity 10982K, committed 11008K, reserved 1058816K
+  class space    used 1458K, capacity 1532K, committed 1536K, reserved 1048576K
+}
+Event: 2.836 GC heap before
+{Heap before GC invocations=10 (full 0):
+ PSYoungGen      total 9728K, used 9696K [0x00000007aab00000, 0x00000007abc00000, 0x00000007c0000000)
+  eden space 8192K, 100% used [0x00000007aab00000,0x00000007ab300000,0x00000007ab300000)
+  from space 1536K, 97% used [0x00000007ab300000,0x00000007ab478010,0x00000007ab480000)
+  to   space 2048K, 0% used [0x00000007aba00000,0x00000007aba00000,0x00000007abc00000)
+ ParOldGen       total 64000K, used 2095K [0x0000000780000000, 0x0000000783e80000, 0x00000007aab00000)
+  object space 64000K, 3% used [0x0000000780000000,0x000000078020bf78,0x0000000783e80000)
+ Metaspace       used 14339K, capacity 14560K, committed 14720K, reserved 1062912K
+  class space    used 2042K, capacity 2113K, committed 2176K, reserved 1048576K
+Event: 2.846 GC heap after
+Heap after GC invocations=10 (full 0):
+ PSYoungGen      total 14848K, used 1795K [0x00000007aab00000, 0x00000007abd00000, 0x00000007c0000000)
+  eden space 12800K, 0% used [0x00000007aab00000,0x00000007aab00000,0x00000007ab780000)
+  from space 2048K, 87% used [0x00000007aba00000,0x00000007abbc0cf0,0x00000007abc00000)
+  to   space 2560K, 0% used [0x00000007ab780000,0x00000007ab780000,0x00000007aba00000)
+ ParOldGen       total 64000K, used 3191K [0x0000000780000000, 0x0000000783e80000, 0x00000007aab00000)
+  object space 64000K, 4% used [0x0000000780000000,0x000000078031df88,0x0000000783e80000)
+ Metaspace       used 14339K, capacity 14560K, committed 14720K, reserved 1062912K
+  class space    used 2042K, capacity 2113K, committed 2176K, reserved 1048576K
+}
+Event: 5.766 GC heap before
+{Heap before GC invocations=11 (full 0):
+ PSYoungGen      total 14848K, used 14595K [0x00000007aab00000, 0x00000007abd00000, 0x00000007c0000000)
+  eden space 12800K, 100% used [0x00000007aab00000,0x00000007ab780000,0x00000007ab780000)
+  from space 2048K, 87% used [0x00000007aba00000,0x00000007abbc0cf0,0x00000007abc00000)
+  to   space 2560K, 0% used [0x00000007ab780000,0x00000007ab780000,0x00000007aba00000)
+ ParOldGen       total 64000K, used 3191K [0x0000000780000000, 0x0000000783e80000, 0x00000007aab00000)
+  object space 64000K, 4% used [0x0000000780000000,0x000000078031df88,0x0000000783e80000)
+ Metaspace       used 17267K, capacity 17472K, committed 17792K, reserved 1064960K
+  class space    used 2595K, capacity 2657K, committed 2688K, reserved 1048576K
+Event: 5.786 GC heap after
+Heap after GC invocations=11 (full 0):
+ PSYoungGen      total 15360K, used 1874K [0x00000007aab00000, 0x00000007ac400000, 0x00000007c0000000)
+  eden space 12800K, 0% used [0x00000007aab00000,0x00000007aab00000,0x00000007ab780000)
+  from space 2560K, 73% used [0x00000007ab780000,0x00000007ab954a80,0x00000007aba00000)
+  to   space 2560K, 0% used [0x00000007ac180000,0x00000007ac180000,0x00000007ac400000)
+ ParOldGen       total 64000K, used 8888K [0x0000000780000000, 0x0000000783e80000, 0x00000007aab00000)
+  object space 64000K, 13% used [0x0000000780000000,0x00000007808ae088,0x0000000783e80000)
+ Metaspace       used 17267K, capacity 17472K, committed 17792K, reserved 1064960K
+  class space    used 2595K, capacity 2657K, committed 2688K, reserved 1048576K
+}
+
+Deoptimization events (10 events):
+Event: 2.310 Thread 0x00007fce138e1000 Uncommon trap: reason=class_check action=maybe_recompile pc=0x000000010763f690 method=java.io.DataInputStream.readShort()S @ 4
+Event: 2.311 Thread 0x00007fce138e1000 Uncommon trap: reason=class_check action=maybe_recompile pc=0x000000010763f690 method=java.io.DataInputStream.readShort()S @ 4
+Event: 2.311 Thread 0x00007fce138e1000 Uncommon trap: reason=class_check action=maybe_recompile pc=0x000000010763f690 method=java.io.DataInputStream.readShort()S @ 4
+Event: 2.324 Thread 0x00007fce138e1000 Uncommon trap: reason=class_check action=maybe_recompile pc=0x000000010752e29c method=java.lang.String.equals(Ljava/lang/Object;)Z @ 8
+Event: 2.324 Thread 0x00007fce138e1000 Uncommon trap: reason=class_check action=maybe_recompile pc=0x000000010752e29c method=java.lang.String.equals(Ljava/lang/Object;)Z @ 8
+Event: 2.329 Thread 0x00007fce138e1000 Uncommon trap: reason=class_check action=maybe_recompile pc=0x000000010752e29c method=java.lang.String.equals(Ljava/lang/Object;)Z @ 8
+Event: 2.329 Thread 0x00007fce138e1000 Uncommon trap: reason=class_check action=maybe_recompile pc=0x000000010752e29c method=java.lang.String.equals(Ljava/lang/Object;)Z @ 8
+Event: 2.668 Thread 0x00007fce138e1000 Uncommon trap: reason=unloaded action=reinterpret pc=0x00000001075eab58 method=java.lang.CharacterData.of(I)Ljava/lang/CharacterData; @ 96
+Event: 2.801 Thread 0x00007fce138e1000 Uncommon trap: reason=uninitialized action=reinterpret pc=0x0000000107730630 method=java.lang.CharacterData.of(I)Ljava/lang/CharacterData; @ 96
+Event: 3.322 Thread 0x00007fce138e1000 Uncommon trap: reason=bimorphic action=maybe_recompile pc=0x0000000107718d60 method=java.util.HashMap.putVal(ILjava/lang/Object;Ljava/lang/Object;ZZ)Ljava/lang/Object; @ 203
+
+Internal exceptions (10 events):
+Event: 2.197 Thread 0x00007fce1338e000 Exception <a 'java/security/PrivilegedActionException'> (0x00000007aae07c80) thrown at [/HUDSON3/workspace/8-2-build-macosx-x86_64/jdk8u11/648/hotspot/src/share/vm/prims/jvm.cpp, line 1248]
+Event: 2.198 Thread 0x00007fce1338e000 Exception <a 'java/security/PrivilegedActionException'> (0x00000007aae0d230) thrown at [/HUDSON3/workspace/8-2-build-macosx-x86_64/jdk8u11/648/hotspot/src/share/vm/prims/jvm.cpp, line 1248]
+Event: 2.213 Thread 0x00007fce1338e000 Exception <a 'java/security/PrivilegedActionException'> (0x00000007aae1ecb8) thrown at [/HUDSON3/workspace/8-2-build-macosx-x86_64/jdk8u11/648/hotspot/src/share/vm/prims/jvm.cpp, line 1248]
+Event: 2.290 Thread 0x00007fce138e1000 Implicit null exception at 0x00000001076a2675 to 0x00000001076a2881
+Event: 2.877 Thread 0x00007fce138e1000 Exception <a 'java/security/PrivilegedActionException'> (0x00000007aabbbff0) thrown at [/HUDSON3/workspace/8-2-build-macosx-x86_64/jdk8u11/648/hotspot/src/share/vm/prims/jvm.cpp, line 1248]
+Event: 2.879 Thread 0x00007fce138e1000 Exception <a 'java/security/PrivilegedActionException'> (0x00000007aabd1118) thrown at [/HUDSON3/workspace/8-2-build-macosx-x86_64/jdk8u11/648/hotspot/src/share/vm/prims/jvm.cpp, line 1248]
+Event: 2.883 Thread 0x00007fce138e1000 Exception <a 'java/security/PrivilegedActionException'> (0x00000007aabef218) thrown at [/HUDSON3/workspace/8-2-build-macosx-x86_64/jdk8u11/648/hotspot/src/share/vm/prims/jvm.cpp, line 1248]
+Event: 5.997 Thread 0x00007fce138e1000 Exception <a 'java/security/PrivilegedActionException'> (0x00000007aab14650) thrown at [/HUDSON3/workspace/8-2-build-macosx-x86_64/jdk8u11/648/hotspot/src/share/vm/prims/jvm.cpp, line 1248]
+Event: 5.998 Thread 0x00007fce138e1000 Exception <a 'java/security/PrivilegedActionException'> (0x00000007aab19a90) thrown at [/HUDSON3/workspace/8-2-build-macosx-x86_64/jdk8u11/648/hotspot/src/share/vm/prims/jvm.cpp, line 1248]
+Event: 5.999 Thread 0x00007fce138e1000 Exception <a 'java/security/PrivilegedActionException'> (0x00000007aab251e8) thrown at [/HUDSON3/workspace/8-2-build-macosx-x86_64/jdk8u11/648/hotspot/src/share/vm/prims/jvm.cpp, line 1248]
+
+Events (10 events):
+Event: 5.997 loading class java/sql/ParameterMetaData
+Event: 5.997 loading class java/sql/ParameterMetaData done
+Event: 5.997 loading class org/sqlite/jdbc3/JDBC3PreparedStatement
+Event: 5.997 loading class org/sqlite/jdbc3/JDBC3PreparedStatement done
+Event: 5.998 loading class org/sqlite/core/CorePreparedStatement
+Event: 5.998 loading class org/sqlite/core/CorePreparedStatement done
+Event: 5.999 loading class java/sql/Date
+Event: 5.999 loading class java/sql/Date done
+Event: 6.000 Executing VM operation: Deoptimize
+Event: 6.000 Executing VM operation: Deoptimize done
+
+
+Dynamic libraries:
+0x000000000a286000 	/System/Library/Frameworks/Cocoa.framework/Versions/A/Cocoa
+0x000000000a286000 	/System/Library/Frameworks/Security.framework/Versions/A/Security
+0x000000000a286000 	/System/Library/Frameworks/ApplicationServices.framework/Versions/A/ApplicationServices
+0x000000000a286000 	/usr/lib/libz.1.dylib
+0x000000000a286000 	/usr/lib/libSystem.B.dylib
+0x000000000a286000 	/usr/lib/libobjc.A.dylib
+0x000000000a286000 	/System/Library/Frameworks/CoreFoundation.framework/Versions/A/CoreFoundation
+0x000000000a286000 	/System/Library/Frameworks/Foundation.framework/Versions/C/Foundation
+0x000000000a286000 	/System/Library/Frameworks/AppKit.framework/Versions/C/AppKit
+0x000000000a286000 	/System/Library/Frameworks/CoreData.framework/Versions/A/CoreData
+0x000000000a286000 	/System/Library/PrivateFrameworks/RemoteViewServices.framework/Versions/A/RemoteViewServices
+0x000000000a286000 	/System/Library/PrivateFrameworks/UIFoundation.framework/Versions/A/UIFoundation
+0x000000000a286000 	/System/Library/Frameworks/IOSurface.framework/Versions/A/IOSurface
+0x000000000a286000 	/System/Library/Frameworks/AudioToolbox.framework/Versions/A/AudioToolbox
+0x000000000a286000 	/System/Library/Frameworks/AudioUnit.framework/Versions/A/AudioUnit
+0x000000000a286000 	/System/Library/PrivateFrameworks/DataDetectorsCore.framework/Versions/A/DataDetectorsCore
+0x000000000a286000 	/System/Library/PrivateFrameworks/DesktopServicesPriv.framework/Versions/A/DesktopServicesPriv
+0x000000000a286000 	/System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/HIToolbox.framework/Versions/A/HIToolbox
+0x000000000a286000 	/System/Library/Frameworks/QuartzCore.framework/Versions/A/QuartzCore
+0x000000000a286000 	/System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/SpeechRecognition.framework/Versions/A/SpeechRecognition
+0x000000000a286000 	/usr/lib/libauto.dylib
+0x000000000a286000 	/usr/lib/libicucore.A.dylib
+0x000000000a286000 	/usr/lib/libxml2.2.dylib
+0x000000000a286000 	/System/Library/PrivateFrameworks/CoreUI.framework/Versions/A/CoreUI
+0x000000000a286000 	/System/Library/Frameworks/CoreAudio.framework/Versions/A/CoreAudio
+0x000000000a286000 	/System/Library/Frameworks/DiskArbitration.framework/Versions/A/DiskArbitration
+0x000000000a286000 	/usr/lib/liblangid.dylib
+0x000000000a286000 	/System/Library/PrivateFrameworks/MultitouchSupport.framework/Versions/A/MultitouchSupport
+0x000000000a286000 	/System/Library/Frameworks/IOKit.framework/Versions/A/IOKit
+0x000000000a286000 	/usr/lib/libDiagnosticMessagesClient.dylib
+0x000000000a286000 	/System/Library/Frameworks/CoreServices.framework/Versions/A/CoreServices
+0x000000000a286000 	/System/Library/PrivateFrameworks/PerformanceAnalysis.framework/Versions/A/PerformanceAnalysis
+0x000000000a286000 	/System/Library/PrivateFrameworks/GenerationalStorage.framework/Versions/A/GenerationalStorage
+0x000000000a286000 	/System/Library/Frameworks/OpenGL.framework/Versions/A/OpenGL
+0x000000000a286000 	/System/Library/PrivateFrameworks/Sharing.framework/Versions/A/Sharing
+0x000000000a286000 	/System/Library/Frameworks/CoreGraphics.framework/Versions/A/CoreGraphics
+0x000000000a286000 	/System/Library/Frameworks/CoreText.framework/Versions/A/CoreText
+0x000000000a286000 	/System/Library/Frameworks/ImageIO.framework/Versions/A/ImageIO
+0x000000000a286000 	/usr/lib/libextension.dylib
+0x000000000a286000 	/System/Library/PrivateFrameworks/Backup.framework/Versions/A/Backup
+0x000000000a286000 	/usr/lib/libarchive.2.dylib
+0x000000000a286000 	/System/Library/Frameworks/CFNetwork.framework/Versions/A/CFNetwork
+0x000000000a286000 	/System/Library/Frameworks/SystemConfiguration.framework/Versions/A/SystemConfiguration
+0x000000000a286000 	/usr/lib/libCRFSuite.dylib
+0x000000000a286000 	/usr/lib/libc++.1.dylib
+0x000000000a286000 	/usr/lib/libc++abi.dylib
+0x000000000a286000 	/usr/lib/system/libcache.dylib
+0x000000000a286000 	/usr/lib/system/libcommonCrypto.dylib
+0x000000000a286000 	/usr/lib/system/libcompiler_rt.dylib
+0x000000000a286000 	/usr/lib/system/libcopyfile.dylib
+0x000000000a286000 	/usr/lib/system/libcorecrypto.dylib
+0x000000000a286000 	/usr/lib/system/libdispatch.dylib
+0x000000000a286000 	/usr/lib/system/libdyld.dylib
+0x000000000a286000 	/usr/lib/system/libkeymgr.dylib
+0x000000000a286000 	/usr/lib/system/liblaunch.dylib
+0x000000000a286000 	/usr/lib/system/libmacho.dylib
+0x000000000a286000 	/usr/lib/system/libquarantine.dylib
+0x000000000a286000 	/usr/lib/system/libremovefile.dylib
+0x000000000a286000 	/usr/lib/system/libsystem_asl.dylib
+0x000000000a286000 	/usr/lib/system/libsystem_blocks.dylib
+0x000000000a286000 	/usr/lib/system/libsystem_c.dylib
+0x000000000a286000 	/usr/lib/system/libsystem_configuration.dylib
+0x000000000a286000 	/usr/lib/system/libsystem_coreservices.dylib
+0x000000000a286000 	/usr/lib/system/libsystem_coretls.dylib
+0x000000000a286000 	/usr/lib/system/libsystem_dnssd.dylib
+0x000000000a286000 	/usr/lib/system/libsystem_info.dylib
+0x000000000a286000 	/usr/lib/system/libsystem_kernel.dylib
+0x000000000a286000 	/usr/lib/system/libsystem_m.dylib
+0x000000000a286000 	/usr/lib/system/libsystem_malloc.dylib
+0x000000000a286000 	/usr/lib/system/libsystem_network.dylib
+0x000000000a286000 	/usr/lib/system/libsystem_networkextension.dylib
+0x000000000a286000 	/usr/lib/system/libsystem_notify.dylib
+0x000000000a286000 	/usr/lib/system/libsystem_platform.dylib
+0x000000000a286000 	/usr/lib/system/libsystem_pthread.dylib
+0x000000000a286000 	/usr/lib/system/libsystem_sandbox.dylib
+0x000000000a286000 	/usr/lib/system/libsystem_secinit.dylib
+0x000000000a286000 	/usr/lib/system/libsystem_stats.dylib
+0x000000000a286000 	/usr/lib/system/libsystem_trace.dylib
+0x000000000a286000 	/usr/lib/system/libunc.dylib
+0x000000000a286000 	/usr/lib/system/libunwind.dylib
+0x000000000a286000 	/usr/lib/system/libxpc.dylib
+0x000000000a286000 	/usr/lib/libbz2.1.0.dylib
+0x000000000a286000 	/usr/lib/liblzma.5.dylib
+0x000000000a286000 	/usr/lib/libbsm.0.dylib
+0x000000000a286000 	/usr/lib/libsqlite3.dylib
+0x000000000a286000 	/usr/lib/system/libkxld.dylib
+0x000000000a286000 	/usr/lib/libxar.1.dylib
+0x000000000a286000 	/usr/lib/libpam.2.dylib
+0x000000000a286000 	/usr/lib/libOpenScriptingUtil.dylib
+0x000000000a286000 	/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/FSEvents.framework/Versions/A/FSEvents
+0x000000000a286000 	/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/CarbonCore.framework/Versions/A/CarbonCore
+0x000000000a286000 	/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/Metadata.framework/Versions/A/Metadata
+0x000000000a286000 	/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/OSServices.framework/Versions/A/OSServices
+0x000000000a286000 	/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/SearchKit.framework/Versions/A/SearchKit
+0x000000000a286000 	/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/AE.framework/Versions/A/AE
+0x000000000a286000 	/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/LaunchServices.framework/Versions/A/LaunchServices
+0x000000000a286000 	/System/Library/Frameworks/CoreServices.framework/Versions/A/Frameworks/DictionaryServices.framework/Versions/A/DictionaryServices
+0x000000000a286000 	/System/Library/Frameworks/NetFS.framework/Versions/A/NetFS
+0x000000000a286000 	/System/Library/PrivateFrameworks/NetAuth.framework/Versions/A/NetAuth
+0x000000000a286000 	/System/Library/PrivateFrameworks/login.framework/Versions/A/Frameworks/loginsupport.framework/Versions/A/loginsupport
+0x000000000a286000 	/System/Library/PrivateFrameworks/TCC.framework/Versions/A/TCC
+0x000000000a286000 	/usr/lib/libmecabra.dylib
+0x000000000a286000 	/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ATS.framework/Versions/A/ATS
+0x000000000a286000 	/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ColorSync.framework/Versions/A/ColorSync
+0x000000000a286000 	/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/HIServices.framework/Versions/A/HIServices
+0x000000000a286000 	/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/LangAnalysis.framework/Versions/A/LangAnalysis
+0x000000000a286000 	/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/PrintCore.framework/Versions/A/PrintCore
+0x000000000a286000 	/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/QD.framework/Versions/A/QD
+0x000000000a286000 	/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/SpeechSynthesis.framework/Versions/A/SpeechSynthesis
+0x000000000a286000 	/System/Library/Frameworks/Accelerate.framework/Versions/A/Accelerate
+0x000000000a286000 	/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vImage.framework/Versions/A/vImage
+0x000000000a286000 	/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/vecLib
+0x000000000a286000 	/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libvDSP.dylib
+0x000000000a286000 	/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libvMisc.dylib
+0x000000000a286000 	/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libLAPACK.dylib
+0x000000000a286000 	/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib
+0x000000000a286000 	/System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libLinearAlgebra.dylib
+0x000000000a286000 	/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ATS.framework/Versions/A/Resources/libFontParser.dylib
+0x000000000a286000 	/System/Library/Frameworks/ApplicationServices.framework/Versions/A/Frameworks/ATS.framework/Versions/A/Resources/libFontRegistry.dylib
+0x000000000a286000 	/System/Library/PrivateFrameworks/AppleVPA.framework/Versions/A/AppleVPA
+0x000000000a286000 	/System/Library/PrivateFrameworks/AppleJPEG.framework/Versions/A/AppleJPEG
+0x000000000a286000 	/System/Library/Frameworks/ImageIO.framework/Versions/A/Resources/libJPEG.dylib
+0x000000000a286000 	/System/Library/Frameworks/ImageIO.framework/Versions/A/Resources/libTIFF.dylib
+0x000000000a286000 	/System/Library/Frameworks/ImageIO.framework/Versions/A/Resources/libPng.dylib
+0x000000000a286000 	/System/Library/Frameworks/ImageIO.framework/Versions/A/Resources/libGIF.dylib
+0x000000000a286000 	/System/Library/Frameworks/ImageIO.framework/Versions/A/Resources/libJP2.dylib
+0x000000000a286000 	/System/Library/Frameworks/ImageIO.framework/Versions/A/Resources/libRadiance.dylib
+0x000000000a286000 	/System/Library/Frameworks/CoreVideo.framework/Versions/A/CoreVideo
+0x000000000a286000 	/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGLU.dylib
+0x000000000a286000 	/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGFXShared.dylib
+0x000000000a286000 	/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib
+0x000000000a286000 	/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGLImage.dylib
+0x000000000a286000 	/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libCVMSPluginSupport.dylib
+0x000000000a286000 	/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libCoreVMClient.dylib
+0x000000000a286000 	/usr/lib/libcups.2.dylib
+0x000000000a286000 	/System/Library/Frameworks/Kerberos.framework/Versions/A/Kerberos
+0x000000000a286000 	/System/Library/Frameworks/GSS.framework/Versions/A/GSS
+0x000000000a286000 	/usr/lib/libresolv.9.dylib
+0x000000000a286000 	/usr/lib/libiconv.2.dylib
+0x000000000a286000 	/System/Library/PrivateFrameworks/Heimdal.framework/Versions/A/Heimdal
+0x000000000a286000 	/usr/lib/libheimdal-asn1.dylib
+0x000000000a286000 	/System/Library/Frameworks/OpenDirectory.framework/Versions/A/OpenDirectory
+0x000000000a286000 	/System/Library/PrivateFrameworks/CommonAuth.framework/Versions/A/CommonAuth
+0x000000000a286000 	/System/Library/Frameworks/OpenDirectory.framework/Versions/A/Frameworks/CFOpenDirectory.framework/Versions/A/CFOpenDirectory
+0x000000000a286000 	/System/Library/Frameworks/SecurityFoundation.framework/Versions/A/SecurityFoundation
+0x000000000a286000 	/System/Library/PrivateFrameworks/LanguageModeling.framework/Versions/A/LanguageModeling
+0x000000000a286000 	/usr/lib/libcmph.dylib
+0x000000000a286000 	/System/Library/Frameworks/ServiceManagement.framework/Versions/A/ServiceManagement
+0x000000000a286000 	/usr/lib/libxslt.1.dylib
+0x000000000a286000 	/System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/Ink.framework/Versions/A/Ink
+0x000000000a286000 	/System/Library/Frameworks/QuartzCore.framework/Versions/A/Frameworks/CoreImage.framework/Versions/A/CoreImage
+0x000000000a286000 	/System/Library/PrivateFrameworks/CrashReporterSupport.framework/Versions/A/CrashReporterSupport
+0x000000000a286000 	/System/Library/Frameworks/OpenCL.framework/Versions/A/OpenCL
+0x000000000a286000 	/System/Library/PrivateFrameworks/FaceCore.framework/Versions/A/FaceCore
+0x000000000a286000 	/System/Library/PrivateFrameworks/Ubiquity.framework/Versions/A/Ubiquity
+0x000000000a286000 	/System/Library/PrivateFrameworks/IconServices.framework/Versions/A/IconServices
+0x000000000a286000 	/System/Library/PrivateFrameworks/ChunkingLibrary.framework/Versions/A/ChunkingLibrary
+0x000000000a286000 	/System/Library/PrivateFrameworks/Apple80211.framework/Versions/A/Apple80211
+0x000000000a286000 	/System/Library/Frameworks/CoreWLAN.framework/Versions/A/CoreWLAN
+0x000000000a286000 	/System/Library/Frameworks/IOBluetooth.framework/Versions/A/IOBluetooth
+0x000000000a286000 	/System/Library/PrivateFrameworks/CoreWiFi.framework/Versions/A/CoreWiFi
+0x000000000a286000 	/System/Library/Frameworks/CoreBluetooth.framework/Versions/A/CoreBluetooth
+0x000000000a286000 	/System/Library/PrivateFrameworks/DebugSymbols.framework/Versions/A/DebugSymbols
+0x000000000a286000 	/System/Library/PrivateFrameworks/CoreSymbolication.framework/Versions/A/CoreSymbolication
+0x000000000a286000 	/System/Library/PrivateFrameworks/Symbolication.framework/Versions/A/Symbolication
+0x000000000a286000 	/System/Library/PrivateFrameworks/SpeechRecognitionCore.framework/Versions/A/SpeechRecognitionCore
+0x0000000105e64000 	/Library/Java/JavaVirtualMachines/jdk1.8.0_11.jdk/Contents/Home/jre/lib/server/libjvm.dylib
+0x000000000a286000 	/usr/lib/libstdc++.6.dylib
+0x0000000106e28000 	/Library/Java/JavaVirtualMachines/jdk1.8.0_11.jdk/Contents/Home/jre/lib/libverify.dylib
+0x0000000106e36000 	/Library/Java/JavaVirtualMachines/jdk1.8.0_11.jdk/Contents/Home/jre/lib/libjava.dylib
+0x0000000106e87000 	/Library/Java/JavaVirtualMachines/jdk1.8.0_11.jdk/Contents/Home/jre/lib/libzip.dylib
+0x000000011a533000 	/System/Library/Frameworks/JavaVM.framework/Frameworks/JavaRuntimeSupport.framework/JavaRuntimeSupport
+0x000000011a54b000 	/System/Library/Frameworks/JavaVM.framework/Versions/A/Frameworks/JavaNativeFoundation.framework/Versions/A/JavaNativeFoundation
+0x000000011a560000 	/System/Library/Frameworks/JavaVM.framework/Versions/A/JavaVM
+0x000000000a286000 	/System/Library/Frameworks/Carbon.framework/Versions/A/Carbon
+0x000000011a56d000 	/System/Library/PrivateFrameworks/JavaLaunching.framework/Versions/A/JavaLaunching
+0x000000000a286000 	/System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/CommonPanels.framework/Versions/A/CommonPanels
+0x000000000a286000 	/System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/Help.framework/Versions/A/Help
+0x000000000a286000 	/System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/ImageCapture.framework/Versions/A/ImageCapture
+0x000000000a286000 	/System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/OpenScripting.framework/Versions/A/OpenScripting
+0x000000000a286000 	/System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/Print.framework/Versions/A/Print
+0x000000000a286000 	/System/Library/Frameworks/Carbon.framework/Versions/A/Frameworks/SecurityHI.framework/Versions/A/SecurityHI
+0x000000011c548000 	/Library/Java/JavaVirtualMachines/jdk1.8.0_11.jdk/Contents/Home/jre/lib/libprism_es2.dylib
+0x000000000a286000 	/System/Library/Frameworks/OpenGL.framework/Versions/A/Resources/GLEngine.bundle/GLEngine
+0x000000000a286000 	/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGLProgrammability.dylib
+0x0000000000000000 	/System/Library/Extensions/GeForceTeslaGLDriver.bundle/Contents/MacOS/GeForceTeslaGLDriver
+0x000000011c5c9000 	/System/Library/Extensions/GeForceTeslaGLDriver.bundle/Contents/MacOS/libclh.dylib
+0x000000011ce10000 	/System/Library/PrivateFrameworks/GPUSupport.framework/Versions/A/Libraries/libGPUSupport.dylib
+0x000000000a286000 	/System/Library/Frameworks/OpenGL.framework/Versions/A/Resources/GLRendererFloat.bundle/GLRendererFloat
+0x000000000a286000 	/System/Library/Frameworks/OpenCL.framework/Versions/A/Libraries/libcldcpuengine.dylib
+0x000000000a286000 	/System/Library/PrivateFrameworks/DiskImages.framework/Versions/A/DiskImages
+0x000000000a286000 	/System/Library/Frameworks/DiscRecording.framework/Versions/A/DiscRecording
+0x000000000a286000 	/usr/lib/libcsfde.dylib
+0x000000000a286000 	/usr/lib/libcurl.4.dylib
+0x000000000a286000 	/System/Library/PrivateFrameworks/MediaKit.framework/Versions/A/MediaKit
+0x000000000a286000 	/System/Library/PrivateFrameworks/ProtectedCloudStorage.framework/Versions/A/ProtectedCloudStorage
+0x000000000a286000 	/usr/lib/libCoreStorage.dylib
+0x000000000a286000 	/System/Library/PrivateFrameworks/EFILogin.framework/Versions/A/EFILogin
+0x000000000a286000 	/usr/lib/libutil.dylib
+0x000000000a286000 	/System/Library/PrivateFrameworks/FindMyDevice.framework/Versions/A/FindMyDevice
+0x000000000a286000 	/System/Library/Frameworks/LDAP.framework/Versions/A/LDAP
+0x000000000a286000 	/usr/lib/libsasl2.2.dylib
+0x000000000a286000 	/System/Library/PrivateFrameworks/CoreDaemon.framework/Versions/B/CoreDaemon
+0x000000000a286000 	/usr/lib/libcrypto.0.9.8.dylib
+0x000000000a286000 	/System/Library/PrivateFrameworks/AppleSRP.framework/Versions/A/AppleSRP
+0x000000000a286000 	/System/Library/PrivateFrameworks/TrustEvaluationAgent.framework/Versions/A/TrustEvaluationAgent
+0x000000011cedd000 	/Library/Java/JavaVirtualMachines/jdk1.8.0_11.jdk/Contents/Home/jre/lib/libglass.dylib
+0x000000000a286000 	/System/Library/PrivateFrameworks/CoreServicesInternal.framework/Versions/A/CoreServicesInternal
+0x000000000a286000 	/System/Library/PrivateFrameworks/CloudDocs.framework/Versions/A/CloudDocs
+0x000000000a286000 	/System/Library/PrivateFrameworks/CoreDuet.framework/Versions/A/CoreDuet
+0x000000000a286000 	/System/Library/Frameworks/CloudKit.framework/Versions/A/CloudKit
+0x000000000a286000 	/System/Library/PrivateFrameworks/ProtocolBuffer.framework/Versions/A/ProtocolBuffer
+0x000000000a286000 	/System/Library/PrivateFrameworks/CoreDuetDaemonProtocol.framework/Versions/A/CoreDuetDaemonProtocol
+0x000000000a286000 	/System/Library/PrivateFrameworks/CoreDuetDebugLogging.framework/Versions/A/CoreDuetDebugLogging
+0x000000000a286000 	/System/Library/PrivateFrameworks/MMCS.framework/Versions/A/MMCS
+0x000000000a286000 	/System/Library/Frameworks/CoreLocation.framework/Versions/A/CoreLocation
+0x000000000a286000 	/System/Library/PrivateFrameworks/GeoServices.framework/Versions/A/GeoServices
+0x000000011e934000 	/System/Library/Frameworks/CoreGraphics.framework/Versions/A/Resources/libCGCMS.A.dylib
+0x000000000a286000 	/System/Library/CoreServices/RawCamera.bundle/Contents/MacOS/RawCamera
+0x000000011ea67000 	/System/Library/Frameworks/CoreGraphics.framework/Versions/A/Resources/libRIP.A.dylib
+0x000000000a286000 	/System/Library/PrivateFrameworks/FamilyControls.framework/Versions/A/FamilyControls
+0x000000000a286000 	/System/Library/PrivateFrameworks/CommerceKit.framework/Versions/A/Frameworks/CommerceCore.framework/Versions/A/CommerceCore
+0x000000000a286000 	/System/Library/PrivateFrameworks/SystemAdministration.framework/Versions/A/SystemAdministration
+0x000000000a286000 	/System/Library/PrivateFrameworks/AppContainer.framework/Versions/A/AppContainer
+0x000000000a286000 	/System/Library/PrivateFrameworks/SecCodeWrapper.framework/Versions/A/SecCodeWrapper
+0x000000000a286000 	/System/Library/Frameworks/DirectoryService.framework/Versions/A/DirectoryService
+0x000000000a286000 	/System/Library/PrivateFrameworks/LoginUIKit.framework/Versions/A/Frameworks/LoginUICore.framework/Versions/A/LoginUICore
+0x000000000a286000 	/usr/lib/libodfde.dylib
+0x000000011e94c000 	/Library/Java/JavaVirtualMachines/jdk1.8.0_11.jdk/Contents/Home/jre/lib/libjavafx_font.dylib
+0x0000000120a8e000 	/private/var/folders/wr/k_5vtmp97v32sxhwbf2m05zm0000gn/T/sqlite-3.8.11.1-90058352-346f-458a-be90-3b98213d40a9-libsqlitejdbc.jnilib
+0x00000001212c9000 	/System/Library/Frameworks/CoreGraphics.framework/Versions/A/Resources/libCGXType.A.dylib
+0x0000000123f21000 	/Library/Java/JavaVirtualMachines/jdk1.8.0_11.jdk/Contents/Home/jre/lib/libprism_common.dylib
+0x0000000122c5b000 	cl_kernels
+0x0000000124322000 	/System/Library/Frameworks/OpenCL.framework/Versions/A/Libraries/ImageFormats/unorm8_bgra.dylib
+0x000000012455c000 	cl_kernels
+
+VM Arguments:
+jvm_args: -Dfile.encoding=UTF-8 
+java_command: /Users/Alfonso/Documents/UNAM/MYP/DMDB/dist/run904862772/DMDB.jar
+java_class_path (initial): /Users/Alfonso/Documents/UNAM/MYP/DMDB/dist/run904862772/DMDB.jar
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+PATH=/usr/bin:/bin:/usr/sbin:/sbin
+LD_LIBRARY_PATH=/Library/Java/JavaVirtualMachines/jdk1.8.0_11.jdk/Contents/Home/jre/lib/amd64:/Library/Java/JavaVirtualMachines/jdk1.8.0_11.jdk/Contents/Home/jre/lib/i386:
+SHELL=/bin/bash
+DYLD_LIBRARY_PATH=/Applications/NetBeans/NetBeans 8.0.2.app/Contents/Resources/NetBeans/webcommon/bin:
+
+Signal Handlers:
+SIGSEGV: [libjvm.dylib+0x56059b], sa_mask[0]=0xfffefeff, sa_flags=0x00000043
+SIGBUS: [libjvm.dylib+0x56059b], sa_mask[0]=0xfffefeff, sa_flags=0x00000042
+SIGFPE: [libjvm.dylib+0x4438f2], sa_mask[0]=0xfffefeff, sa_flags=0x00000042
+SIGPIPE: [libjvm.dylib+0x4438f2], sa_mask[0]=0xfffefeff, sa_flags=0x00000042
+SIGXFSZ: [libjvm.dylib+0x4438f2], sa_mask[0]=0xfffefeff, sa_flags=0x00000042
+SIGILL: [libjvm.dylib+0x4438f2], sa_mask[0]=0xfffefeff, sa_flags=0x00000042
+SIGUSR1: SIG_DFL, sa_mask[0]=0x00000000, sa_flags=0x00000000
+SIGUSR2: [libjvm.dylib+0x443410], sa_mask[0]=0x00000004, sa_flags=0x00000042
+SIGHUP: [libjvm.dylib+0x44179b], sa_mask[0]=0xfffefeff, sa_flags=0x00000042
+SIGINT: SIG_IGN, sa_mask[0]=0x00000000, sa_flags=0x00000000
+SIGTERM: [libjvm.dylib+0x44179b], sa_mask[0]=0xfffefeff, sa_flags=0x00000042
+SIGQUIT: [libjvm.dylib+0x44179b], sa_mask[0]=0xfffefeff, sa_flags=0x00000042
+
+
+---------------  S Y S T E M  ---------------
+
+OS:Bsduname:Darwin 14.5.0 Darwin Kernel Version 14.5.0: Wed Jul 29 02:26:53 PDT 2015; root:xnu-2782.40.9~1/RELEASE_X86_64 x86_64
+rlimit: STACK 8192k, CORE 0k, NPROC 709, NOFILE 10240, AS infinity
+load average:2.95 2.54 2.30
+
+CPU:total 2 (2 cores per cpu, 1 threads per core) family 6 model 23 stepping 10, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, tsc
+
+Memory: 4k page, physical 4194304k(28816k free)
+
+/proc/meminfo:
+
+
+vm_info: Java HotSpot(TM) 64-Bit Server VM (25.11-b03) for bsd-amd64 JRE (1.8.0_11-b12), built on Jun 16 2014 17:39:42 by "java_re" with gcc 4.2.1 (Based on Apple Inc. build 5658) (LLVM build 2336.11.00)
+
+time: Wed Oct 14 22:01:13 2015
+elapsed time: 6 seconds
+

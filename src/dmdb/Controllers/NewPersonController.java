@@ -7,7 +7,6 @@
 package dmdb.Controllers;
 
 import dmdb.Registers.Person;
-import dmdb.Registers.Title;
 import dmdb.Thread.SQLThread;
 import java.net.URL;
 import java.time.LocalDate;
@@ -20,29 +19,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-//import javafx.event.ActionEvent;
-//import javafx.fxml.FXML;
-//import javafx.fxml.Initializable;
-//
-//import javafx.scene.control.Label;
-//import javafx.scene.control.Button;
-//import javafx.scene.control.ChoiceBox;
-//
-//import javafx.scene.control.TextField;
-//import javafx.scene.control.TableView;
-//
-//
-//import java.sql.*;
-//import javafx.collections.FXCollections;
-//import javafx.collections.ObservableList;
-//import javafx.fxml.FXMLLoader;
-//import javafx.scene.control.MenuButton;
-//import javafx.scene.control.SingleSelectionModel;
-//import javafx.scene.control.SplitPane;
-//import javafx.scene.control.Tab;
-//import javafx.scene.control.TabPane;
-//import javafx.scene.control.TableColumn;
-//import javafx.scene.control.cell.PropertyValueFactory;
 
 
 /**
