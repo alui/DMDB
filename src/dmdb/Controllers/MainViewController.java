@@ -12,7 +12,6 @@ import dmdb.Registers.Title;
 import dmdb.Thread.SQLThread;
 
 import java.io.IOException;
-import static java.lang.System.in;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +30,6 @@ import javafx.scene.control.TableView;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.SelectionMode;

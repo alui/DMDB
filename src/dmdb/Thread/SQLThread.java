@@ -16,6 +16,7 @@ import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.scene.Node;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableView;
 
 /**
@@ -79,6 +80,16 @@ public class SQLThread extends Thread{
     private PreparedStatement directorsPrepared;
     private PreparedStatement artistsPrepared;
     private PreparedStatement titlesPrepared;
+    
+    
+    //For OTher controllers
+    public void setTitlesComboBox(ComboBox<Title> obs){
+        titlesComboBox=obs;
+        
+    }
+    private ComboBox<Title> titlesComboBox;
+    private PreparedStatement titlesComboPrepared;
+    
     
     //FOR RELAODING PURPOSES ONLY
     private String r_directorsPrepared;
@@ -152,7 +163,72 @@ public class SQLThread extends Thread{
                 pts=null;
             }
             }
+            if(titlesComboPrepared!=null)
+            {
+             ObservableList<Title> innerObsk = FXCollections.observableArrayList();
+             
+             
+             ResultSet rs;
+             try {
+                  
+                       
+                       rs = titlesComboPrepared.executeQuery();
+                   
+             
+            while (rs.next()) {
+                
+            Integer ID = rs.getInt("TitleID");
+            String firstName = rs.getString("Name");
+            String summary = rs.getString("Summary");
             
+            String dateString = rs.getString("ReleaseDate");
+            
+            java.sql.Date d;
+            d =  java.sql.Date.valueOf(dateString);
+            
+            String genere = rs.getString("Genere");
+            
+              Title r = new Title(ID, firstName,summary,d,genere);
+              innerObsk.add(r);  
+            }
+            
+            
+                 
+            
+                    Platform.runLater(() -> {
+                        
+                        titlesComboBox.getItems().removeAll(titlesComboBox.getItems());
+                        System.out.println("\n\nPrintin" + innerObsk);
+                        System.out.println("Later" + innerObsk);
+                        innerObsk.removeAll(titlesTable.getItems());
+                        titlesComboBox.getItems().addAll(innerObsk);
+                        
+                         if(titlesComboBox.getItems().size()>0)
+                                titlesComboBox.show();
+                            else
+                                titlesComboBox.hide();
+                        
+                       });
+                
+                 
+                 
+            } catch (SQLException ex) {
+                       Logger.getLogger(SQLThread.class.getName()).log(Level.SEVERE, null, ex);
+             
+            }
+             finally{
+            
+            try{
+                if(titlesComboPrepared!=null)
+                    titlesComboPrepared.close();
+                titlesComboPrepared=null;
+            }catch(SQLException se2){  
+                titlesComboPrepared=null;
+                
+            }
+                }    
+                
+            }
             
             if(artistsPrepared!=null)
             {
@@ -379,10 +455,20 @@ public class SQLThread extends Thread{
         }
         catch(SQLException se){
                  System.out.println(se);
-        } 
+        }  
+    }
+     public void prepareStatementSelectComboTitles(String search){
+        try{
+         titlesComboPrepared = conn.prepareStatement("SELECT * FROM Titles WHERE Name LIKE ? OR Genere LIKE ?");     
+                    titlesComboPrepared.setString(1,search+"%"); 
+                    titlesComboPrepared.setString(2,search+"%"); 
+              
                     
-        
-        
+        this.shouldSleep = false;
+        }
+        catch(SQLException se){
+                 System.out.println(se);
+        }  
     }
     public void prepareStatementSelectDirectors(String search){
            r_directorsPrepared  =search;
@@ -533,7 +619,7 @@ public class SQLThread extends Thread{
         catch(SQLException se){
                  System.out.println(se);
         }
-        }  
+     }  
         
 
     

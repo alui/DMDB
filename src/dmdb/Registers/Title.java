@@ -10,6 +10,7 @@ package dmdb.Registers;
 import dmdb.Registers.Register;
 import java.awt.Image;
 import java.sql.Date;
+import java.util.Objects;
 
 
 
@@ -76,7 +77,21 @@ public class Title extends Register {
         return this.getTitleID();
     }
     
-    
+    @Override
+    public String toString(){
+        return name;
+    }
+
+    @Override
+    public boolean equals(Object o ){
+        boolean isEqual = false;
+        if(o instanceof Title){
+            Title t = (Title)o;
+            if(Objects.equals(t.titleID, this.titleID))
+                isEqual=true;
+        }
+        return isEqual;
+    }
     
     
 }
