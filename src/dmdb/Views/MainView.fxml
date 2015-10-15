@@ -15,7 +15,7 @@
             <ToolBar prefHeight="30.0" prefWidth="692.0" BorderPane.alignment="CENTER">
               <items>
                   <ChoiceBox fx:id="choiceBox" prefHeight="26.0" prefWidth="107.0" />
-                  <TextField fx:id="searchBox" prefHeight="26.0" prefWidth="201.0" promptText="Search for movies and more!" />
+                  <TextField fx:id="searchBox" onAction="#performSimpleSearch" onKeyReleased="#performSimpleSearch" prefHeight="26.0" prefWidth="201.0" promptText="Search for movies and more!" />
                   <Separator prefHeight="29.0" prefWidth="224.0" />
                   <MenuButton mnemonicParsing="false" text="New">
                     <items>

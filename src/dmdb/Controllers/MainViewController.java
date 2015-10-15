@@ -169,6 +169,7 @@ public class MainViewController implements Initializable, RegisterDelegate {
         //Set up Sql Thread.
         sqlThread = new SQLThread( DbUser,DbPassword,DbURL,DbJDBC );
         sqlThread.setDaemon(true);
+        sqlThread.setName("SQL-Thread");
         sqlThread.setArtistsTable(artistsTable);
         sqlThread.setDirectorsTable(directorsTable);
         sqlThread.setTitlesTable(titlesTable);
@@ -202,7 +203,7 @@ public class MainViewController implements Initializable, RegisterDelegate {
         //Seraches have to be cancelable. Twice the secutiry.
         
         //******Set listener for search button and <Enter>
-        searchBox.setOnAction(e -> performSimpleSearch());
+//        searchBox.setOnAction(e -> performSimpleSearch());
             //With that text search for Movies, Directors, Artists in same service. Hence im going to be using multiple simple searches.
         
             //Such service shall update the tables.
@@ -267,7 +268,7 @@ public class MainViewController implements Initializable, RegisterDelegate {
                     for(Object p : items ){
                         sqlThread.prepareStatementDelete("Artist", (Person) p);
                     }
-                    
+
                     artistsTable.getSelectionModel().clearSelection();
 
             
@@ -285,9 +286,14 @@ public class MainViewController implements Initializable, RegisterDelegate {
     }
     
 //    SearchDirectorsTask
-    private void performSimpleSearch(){
+    public void performSimpleSearch(){
         
-                    
+//                    
+//                        artistsTable.setDisable(true);
+//                        
+//                        directorsTable.setDisable(true);
+//                        
+//                        titlesTable.setDisable(true);
          
         String s = (String) choiceBox.getSelectionModel().selectedItemProperty().get();
         ObservableList<Tab> tabs =  tabPane.getTabs();
@@ -301,6 +307,7 @@ public class MainViewController implements Initializable, RegisterDelegate {
                 if (!tabs.contains(tabDirectors))
                     tabPane.getTabs().add(tabDirectors);
                  
+                
                 sqlThread.prepareStatementSelectArtists(searchBox.getText());
                 sqlThread.prepareStatementSelectDirectors(searchBox.getText());
                 sqlThread.prepareStatementSelectTitles(searchBox.getText());
@@ -560,9 +567,14 @@ public class MainViewController implements Initializable, RegisterDelegate {
         if(lastTemporaryNode!=null)
         {
             mainPane.getChildren().remove(lastTemporaryNode);
+           
         }
         mainPane.getChildren().add(searchBorderPane);
         
+        
+        sqlThread.setArtistsTable(artistsTable);
+        sqlThread.setDirectorsTable(directorsTable);
+        sqlThread.setTitlesTable(titlesTable);
         sqlThread.reload();
 
     }

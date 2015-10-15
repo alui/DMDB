@@ -55,14 +55,8 @@ public class SQLThread extends Thread{
         
         
     }
-    public void setTitleObs(){
-        
-    }
     public void setArtistsTable(TableView<Person> obs){
         artistsTable=obs;
-        
-       
-        
     }
        
     public void setDirectorsTable(TableView<Person> obs){
@@ -91,7 +85,6 @@ public class SQLThread extends Thread{
     private String r_artistsPrepared;
     private String r_titlesPrepared;
               
-    private String personKind;
     
     private boolean shouldSleep;
             
@@ -132,15 +125,15 @@ public class SQLThread extends Thread{
                    Logger.getLogger(SQLThread.class.getName()).log(Level.SEVERE, null, ex);
                }
                 
-            //Simple executeo
-            if(pts!=null)
+          
+               
+               
+                if(pts!=null)
             {
                 
                 
                    try {
                        
-                       
-                 System.out.println("Simple Execute");
                        pts.execute();
                        
             
@@ -159,23 +152,6 @@ public class SQLThread extends Thread{
                 pts=null;
             }
             }
-            
-//            if(deleteStatement!=null)
-//            {
-//                
-//                
-//                   try {
-//                       
-//                       
-//                 System.out.println("Simple Execute");
-//                       pts.execute();
-//                       
-//            
-//                   } catch (SQLException ex) {
-//                       Logger.getLogger(SQLThread.class.getName()).log(Level.SEVERE, null, ex);
-//                   }
-//                pts=null;
-//            }
             
             
             if(artistsPrepared!=null)
@@ -202,7 +178,11 @@ public class SQLThread extends Thread{
 
                 d =  java.sql.Date.valueOf(dateString);
             
-//            
+////            
+//                
+//                for(int i =0;i<10000;i++){
+//                    System.out.println(i);
+//                }
                 Person r = new Person(personID, firstName,lastName,biogra,d);
                  innerObs.add(r);  
             }
@@ -214,6 +194,7 @@ public class SQLThread extends Thread{
                         artistsTable.getSelectionModel().clearSelection();
                         artistsTable.getItems().removeAll(artistsTable.getItems());       
                         artistsTable.getItems().addAll(innerObs);
+                        artistsTable.setDisable(false);
                        });
                 
                  
@@ -273,6 +254,8 @@ public class SQLThread extends Thread{
                         directorsTable.getSelectionModel().clearSelection();
                         directorsTable.getItems().removeAll(directorsTable.getItems());       
                         directorsTable.getItems().addAll(innerDirObs);
+                        
+                        directorsTable.setDisable(false);
                        });
                 
                  
@@ -334,6 +317,8 @@ public class SQLThread extends Thread{
                         titlesTable.getSelectionModel().clearSelection();
                         titlesTable.getItems().removeAll(titlesTable.getItems());
                         titlesTable.getItems().addAll(innerObsk);
+                        
+                        titlesTable.setDisable(false);
                        });
                 
                  
@@ -356,6 +341,8 @@ public class SQLThread extends Thread{
                 
             }
                 
+              //Simple executeo
+           
             
                 shouldSleep= true;
             }
@@ -384,8 +371,8 @@ public class SQLThread extends Thread{
         r_titlesPrepared= search;
         try{
          titlesPrepared = conn.prepareStatement("SELECT * FROM Titles WHERE Name LIKE ? OR Genere LIKE ?");     
-                    titlesPrepared.setString(1,search); 
-                    titlesPrepared.setString(2,search); 
+                    titlesPrepared.setString(1,search+"%"); 
+                    titlesPrepared.setString(2,search+"%"); 
               
                     
         this.shouldSleep = false;
@@ -402,8 +389,8 @@ public class SQLThread extends Thread{
         try{
         
             directorsPrepared = conn.prepareStatement("SELECT * FROM Directors WHERE FirstName LIKE ? OR LastName LIKE ? ");                   
-                    directorsPrepared.setString(1,search); 
-                    directorsPrepared.setString(2,search);
+                    directorsPrepared.setString(1,search+"%"); 
+                    directorsPrepared.setString(2,search+"%");
                  
                     
               
@@ -419,8 +406,8 @@ public class SQLThread extends Thread{
         try{
             artistsPrepared = conn.prepareStatement("SELECT * FROM Artists WHERE FirstName LIKE ? OR LastName LIKE ? ");                   
                
-                    artistsPrepared.setString(1,search); 
-                    artistsPrepared.setString(2,search);
+                    artistsPrepared.setString(1,search+"%"); 
+                    artistsPrepared.setString(2,search+"%");
                     
                 
            
@@ -522,19 +509,10 @@ public class SQLThread extends Thread{
                     
 //                  
                     shouldSleep=false;
-//          pstmt.execute();
         }
         catch(SQLException se){
                  System.out.println(se);
         }
-//        finally{
-//            
-//            try{
-//                if(pstmt!=null)
-//                    pstmt.close();
-//            }catch(SQLException se2){
-//                
-//            }
         
     }
 
@@ -550,21 +528,11 @@ public class SQLThread extends Thread{
                     pts.setString(3,r.getReleaseDate().toString());
                     pts.setString(4,r.getGenere());
 
-                    
                     shouldSleep=false;
-//          pstmt.execute();
         }
         catch(SQLException se){
                  System.out.println(se);
         }
-//        finally{
-//            
-//            try{
-//                if(pstmt!=null)
-//                    pstmt.close();
-//            }catch(SQLException se2){
-//                
-//            }// 
         }  
         
 
