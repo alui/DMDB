@@ -7,7 +7,6 @@ package dmdb.Registers;
 
 //import java.sql.Date;
 
-import dmdb.Registers.Register;
 import java.awt.Image;
 import java.sql.Date;
 import java.util.Objects;

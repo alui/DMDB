@@ -21,6 +21,8 @@ import java.util.ResourceBundle;
 import java.util.logging.Logger;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -76,11 +78,32 @@ public class NewPersonController implements Initializable {
              private TableColumn<Title,String> t_genereCol;
     
     
+             private ObservableList<Title> dummyList;
+             private boolean isDummyPerson;
     
     public void cancel(){
+        
+        //Remove all aditions in private Items
+       String kindName = "Artist";
+       if(isDirector)
+           kindName = "Director";
+       if(isDummyPerson)
+        sqlThread.prepareStatementDelete(kindName, oldPerson);
+        
+        //Delete created person if its dummy.
+         for(Title p : dummyList ){
+                        if(isDirector)
+                            sqlThread.prepareDeleteRelacionDirigio((Title) p,oldPerson);
+                        else
+                            sqlThread.prepareDeleteRelacionActuo((Title) p,oldPerson);
+             }
+         
+        
         if(delegate!=null)
             delegate.close();   
         sqlThread =null;
+        
+        
     }
     public void save(){
          
@@ -89,40 +112,53 @@ public class NewPersonController implements Initializable {
          if(firstName.getText()==null || firstName.getText().equals("")||ld==null)
              return;
 
-         
-         
         java.sql.Date sqlDate;
         Date d = Date.from(ld.atStartOfDay(ZoneId.systemDefault()).toInstant());
              sqlDate = new java.sql.Date(d.getTime());
          
-        
-        
-        int id = 0;
-        if(oldPerson!=null)
-            id = oldPerson.getPersonID();
-       Person p = new Person(id,firstName.getText(),lastName.getText(),biography.getText(),sqlDate); 
+       
+             
+//             
+//             int id = 0;
+//             if(isDummyPerson)
+//             {
+//                 id = oldPerson.getID();
+//             }
+//             
+       Person p = new Person(oldPerson.getID() ,firstName.getText(),lastName.getText(),biography.getText(),sqlDate); 
        
        String kindName = "Artist";
        if(isDirector)
            kindName = "Director";
-        
-        if(oldPerson!=null)
-        {
+//       
+//       if(isDummyPerson)
+//            sqlThread.insertPersonKind(p,kindName);
+//       else
             sqlThread.updatePersonKind(p,kindName);
-        }else 
-            sqlThread.insertPersonKind(p,kindName);
+       
+      
+       
+       
 
          
-       cancel();
+        if(delegate!=null)
+            delegate.close();   
+        sqlThread =null;
     }
      
      public void delete(){
          
          List items =  new ArrayList (titlesTable.getSelectionModel().getSelectedItems());  
                     titlesTable.getItems().removeAll(items);
-//                    for(Object p : items ){
-////                        sqlThread.prepareStatementDelete("Title", (Title) p);
-//                    }
+                    for(Object p : items ){
+                        if(dummyList.contains((Title)p))
+                            dummyList.remove((Title)p);
+                                
+                        if(isDirector)
+                            sqlThread.prepareDeleteRelacionDirigio((Title) p,oldPerson);
+                        else
+                            sqlThread.prepareDeleteRelacionActuo((Title) p,oldPerson);
+                    }
                     
                     titlesTable.getSelectionModel().clearSelection();
          
@@ -133,7 +169,11 @@ public class NewPersonController implements Initializable {
     private ComboBox<Title> titlesComboBox;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        date.setValue(LocalDate.of(2000, Month.JANUARY, 1));
         this.updateCellFactoryForTables();
+         dummyList= FXCollections.observableArrayList();
+         isDummyPerson = true;
+        
        
     } 
 
@@ -142,10 +182,30 @@ public class NewPersonController implements Initializable {
         Object o = titlesComboBox.getValue();
         if(o instanceof Title)
         {   Title t = (Title)o;
-        ;
+        
             if(!titlesTable.getItems().contains(t))
-                titlesTable.getItems().add(t);
-            updateComboList(t.toString());
+            {
+                dummyList.add(t);
+                
+                titlesComboBox.setValue(null);
+                
+                if(isDirector)
+                {
+                    sqlThread.insertRelacionDirigio(oldPerson,t);
+                    sqlThread.prepareSelectParticipatingTitlesForDirector(oldPerson);
+                }
+                else
+                {
+                    sqlThread.insertRelacionActuo(oldPerson,t);
+                    sqlThread.prepareSelectParticipatingTitlesForArtist(oldPerson);
+                }
+                
+        
+                
+            }
+                //
+//                titlesTable.getItems().add(t);
+//            updateComboList(t.toString());
         }
         
     }
@@ -162,11 +222,7 @@ public class NewPersonController implements Initializable {
         updateComboList(s);
         
         
-//        Title t = titlesComboBox.getSelectionModel().getSelectedItem();
-//        
-////        titlesTable.getItems().removeAll(titlesTable.getItems());
-//        titlesTable.getItems().add(t);
-//        System.out.println("Update" + s);
+        
     }
     
     private void updateCellFactoryForTables(){
@@ -175,34 +231,15 @@ public class NewPersonController implements Initializable {
     t_genereCol.setCellValueFactory(new PropertyValueFactory("genere"));
     t_summaryCol.setCellValueFactory(new PropertyValueFactory("summary"));
     
-//    titlesComboBox.setCe
-    
-//    titlesTable.setOnMousePressed((MouseEvent event) -> {
-//            if (event.isPrimaryButtonDown() && event.getClickCount() == 2) {
-//                Node node = ((Node) event.getTarget()).getParent();
-//                TableRow row;
-//                if (node instanceof TableRow) {
-//                    row = (TableRow) node;
-//                } else {
-//                    // clicking on text part
-//                    row = (TableRow) node.getParent();
-//                }
-////                try {
-//////                    editTitleRegister((Title)row.getItem());
-////                } catch (IOException ex) {
-////                    Logger.getLogger(MainViewController.class.getName()).log(Level.SEVERE, null, ex);
-////                }
-//            }
-//          });
-        titlesTable.getSelectionModel().setSelectionMode(
-                 SelectionMode.MULTIPLE
-        );
+//        titlesTable.getSelectionModel().setSelectionMode(
+//                 SelectionMode.MULTIPLE
+//        );
     }
     
     
     
     
-    void setRegisterDelegate(MainViewController aThis) {
+    void setDelegate(MainViewController aThis) {
         
         delegate=aThis;
        
@@ -213,16 +250,53 @@ public class NewPersonController implements Initializable {
         
         sqlThread.setTitlesComboBox(titlesComboBox);
         sqlThread.setTitlesTable(titlesTable);
+        
+//        sqlThread.prepareSelectParticipatingTitles(null);
     }
+    
+    
 
     void setPerson(Person p) {
         
-        firstName.setText(p.getFirstName());
-        lastName.setText(p.getLastName());
-        biography.setText(p.getBiography());
-        date.setValue(p.getBirthDate().toLocalDate());
-        oldPerson = p;
+        if(p==null){
+            isDummyPerson = true;
+//         
+        java.sql.Date sqlDate;
+        LocalDate ld = LocalDate.of(2000, Month.MARCH, 1);
+        Date d = Date.from(ld.atStartOfDay(ZoneId.systemDefault()).toInstant());
+             sqlDate = new java.sql.Date(d.getTime());
+             
+             
+            Person k = new Person(0,"__*","","",sqlDate);
+            
+            
+            if(isDirector)
+                
+               oldPerson =  sqlThread.resolveDirectorID(k);
+            else
+                
+               oldPerson =  sqlThread.resloveArtistID(k);
+                
+                
+            //MAKE IT NEW.
+            
+            //GET IT BACK WITH ITS NEW ID...
+        }
+        else{
+            
+            isDummyPerson = false;
+            
+            firstName.setText(p.getFirstName());
+            lastName.setText(p.getLastName());
+            biography.setText(p.getBiography());
+            date.setValue(p.getBirthDate().toLocalDate());
+            oldPerson = p;
         
+            if(isDirector)
+                sqlThread.prepareSelectParticipatingTitlesForDirector(p);
+            else
+                sqlThread.prepareSelectParticipatingTitlesForArtist(p);
+        }
         
     }
 

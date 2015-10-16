@@ -252,10 +252,11 @@ public class MainViewController implements Initializable, RegisterDelegate {
         if(tabTitles.isSelected()){
                     List items =  new ArrayList (titlesTable.getSelectionModel().getSelectedItems());  
                     titlesTable.getItems().removeAll(items);
-                    for(Object p : items ){
-                        sqlThread.prepareStatementDelete("Title", (Title) p);
-                    }
                     
+//                    
+                    sqlThread.prepareMassiveDelete(sqlThread.prepareSQLDelete("Actuo", "Title", items));
+                    sqlThread.prepareMassiveDelete(sqlThread.prepareSQLDelete("Dirigio", "Title", items));
+                    sqlThread.prepareMassiveDelete(sqlThread.prepareSQLDelete("Titles", "Title", items));
                     titlesTable.getSelectionModel().clearSelection();
             
             
@@ -263,10 +264,8 @@ public class MainViewController implements Initializable, RegisterDelegate {
             
                     List items =  new ArrayList (artistsTable.getSelectionModel().getSelectedItems());
                     artistsTable.getItems().removeAll(items);
-                    for(Object p : items ){
-                        sqlThread.prepareStatementDelete("Artist", (Person) p);
-                    }
-
+                    sqlThread.prepareMassiveDelete(sqlThread.prepareSQLDelete("Actuo", "Artist", items));
+                    sqlThread.prepareMassiveDelete(sqlThread.prepareSQLDelete("Artists", "Artist", items));
                     artistsTable.getSelectionModel().clearSelection();
 
             
@@ -275,9 +274,9 @@ public class MainViewController implements Initializable, RegisterDelegate {
             
                     List items =  new ArrayList (directorsTable.getSelectionModel().getSelectedItems());  
                     directorsTable.getItems().removeAll(items);
-                     for(Object p : items ){
-                        sqlThread.prepareStatementDelete("Director", (Person) p);
-                    }
+                    
+                    sqlThread.prepareMassiveDelete(sqlThread.prepareSQLDelete("Dirigio", "Director", items));
+                    sqlThread.prepareMassiveDelete(sqlThread.prepareSQLDelete("Directors", "Director", items));
                     directorsTable.getSelectionModel().clearSelection();
         }
         
@@ -508,13 +507,11 @@ public class MainViewController implements Initializable, RegisterDelegate {
 
         AnchorPane n = (AnchorPane)fxmlLoader.load(); 
         NewPersonController controller = fxmlLoader.<NewPersonController>getController();
-        controller.setRegisterDelegate(this);
-        controller.setSQLThread(sqlThread);
-        
-        if(p!=null)
-         controller.setPerson(p);
-        
+        controller.setDelegate(this);
+        controller.setSQLThread(sqlThread);        
         controller.setIsDirector(isDirector);
+        controller.setPerson(p);
+        
 
         lastTemporaryNode = n;
         mainPane.getChildren().remove(searchBorderPane);

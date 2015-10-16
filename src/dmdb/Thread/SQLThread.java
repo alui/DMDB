@@ -11,11 +11,12 @@ import dmdb.Registers.Title;
 import javafx.collections.ObservableList;
 
 import java.sql.*;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.scene.Node;
+
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableView;
 
@@ -113,10 +114,6 @@ public class SQLThread extends Thread{
             
             conn = DriverManager.getConnection(DbURL, DbUser, DbPassword);
             
-            System.out.println("Before");
-            
-            
-//            System.out.println("After");
                 
         
         }catch (ClassNotFoundException | SQLException ex) {
@@ -443,6 +440,36 @@ public class SQLThread extends Thread{
             }
     }
     
+            
+    public void prepareSelectParticipatingTitlesForDirector(Register r)
+    {
+        try{
+         titlesPrepared = conn.prepareStatement("SELECT T.*\n" +
+                                                "FROM Titles T\n" +
+                    "WHERE T.TitleID in ( SELECT A.TitleID FROM Dirigio A WHERE A.DirectorID=?);");     
+                    titlesPrepared.setInt(1,r.getID()); 
+        this.shouldSleep = false;
+        }
+        catch(SQLException se){
+                 System.out.println(se);
+        }  
+
+    }
+    public void prepareSelectParticipatingTitlesForArtist(Register r)
+    {
+        
+        try{
+         titlesPrepared = conn.prepareStatement("SELECT T.*\n" +
+                                                "FROM Titles T\n" +
+                    "WHERE T.TitleID in ( SELECT A.TitleID FROM Actuo A WHERE A.ArtistID=?);");     
+                    titlesPrepared.setInt(1,r.getID()); 
+        this.shouldSleep = false;
+        }
+        catch(SQLException se){
+                 System.out.println(se);
+        }  
+        
+    }
     public void prepareStatementSelectTitles(String search){
         r_titlesPrepared= search;
         try{
@@ -516,7 +543,42 @@ public class SQLThread extends Thread{
         
                
     }
-
+    public void insertRelacionActuo(Register art, Register title){
+         try{
+    
+         pts = conn.prepareStatement("INSERT INTO Actuo (ArtistID, TitleID)\n" +
+        "VALUES (?,?)");   
+                    pts.setInt(1,art.getID());
+                    pts.setInt(2,title.getID());
+                    
+                    shouldSleep=false;
+        }
+        catch(SQLException se){
+                 System.out.println(se);
+        }
+    }
+    
+    public void insertRelacionDirigio(Register dir, Register title){
+        
+        try{
+    
+         pts = conn.prepareStatement("INSERT INTO Dirigio (DirectorID, TitleID)\n" +
+        "VALUES (?,?)");   
+                    pts.setInt(1,dir.getID());
+                    pts.setInt(2,title.getID());
+//                    pts.setString(3,r.getBiography());
+//
+//                    pts.setString(4,r.getBirthDate().toString());
+//                    
+//          pstmt.execute();
+                    shouldSleep=false;
+        }
+        catch(SQLException se){
+                 System.out.println(se);
+        }
+        
+        
+    }
     public void insertPersonKind(Person r,String kindName) {
                   
 //        PreparedStatement pstmt = null;
@@ -636,6 +698,254 @@ public class SQLThread extends Thread{
                  System.out.println(se);
         } 
     }
+
+//    public void prepareMassiveDeleteActuo(List<Register> s)
+//    {
+//        try{
+//            
+//            
+//            String preSQL = "DELETE FROM Actuo \n"+
+//        "WHERE ";
+//            String middleSQL ="";
+//            for(Register r : s)
+//            {
+////                Register n = (Register)s; 
+//                middleSQL+= ("ArtistID =? OR ");
+//                
+//            }
+//            middleSQL+=("ArtistID =? ; \n" );
+//            
+//            preSQL+=middleSQL;
+////            preSQL+="DELETE FROM Actuo \n"+
+////        "WHERE "+ middleSQL;
+//            
+//         pts = conn.prepareStatement(preSQL); 
+//         
+//             int i = 1;
+//             Register last = null;
+//            for(Register r : s){
+////                Register n = (Register)s; 
+//               pts.setInt(i,r.getID());
+//               last = r;
+//                i++;
+//            }
+//            
+//               pts.setInt(i++,last.getID());
+//               
+//               shouldSleep=false;
+//        }
+//        catch(SQLException se){
+//                 System.out.println(se);
+//        } 
+//               
+//    }
+    
+    public String prepareSQLDelete(String tableName, String column ,List<Register> s){
+        
+            
+            String preSQL = "DELETE FROM "+tableName+" \n"+
+        "WHERE ";
+            String middleSQL ="";
+            
+            Register last = null;
+            for(Register r : s)
+            {
+
+                middleSQL+= (column +"ID ="+r.getID()+" OR ");
+                last = r;   
+            }
+            middleSQL+=(column +"ID ="+last.getID() +";\n" );
+            
+        return (preSQL+middleSQL);
+    }
+    public void prepareMassiveDelete(String pp)
+    {
+            PreparedStatement delS = null;
+        try{
+//            
+            
+            
+         delS = conn.prepareStatement(pp);
+         delS.execute();
+                       
+                   } catch (SQLException ex) {
+                       Logger.getLogger(SQLThread.class.getName()).log(Level.SEVERE, null, ex);
+                   }
+      finally{
+//            
+            try{
+                if(delS!=null)
+                    delS.close();
+                
+            }catch(SQLException se2){
+                
+            }
+        }
+    }
+    
+     public void prepareDeleteRelacionActuo(Register r ,Register s)
+    {
+        try{
+         pts = conn.prepareStatement("DELETE FROM Actuo \n"+
+        "WHERE TitleID =? AND ArtistID=?"); 
+         pts.setInt(1,r.getID()); 
+         pts.setInt(2,s.getID()); 
+        shouldSleep=false;
+        }
+        catch(SQLException se){
+                 System.out.println(se);
+        } 
+    }
+     public void prepareDeleteRelacionDirigio(Register r ,Register s)
+    {
+        try{
+         pts = conn.prepareStatement("DELETE FROM Dirigio \n"+
+        "WHERE TitleID =? AND DirectorID=?"); 
+         pts.setInt(1,r.getID()); 
+         pts.setInt(2,s.getID()); 
+        shouldSleep=false;
+        }
+        catch(SQLException se){
+                 System.out.println(se);
+        } 
+    }
+     
+     public Person resloveArtistID(Person r){
+         
+          
+          
+          
+             
+             Person good =null;
+             ResultSet rs;
+             
+              PreparedStatement pstmt=null;
+              
+              PreparedStatement insertPST=null;
+         try {
+                  
+                        insertPST = conn.prepareStatement("INSERT INTO Artists (FirstName, LastName, Biography,BirthDate)\n" +
+        "VALUES (?,?,?,?)");   
+                    insertPST.setString(1,r.getFirstName());
+                    insertPST.setString(2,r.getLastName());
+                    insertPST.setString(3,r.getBiography());
+                    insertPST.setString(4,r.getBirthDate().toString());
+                    
+                        insertPST.execute();
+                                
+                       pstmt = conn.prepareStatement("SELECT * FROM Artists WHERE FirstName= ? ");
+                       pstmt.setString(1,r.getFirstName()); 
+                       rs = pstmt.executeQuery();
+                       
+                   
+            while (rs.next()) {
+                
+                Integer personID = rs.getInt("ArtistID");
+                String firstName = rs.getString("FirstName");
+                String lastName = rs.getString("LastName");
+                String biogra = rs.getString("Biography");
+                String dateString = rs.getString("BirthDate");
+                java.sql.Date d;
+
+
+                d =  java.sql.Date.valueOf(dateString);
+            
+                good = new Person(personID, firstName,lastName,biogra,d);
+                  
+            }
+            
+            
+                 
+            
+                 
+            } catch (SQLException ex) {
+                       Logger.getLogger(SQLThread.class.getName()).log(Level.SEVERE, null, ex);
+             
+            }
+             finally{
+            
+            try{
+                if(pstmt!=null)
+                    pstmt.close();
+                
+            }catch(SQLException se2){  
+                
+            }
+             
+            }
+             
+             return good;
+         
+     }
+       
+               
+     public Person resolveDirectorID(Person r){
+         
+          
+          
+          
+             
+             Person good =null;
+             ResultSet rs;
+             
+              PreparedStatement pstmt=null;
+              
+              
+              PreparedStatement insertPST=null;
+         try {
+                  
+                        insertPST = conn.prepareStatement("INSERT INTO Directors (FirstName, LastName, Biography,BirthDate)\n" +
+        "VALUES (?,?,?,?)");   
+                    insertPST.setString(1,r.getFirstName());
+                    insertPST.setString(2,r.getLastName());
+                    insertPST.setString(3,r.getBiography());
+                    insertPST.setString(4,r.getBirthDate().toString());
+                    
+                        insertPST.execute();
+                                
+                       pstmt = conn.prepareStatement("SELECT * FROM Directors WHERE FirstName=? ");
+                       pstmt.setString(1,r.getFirstName()); 
+                       rs = pstmt.executeQuery();
+                   
+            while (rs.next()) {
+                
+                Integer personID = rs.getInt("DirectorID");
+                String firstName = rs.getString("FirstName");
+                String lastName = rs.getString("LastName");
+                String biogra = rs.getString("Biography");
+                String dateString = rs.getString("BirthDate");
+                java.sql.Date d;
+
+
+                d =  java.sql.Date.valueOf(dateString);
+            
+                good = new Person(personID, firstName,lastName,biogra,d);
+                  
+            }
+            
+            
+                 
+            
+                 
+            } catch (SQLException ex) {
+                       Logger.getLogger(SQLThread.class.getName()).log(Level.SEVERE, null, ex);
+             
+            }
+             finally{
+            
+            try{
+                if(pstmt!=null)
+                    pstmt.close();
+                
+            }catch(SQLException se2){  
+                
+            }
+             
+            }
+             
+             return good;
+         
+     }
 
     
 }
