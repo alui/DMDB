@@ -98,4 +98,9 @@ public class Person extends Register {
     }
 
    
+    
+    @Override
+    public String toString(){
+        return firstName + " "+lastName;
+    }
 }

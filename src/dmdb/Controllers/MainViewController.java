@@ -49,7 +49,7 @@ import javafx.scene.layout.BorderPane;
  *
  * @author Alfonso
  */
-public class MainViewController implements Initializable, RegisterDelegate {
+public class MainViewController implements Initializable, RegisterDelegate,SearchDelegate {
     
     
     
@@ -267,7 +267,7 @@ public class MainViewController implements Initializable, RegisterDelegate {
                     sqlThread.prepareMassiveDelete(sqlThread.prepareSQLDelete("Actuo", "Artist", items));
                     sqlThread.prepareMassiveDelete(sqlThread.prepareSQLDelete("Artists", "Artist", items));
                     artistsTable.getSelectionModel().clearSelection();
-
+                    
             
         }else if (tabDirectors.isSelected()){
             
@@ -361,6 +361,7 @@ public class MainViewController implements Initializable, RegisterDelegate {
     a_lastNameCol.setCellValueFactory(new PropertyValueFactory("lastName"));
     a_birthDateCol.setCellValueFactory(new PropertyValueFactory("birthDate"));
     a_bioCol.setCellValueFactory(new PropertyValueFactory("biography"));
+    
  
 //        tableArtists.getColumns().setAll(firstNameCol, lastNameCol,dateCol);
         
@@ -543,12 +544,25 @@ public class MainViewController implements Initializable, RegisterDelegate {
         
     }
     
-    public void advancedSearch(){
-        sqlThread.tryAgain();
+    private AnchorPane searchView;
+    private  AdvancedSearchViewController controller;
+    public void advancedSearch() throws IOException{
         
-        sqlThread.reload();
+        if(searchView ==null){
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AdvancedSearchView.fxml"));     
 
-        
+        searchView = (AnchorPane)fxmlLoader.load(); 
+//        
+        controller = fxmlLoader.<AdvancedSearchViewController>getController();
+        } 
+        controller.setDelegate(this);
+        controller.setSQLThread(sqlThread);       
+//        
+       
+
+        lastTemporaryNode = searchView;
+        mainPane.getChildren().remove(searchBorderPane);
+        mainPane.getChildren().add(searchView);
         
     }
     
@@ -572,6 +586,23 @@ public class MainViewController implements Initializable, RegisterDelegate {
         sqlThread.setTitlesTable(titlesTable);
         sqlThread.reload();
 
+    }
+    @Override 
+    public void closeAdvancedSearch(){
+        
+        
+        if(lastTemporaryNode!=null)
+        {
+            mainPane.getChildren().remove(lastTemporaryNode);
+           
+        }
+        mainPane.getChildren().add(searchBorderPane);
+        
+        
+//        sqlThread.setArtistsTable(artistsTable);
+//        sqlThread.setDirectorsTable(directorsTable);
+//        sqlThread.setTitlesTable(titlesTable);
+//        sqlThread.reload();
     }
     
     

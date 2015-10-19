@@ -30,8 +30,8 @@ public class Title extends Register {
     private Image coverImage;
     
     
-    public Title(){
-        titleID=null;
+    public Title(int id){
+        titleID=id;
         name = "";
         releaseDate = null;
         coverImage = null;

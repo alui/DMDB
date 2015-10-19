@@ -7,6 +7,7 @@
 package dmdb.Controllers;
 
 import dmdb.Registers.Person;
+import dmdb.Registers.Register;
 import dmdb.Registers.Title;
 import dmdb.Thread.SQLThread;
 import java.io.IOException;
@@ -23,11 +24,14 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -35,7 +39,11 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.util.Callback;
+import javafx.util.StringConverter;
 
 
 /**
@@ -46,7 +54,7 @@ public class NewPersonController implements Initializable {
     
     private boolean isDirector;
     private Person oldPerson = null;
-    private MainViewController delegate;
+    private RegisterDelegate delegate;
     private SQLThread sqlThread;
     
     
@@ -80,6 +88,9 @@ public class NewPersonController implements Initializable {
     
              private ObservableList<Title> dummyList;
              private boolean isDummyPerson;
+             
+    @FXML
+    private ComboBox<Title> titlesComboBox;
     
     public void cancel(){
         
@@ -165,21 +176,27 @@ public class NewPersonController implements Initializable {
          
      }
     
-    @FXML
-    private ComboBox<Title> titlesComboBox;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         date.setValue(LocalDate.of(2000, Month.JANUARY, 1));
         this.updateCellFactoryForTables();
+        
          dummyList= FXCollections.observableArrayList();
          isDummyPerson = true;
-        
+         titlesComboBox.setOnAction(e->{
+             
+             selectComboItem();
+         }
+             
+         );
        
     } 
 
     public void selectComboItem(){
         
         Object o = titlesComboBox.getValue();
+//        titlesComboBox.getEditor().selectAll();
+        
         if(o instanceof Title)
         {   Title t = (Title)o;
         
@@ -187,7 +204,6 @@ public class NewPersonController implements Initializable {
             {
                 dummyList.add(t);
                 
-                titlesComboBox.setValue(null);
                 
                 if(isDirector)
                 {
@@ -267,7 +283,7 @@ public class NewPersonController implements Initializable {
              sqlDate = new java.sql.Date(d.getTime());
              
              
-            Person k = new Person(0,"__*","","",sqlDate);
+            Person k = new Person(-1,"","","",sqlDate);
             
             
             if(isDirector)

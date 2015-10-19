@@ -71,7 +71,7 @@
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                            </opaqueInsets>
                         </Label>
-                        <ComboBox fx:id="titlesComboBox" editable="true" onAction="#selectComboItem" onKeyReleased="#updateComboList" prefHeight="26.0" prefWidth="189.0" promptText="Add more movies" />
+                        <ComboBox fx:id="titlesComboBox" editable="true" onKeyReleased="#updateComboList" prefHeight="26.0" prefWidth="189.0" promptText="Add more movies" />
                         <Button mnemonicParsing="false" onAction="#delete" prefHeight="26.0" prefWidth="66.0" text="Delete" GridPane.columnIndex="4">
                            <HBox.margin>
                               <Insets left="10.0" />
