@@ -8,6 +8,7 @@ package dmdb.Registers;
 //import dmdb.Register;
 
 import java.sql.Date;
+import java.util.Objects;
 
 
 
@@ -30,6 +31,7 @@ public class Person extends Register {
     private String biography;
     
     private Date birthDate;
+    private String gender;
     
 
     
@@ -59,17 +61,19 @@ public class Person extends Register {
         lastName="";   
         biography = "";
         birthDate = null;
+        gender = "";
         
         
     }
     
-    public Person(Integer id, String f, String l, String b, Date d){
+    public Person(Integer id, String f, String l, String b, Date d, String g){
         
         personID = id;
         firstName = f;
         lastName=l;   
         biography = b;
-        birthDate = d;     
+        birthDate = d; 
+        gender = g;
         
     }
     
@@ -102,5 +106,16 @@ public class Person extends Register {
     @Override
     public String toString(){
         return firstName + " "+lastName;
+    }
+    
+    @Override
+    public boolean equals(Object o ){
+        boolean isEqual = false;
+        if(o instanceof Person){
+            Person t = (Person)o;
+            if(Objects.equals(t.personID, this.personID))
+                isEqual=true;
+        }
+        return isEqual;
     }
 }

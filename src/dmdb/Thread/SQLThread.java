@@ -11,8 +11,9 @@ import dmdb.Registers.Title;
 import javafx.collections.ObservableList;
 
 import java.sql.*;
-import java.time.LocalDate;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
@@ -78,11 +79,10 @@ public class SQLThread extends Thread{
     private TableView<Person> directorsTable;
     
             
-    private PreparedStatement pts;
-    private PreparedStatement directorsPrepared;
-    private PreparedStatement artistsPrepared;
-    private PreparedStatement titlesPrepared;
-    
+    private PreparedStatement selectDirectorsForTable;
+    private PreparedStatement selectArtistsForTable;
+    private PreparedStatement selectTitlesForTable;
+    private Queue<PreparedStatement> listPts;
     
     //For OTher controllers
     public void setTitlesComboBox(ComboBox<Title> obs){
@@ -90,16 +90,25 @@ public class SQLThread extends Thread{
         
     }
     private ComboBox<Title> titlesComboBox;
-    private PreparedStatement titlesComboPrepared;
+    private PreparedStatement selectTitlesForComboBox;
     
     
-     public void setPersonComboBox(ComboBox<Person> obs){
-        personComboBox=obs;
+     public void setDirectorComboBox(ComboBox<Person> obs){
+        directorComboBox=obs;
         
     }
      
-    private ComboBox<Person> personComboBox;
-    private PreparedStatement personComboPrepared;
+    private ComboBox<Person> directorComboBox;
+    private PreparedStatement selectDirectorsForComboBox;
+    
+    
+     public void setArtistsComboBox(ComboBox<Person> obs){
+        artistsComboBox=obs;
+        
+    }
+     
+    private ComboBox<Person> artistsComboBox;
+    private PreparedStatement selectArtistsForComboBox;
     
     //FOR RELAODING PURPOSES ONLY
     private String r_directorsPrepared;
@@ -112,6 +121,9 @@ public class SQLThread extends Thread{
     @Override
     public void run() {
          shouldSleep = true;
+         
+         listPts = new LinkedList<PreparedStatement>() {};
+         
         
         try {
             
@@ -129,6 +141,10 @@ public class SQLThread extends Thread{
                System.out.println(ex);
         } 
         
+                this.selectArtists("");
+                this.selectDirectors("");
+                this.selectTitles("");
+        
         while(true){
                try {
                    
@@ -141,30 +157,29 @@ public class SQLThread extends Thread{
                }
                 
           
-               
-
-            if(pts!=null){
+             
+             PreparedStatement p;
+             while( ( p = listPts.poll())!=null)
+             {
                try {
-                   pts.execute();
+                   p.execute();
                } catch (SQLException ex) {
-                   Logger.getLogger(SQLThread.class.getName()).log(Level.SEVERE, null, ex);
                }
                finally{
-//            
                     try{
-                        if(pts!=null)
-                            pts.close();
-                        pts=null;
+                        if(p!=null)
+                            p.close();
                     }catch(SQLException se2){
-                        pts=null;
                     }
                 }
-            }
-            if(titlesComboPrepared!=null){
+                 
+             }
+             
+            if(selectTitlesForComboBox!=null){
                  ObservableList<Title> innerObsk = FXCollections.observableArrayList();
                  ResultSet rs;
                  try {
-                     rs = titlesComboPrepared.executeQuery();
+                     rs = selectTitlesForComboBox.executeQuery();
                     while (rs.next()) {
 
                         Integer ID = rs.getInt("TitleID");
@@ -184,8 +199,6 @@ public class SQLThread extends Thread{
                     Platform.runLater(() -> {
 
                         titlesComboBox.getItems().removeAll(titlesComboBox.getItems());
-                        System.out.println("\n\nPrintin" + innerObsk);
-                        System.out.println("Later" + innerObsk);
                         innerObsk.removeAll(titlesTable.getItems());
                         titlesComboBox.getItems().addAll(innerObsk);
 
@@ -204,23 +217,23 @@ public class SQLThread extends Thread{
                 }finally{
 
                     try{
-                        if(titlesComboPrepared!=null)
-                            titlesComboPrepared.close();
-                        titlesComboPrepared=null;
+                        if(selectTitlesForComboBox!=null)
+                            selectTitlesForComboBox.close();
+                        selectTitlesForComboBox=null;
                     }catch(SQLException se2){  
-                        titlesComboPrepared=null;
+                        selectTitlesForComboBox=null;
 
                     }
                 }    
                 
             }
             
-            if(personComboPrepared!=null)
+            if(selectDirectorsForComboBox!=null)
             {
-                 ObservableList<Person> innerObsk = FXCollections.observableArrayList();
+             ObservableList<Person> innerObsk = FXCollections.observableArrayList();
              ResultSet rs;
              try {
-                 rs = personComboPrepared.executeQuery();
+                 rs = selectDirectorsForComboBox.executeQuery();
                    
              
                 while (rs.next()) {
@@ -239,19 +252,19 @@ public class SQLThread extends Thread{
 
 
                     d =  java.sql.Date.valueOf(dateString);
-                    Person r = new Person(id, firstName,lastName,biogra,d);
+                    Person r = new Person(id, firstName,lastName,biogra,d,"Male");
                      innerObsk.add(r);   
                 }
                 Platform.runLater(() -> {
-
-                    personComboBox.getItems().removeAll(personComboBox.getItems());
                     
-                    personComboBox.getItems().addAll(innerObsk);
+                    directorComboBox.getItems().removeAll(directorComboBox.getItems());
+                    innerObsk.removeAll(directorsTable.getItems());
+                    directorComboBox.getItems().addAll(innerObsk);
 
-                     if(personComboBox.getItems().size()>0)
-                            personComboBox.show();
+                     if(directorComboBox.getItems().size()>0)
+                            directorComboBox.show();
                         else
-                            personComboBox.hide();
+                            directorComboBox.hide();
 
                    });
                 } catch (SQLException ex) {
@@ -260,23 +273,79 @@ public class SQLThread extends Thread{
                 }finally{
 
                     try{
-                        if(personComboPrepared!=null)
-                            personComboPrepared.close();
-                        personComboPrepared=null;
+                        if(selectDirectorsForComboBox!=null)
+                            selectDirectorsForComboBox.close();
+                        selectDirectorsForComboBox=null;
                     }catch(SQLException se2){  
-                        personComboPrepared=null;
+                        selectDirectorsForComboBox=null;
 
                     }
                 }    
                 
             }
             //personComboPrepared
+            if(selectArtistsForComboBox!=null)
+            {
+                 ObservableList<Person> innerObsk = FXCollections.observableArrayList();
+             ResultSet rs;
+             try {
+                 rs = selectArtistsForComboBox.executeQuery();
+                   
+             
+                while (rs.next()) {
+                    Integer id;
+                    try{
+                        id = rs.getInt("ArtistID");
+                    }catch(SQLException e){
+                        id = rs.getInt("DirectorID");
+                    }
+
+                    String firstName = rs.getString("FirstName");
+                    String lastName = rs.getString("LastName");
+                    String biogra = rs.getString("Biography");
+                    String dateString = rs.getString("BirthDate");
+                    java.sql.Date d;
+
+
+                    d =  java.sql.Date.valueOf(dateString);
+                    Person r = new Person(id, firstName,lastName,biogra,d,"Male");
+                     innerObsk.add(r);   
+                }
+                Platform.runLater(() -> {
+
+                    artistsComboBox.getItems().removeAll(artistsComboBox.getItems());
+                    
+                    innerObsk.removeAll(artistsTable.getItems());
+                    artistsComboBox.getItems().addAll(innerObsk);
+
+                     if(artistsComboBox.getItems().size()>0)
+                            artistsComboBox.show();
+                        else
+                            artistsComboBox.hide();
+
+                   });
+                } catch (SQLException ex) {
+                           Logger.getLogger(SQLThread.class.getName()).log(Level.SEVERE, null, ex);
+
+                }finally{
+
+                    try{
+                        if(selectArtistsForComboBox!=null)
+                            selectArtistsForComboBox.close();
+                        selectArtistsForComboBox=null;
+                    }catch(SQLException se2){  
+                        selectArtistsForComboBox=null;
+
+                    }
+                }    
+                
+            }
             
-            if(artistsPrepared!=null){
+            if(selectArtistsForTable!=null){
              ObservableList<Person> innerObs = FXCollections.observableArrayList();
              ResultSet rs;
                 try {  
-                    rs = artistsPrepared.executeQuery();
+                    rs = selectArtistsForTable.executeQuery();
                     while (rs.next()) {
 
                         Integer personID = rs.getInt("ArtistID");
@@ -286,7 +355,7 @@ public class SQLThread extends Thread{
                         String dateString = rs.getString("BirthDate");
                         java.sql.Date d;
                         d =  java.sql.Date.valueOf(dateString);
-                        Person r = new Person(personID, firstName,lastName,biogra,d);
+                        Person r = new Person(personID, firstName,lastName,biogra,d,"Male");
                          innerObs.add(r);  
                     }
                     Platform.runLater(() -> {
@@ -302,11 +371,11 @@ public class SQLThread extends Thread{
                 }finally{
 
                     try{
-                        if(artistsPrepared!=null)
-                            artistsPrepared.close();
-                        artistsPrepared=null;
+                        if(selectArtistsForTable!=null)
+                            selectArtistsForTable.close();
+                        selectArtistsForTable=null;
                     }catch(SQLException se2){  
-                        artistsPrepared=null;
+                        selectArtistsForTable=null;
 
                     }
              
@@ -314,7 +383,7 @@ public class SQLThread extends Thread{
         
               
              
-            if(directorsPrepared!=null)
+            if(selectDirectorsForTable!=null)
             {
              ObservableList<Person> innerDirObs = FXCollections.observableArrayList();
              
@@ -323,7 +392,7 @@ public class SQLThread extends Thread{
              try {
                   
                        
-                       rsDir = directorsPrepared.executeQuery();
+                       rsDir = selectDirectorsForTable.executeQuery();
                    
              
             while (rsDir.next()) {
@@ -339,7 +408,7 @@ public class SQLThread extends Thread{
                 d =  java.sql.Date.valueOf(dateString);
             
                 
-                Person r = new Person(personID, firstName,lastName,biogra,d);
+                Person r = new Person(personID, firstName,lastName,biogra,d,"Male");
                 innerDirObs.add(r);  
             }
             
@@ -363,11 +432,11 @@ public class SQLThread extends Thread{
              finally{
             
             try{
-                if(directorsPrepared!=null)
-                    directorsPrepared.close();
-                directorsPrepared=null;
+                if(selectDirectorsForTable!=null)
+                    selectDirectorsForTable.close();
+                selectDirectorsForTable=null;
             }catch(SQLException se2){  
-                directorsPrepared=null;
+                selectDirectorsForTable=null;
                 
             }
                 }    
@@ -377,7 +446,7 @@ public class SQLThread extends Thread{
                 
             
                 
-            if(titlesPrepared!=null)
+            if(selectTitlesForTable!=null)
             {
              ObservableList<Title> innerObsk = FXCollections.observableArrayList();
              
@@ -386,7 +455,7 @@ public class SQLThread extends Thread{
              try {
                   
                        
-                       rs = titlesPrepared.executeQuery();
+                       rs = selectTitlesForTable.executeQuery();
                    
              
             while (rs.next()) {
@@ -426,11 +495,11 @@ public class SQLThread extends Thread{
              finally{
             
             try{
-                if(titlesPrepared!=null)
-                    titlesPrepared.close();
-                titlesPrepared=null;
+                if(selectTitlesForTable!=null)
+                    selectTitlesForTable.close();
+                selectTitlesForTable=null;
             }catch(SQLException se2){  
-                titlesPrepared=null;
+                selectTitlesForTable=null;
                 
             }
                 }    
@@ -444,15 +513,7 @@ public class SQLThread extends Thread{
             }
         
     }
-     
-    public void tryAgain(){
-//        shouldSleep = false;
-        if(shouldSleep==false)
-            shouldSleep=true;
-        else if(shouldSleep==true)
-            shouldSleep=false;
-            
-    }
+    
     public void close(){
         
          
@@ -464,13 +525,13 @@ public class SQLThread extends Thread{
     }
     
             
-    public void prepareSelectParticipatingTitlesForDirector(Register r)
+    public void selectTitlesForDirector(Register r)
     {
         try{
-         titlesPrepared = conn.prepareStatement("SELECT T.*\n" +
+         selectTitlesForTable = conn.prepareStatement("SELECT T.*\n" +
                                                 "FROM Titles T\n" +
                     "WHERE T.TitleID in ( SELECT A.TitleID FROM Dirigio A WHERE A.DirectorID=?);");     
-                    titlesPrepared.setInt(1,r.getID()); 
+                    selectTitlesForTable.setInt(1,r.getID()); 
         this.shouldSleep = false;
         }
         catch(SQLException se){
@@ -478,14 +539,14 @@ public class SQLThread extends Thread{
         }  
 
     }
-    public void prepareSelectParticipatingTitlesForArtist(Register r)
+    public void selectTitlesForArtist(Register r)
     {
         
         try{
-         titlesPrepared = conn.prepareStatement("SELECT T.*\n" +
+         selectTitlesForTable = conn.prepareStatement("SELECT T.*\n" +
                                                 "FROM Titles T\n" +
                     "WHERE T.TitleID in ( SELECT A.TitleID FROM Actuo A WHERE A.ArtistID=?);");     
-                    titlesPrepared.setInt(1,r.getID()); 
+                    selectTitlesForTable.setInt(1,r.getID()); 
         this.shouldSleep = false;
         }
         catch(SQLException se){
@@ -493,12 +554,46 @@ public class SQLThread extends Thread{
         }  
         
     }
-    public void prepareStatementSelectTitles(String search){
+    
+    public void selectArtistsForTitle(Register r)
+    {
+        
+        try{
+         selectArtistsForTable = conn.prepareStatement("SELECT T.*\n" +
+                                                "FROM Artists T\n" +
+                    "WHERE T.ArtistID in ( SELECT ArtistID FROM Actuo WHERE TitleID=?);");     
+                    selectArtistsForTable.setInt(1,r.getID()); 
+                    
+        this.shouldSleep = false;
+        }
+        catch(SQLException se){
+                 System.out.println(se);
+        }  
+        
+    }
+      
+    public void selectDirectorsForTitle(Register r)
+    {
+        
+        try{
+         selectDirectorsForTable = conn.prepareStatement("SELECT T.*\n" +
+                                                "FROM Directors T\n" +
+                    "WHERE T.DirectorID in ( SELECT DirectorID FROM Dirigio WHERE TitleID=?);");     
+                    selectDirectorsForTable.setInt(1,r.getID()); 
+                    
+        this.shouldSleep = false;
+        }
+        catch(SQLException se){
+                 System.out.println(se);
+        }  
+        
+    }
+    public void selectTitles(String search){
         r_titlesPrepared= search;
         try{
-         titlesPrepared = conn.prepareStatement("SELECT * FROM Titles WHERE Name LIKE ? OR Genere LIKE ?");     
-                    titlesPrepared.setString(1,search+"%"); 
-                    titlesPrepared.setString(2,search+"%"); 
+         selectTitlesForTable = conn.prepareStatement("SELECT * FROM Titles WHERE Name LIKE ? OR Genere LIKE ?");     
+                    selectTitlesForTable.setString(1,search+"%"); 
+                    selectTitlesForTable.setString(2,search+"%"); 
               
                     
         this.shouldSleep = false;
@@ -507,11 +602,11 @@ public class SQLThread extends Thread{
                  System.out.println(se);
         }  
     }
-     public void prepareStatementSelectComboTitles(String search){
+     public void selectComboTitles(String search){
         try{
-         titlesComboPrepared = conn.prepareStatement("SELECT * FROM Titles WHERE Name LIKE ? OR Genere LIKE ?");     
-                    titlesComboPrepared.setString(1,search+"%"); 
-                    titlesComboPrepared.setString(2,search+"%"); 
+         selectTitlesForComboBox = conn.prepareStatement("SELECT * FROM Titles WHERE Name LIKE ? OR Genere LIKE ?");     
+                    selectTitlesForComboBox.setString(1,search+"%"); 
+                    selectTitlesForComboBox.setString(2,search+"%"); 
               
                     
         this.shouldSleep = false;
@@ -520,13 +615,11 @@ public class SQLThread extends Thread{
                  System.out.println(se);
         }  
     }
-      public void prepareStatementSelectComboPersons(String search){
+      public void selectComboDirectors(String search){
         try{
-         personComboPrepared = conn.prepareStatement("SELECT * FROM  Directors  WHERE FirstName LIKE ? OR LastName LIKE ? ");     
-                    personComboPrepared.setString(1,search+"%");  
-                    personComboPrepared.setString(2,search+"%");  
-//                    personComboPrepared.setString(3,search+"%");  
-//                    personComboPrepared.setString(4,search+"%"); 
+         selectDirectorsForComboBox = conn.prepareStatement("SELECT * FROM  Directors  WHERE FirstName LIKE ? OR LastName LIKE ? ");     
+                    selectDirectorsForComboBox.setString(1,search+"%");  
+                    selectDirectorsForComboBox.setString(2,search+"%");  
               
                     
         this.shouldSleep = false;
@@ -535,13 +628,26 @@ public class SQLThread extends Thread{
                  System.out.println(se);
         }  
     }
-    public void prepareStatementSelectDirectors(String search){
+       public void selectComboArtists(String search){
+        try{
+         selectArtistsForComboBox = conn.prepareStatement("SELECT * FROM  Artists  WHERE FirstName LIKE ? OR LastName LIKE ? ");     
+                    selectArtistsForComboBox.setString(1,search+"%");  
+                    selectArtistsForComboBox.setString(2,search+"%");  
+              
+                    
+        this.shouldSleep = false;
+        }
+        catch(SQLException se){
+                 System.out.println(se);
+        }  
+    }
+    public void selectDirectors(String search){
            r_directorsPrepared  =search;
         try{
         
-            directorsPrepared = conn.prepareStatement("SELECT * FROM Directors WHERE FirstName LIKE ? OR LastName LIKE ? ");                   
-                    directorsPrepared.setString(1,search+"%"); 
-                    directorsPrepared.setString(2,search+"%");
+            selectDirectorsForTable = conn.prepareStatement("SELECT * FROM Directors WHERE FirstName LIKE ? OR LastName LIKE ? ");                   
+                    selectDirectorsForTable.setString(1,search+"%"); 
+                    selectDirectorsForTable.setString(2,search+"%");
                  
                     
               
@@ -552,13 +658,13 @@ public class SQLThread extends Thread{
                  System.out.println(se);
         } 
     }
-    public void prepareStatementSelectArtists(String search){
+    public void selectArtists(String search){
         r_artistsPrepared = search;
         try{
-            artistsPrepared = conn.prepareStatement("SELECT * FROM Artists WHERE FirstName LIKE ? OR LastName LIKE ? ");                   
+            selectArtistsForTable = conn.prepareStatement("SELECT * FROM Artists WHERE FirstName LIKE ? OR LastName LIKE ? ");                   
                
-                    artistsPrepared.setString(1,search+"%"); 
-                    artistsPrepared.setString(2,search+"%");
+                    selectArtistsForTable.setString(1,search+"%"); 
+                    selectArtistsForTable.setString(2,search+"%");
                     
                 
            
@@ -573,65 +679,58 @@ public class SQLThread extends Thread{
     public void reload() {
         
         if(r_artistsPrepared!=null)
-            prepareStatementSelectArtists(r_artistsPrepared);
+            selectArtists(r_artistsPrepared);
         if(r_directorsPrepared!=null)
-            prepareStatementSelectDirectors(r_directorsPrepared);
+            selectDirectors(r_directorsPrepared);
         if(r_titlesPrepared!=null)
-            prepareStatementSelectTitles(r_titlesPrepared);
+            selectTitles(r_titlesPrepared);
         
                
     }
-    public void insertRelacionActuo(Register art, Register title){
+    public void addRelacionActuo(Register art, Register title){
          try{
     
-         pts = conn.prepareStatement("INSERT INTO Actuo (ArtistID, TitleID)\n" +
+         PreparedStatement temporalPts = conn.prepareStatement("INSERT INTO Actuo (ArtistID, TitleID)\n" +
         "VALUES (?,?)");   
-                    pts.setInt(1,art.getID());
-                    pts.setInt(2,title.getID());
-                    
-                    shouldSleep=false;
+                    temporalPts.setInt(1,art.getID());
+                    temporalPts.setInt(2,title.getID());
+        listPts.add(temporalPts);
         }
         catch(SQLException se){
                  System.out.println(se);
         }
     }
     
-    public void insertRelacionDirigio(Register dir, Register title){
+    public void addRelacionDirigio(Register dir, Register title){
         
         try{
     
-         pts = conn.prepareStatement("INSERT INTO Dirigio (DirectorID, TitleID)\n" +
+         PreparedStatement temporalPts = conn.prepareStatement("INSERT INTO Dirigio (DirectorID, TitleID)\n" +
         "VALUES (?,?)");   
-                    pts.setInt(1,dir.getID());
-                    pts.setInt(2,title.getID());
-//                    pts.setString(3,r.getBiography());
-//
-//                    pts.setString(4,r.getBirthDate().toString());
-//                    
-//          pstmt.execute();
-                    shouldSleep=false;
+                    temporalPts.setInt(1,dir.getID());
+                    temporalPts.setInt(2,title.getID());
+         listPts.add(temporalPts);
         }
         catch(SQLException se){
                  System.out.println(se);
         }
-        
-        
     }
-    public void insertPersonKind(Person r,String kindName) {
+    public void addInsertPersonOfKind(Person r,String kindName) {
                   
-//        PreparedStatement pstmt = null;
+        PreparedStatement pstmt = null;
         try{
     
-         pts = conn.prepareStatement("INSERT INTO "+kindName +"s (FirstName, LastName, Biography,BirthDate)\n" +
+         pstmt = conn.prepareStatement("INSERT INTO "+kindName +"s (FirstName, LastName, Biography,BirthDate)\n" +
         "VALUES (?,?,?,?)");   
-                    pts.setString(1,r.getFirstName());
-                    pts.setString(2,r.getLastName());
-                    pts.setString(3,r.getBiography());
+                    pstmt.setString(1,r.getFirstName());
+                    pstmt.setString(2,r.getLastName());
+                    pstmt.setString(3,r.getBiography());
 
-                    pts.setString(4,r.getBirthDate().toString());
+                    pstmt.setString(4,r.getBirthDate().toString());
                     
 //          pstmt.execute();
-                    shouldSleep=false;
+//                    shouldSleep=false;
+                    listPts.add(pstmt);
         }
         catch(SQLException se){
                  System.out.println(se);
@@ -640,25 +739,24 @@ public class SQLThread extends Thread{
         
     }
 
-    public void updatePersonKind(Person r,String kindName) {
+    public void addUpdatePersonOfKind(Person r,String kindName) {
                   
-//        PreparedStatement pstmt = null;
+        PreparedStatement pstmt = null;
         try{
     
-         pts = conn.prepareStatement(
+         pstmt = conn.prepareStatement(
                  "UPDATE "+ kindName+ "s \n"+
             "SET FirstName= ?, LastName= ?, Biography=?, BirthDate = ? \n"+
            " WHERE "+kindName+"ID= ? "); 
          
-                    pts.setString(1,r.getFirstName());
-                    pts.setString(2,r.getLastName());
-                    pts.setString(3,r.getBiography());
-                    pts.setString(4,r.getBirthDate().toString());
-                    pts.setInt(5,r.getPersonID());
+                    pstmt.setString(1,r.getFirstName());
+                    pstmt.setString(2,r.getLastName());
+                    pstmt.setString(3,r.getBiography());
+                    pstmt.setString(4,r.getBirthDate().toString());
+                    pstmt.setInt(5,r.getPersonID());
                     
-//          pstmt.execute();
+          listPts.add(pstmt);
                     
-                    shouldSleep=false;
         }
         catch(SQLException se){
                  System.out.println(se);
@@ -678,23 +776,23 @@ public class SQLThread extends Thread{
     
    
 
-    public void updateTitle(Title r) {
+    public void addUpdateTitle(Title r) {
           PreparedStatement pstmt = null;
         try{
     
-          pts = conn.prepareStatement(
+          pstmt = conn.prepareStatement(
                  "UPDATE Titles \n"+
             "SET Name= ?, Summary= ?, ReleaseDate = ?, Genere=? \n"+
            " WHERE TitleID= ? "); 
           
-                    pts.setString(1,r.getName());
-                    pts.setString(2,r.getSummary());
-                    pts.setString(3,r.getReleaseDate().toString());
-                    pts.setString(4,r.getGenere());
-                    pts.setInt(5,r.getTitleID());
+                    pstmt.setString(1,r.getName());
+                    pstmt.setString(2,r.getSummary());
+                    pstmt.setString(3,r.getReleaseDate().toString());
+                    pstmt.setString(4,r.getGenere());
+                    pstmt.setInt(5,r.getTitleID());
                     
-//                  
-                    shouldSleep=false;
+                    listPts.add(pstmt);
+                  
         }
         catch(SQLException se){
                  System.out.println(se);
@@ -703,18 +801,17 @@ public class SQLThread extends Thread{
     }
 
     
-    public void insertTitle(Title r) {
+    public void addInsertTitle(Title r) {
 //        PreparedStatement pstmt = null;
         try{
     
-         pts = conn.prepareStatement("INSERT INTO Titles (Name, Summary,ReleaseDate,Genere)\n" +
+         PreparedStatement tpts = conn.prepareStatement("INSERT INTO Titles (Name, Summary,ReleaseDate,Genere)\n" +
         "VALUES (?,?,?,?)");   
-                    pts.setString(1,r.getName());
-                    pts.setString(2,r.getSummary());
-                    pts.setString(3,r.getReleaseDate().toString());
-                    pts.setString(4,r.getGenere());
-
-                    shouldSleep=false;
+                    tpts.setString(1,r.getName());
+                    tpts.setString(2,r.getSummary());
+                    tpts.setString(3,r.getReleaseDate().toString());
+                    tpts.setString(4,r.getGenere());
+          listPts.add(tpts);
         }
         catch(SQLException se){
                  System.out.println(se);
@@ -724,13 +821,13 @@ public class SQLThread extends Thread{
 
     
     
-    public void prepareStatementDelete(String kindName, Register r )
+    public void addDelete(String kindName, Register r )
     {
         try{
-         pts = conn.prepareStatement("DELETE FROM "+kindName+"s \n"+
+         PreparedStatement tPts = conn.prepareStatement("DELETE FROM "+kindName+"s \n"+
         "WHERE "+kindName +"ID =?"); 
-         pts.setInt(1,r.getID());  
-        shouldSleep=false;
+         tPts.setInt(1,r.getID());  
+        listPts.add(tPts);
         }
         catch(SQLException se){
                  System.out.println(se);
@@ -778,7 +875,7 @@ public class SQLThread extends Thread{
 //               
 //    }
     
-    public String prepareSQLDelete(String tableName, String column ,List<Register> s){
+    static public String prepareDelete(String tableName, String column ,List<Register> s){
         
             
             String preSQL = "DELETE FROM "+tableName+" \n"+
@@ -796,59 +893,48 @@ public class SQLThread extends Thread{
             
         return (preSQL+middleSQL);
     }
-    public void prepareMassiveDelete(String pp)
+    public void addDelete(String pp)
     {
-            PreparedStatement delS = null;
+            PreparedStatement del = null;
         try{
-//            
-            
-            
-         delS = conn.prepareStatement(pp);
-         delS.execute();
-                       
-                   } catch (SQLException ex) {
-                       Logger.getLogger(SQLThread.class.getName()).log(Level.SEVERE, null, ex);
-                   }
-      finally{
-//            
-            try{
-                if(delS!=null)
-                    delS.close();
-                
-            }catch(SQLException se2){
-                
-            }
-        }
-    }
-    
-     public void prepareDeleteRelacionActuo(Register r ,Register s)
-    {
-        try{
-         pts = conn.prepareStatement("DELETE FROM Actuo \n"+
-        "WHERE TitleID =? AND ArtistID=?"); 
-         pts.setInt(1,r.getID()); 
-         pts.setInt(2,s.getID()); 
-        shouldSleep=false;
+         del = conn.prepareStatement(pp);
+         listPts.add(del);
         }
         catch(SQLException se){
                  System.out.println(se);
         } 
     }
-     public void prepareDeleteRelacionDirigio(Register r ,Register s)
+    
+     public void addDeleteRelacionActuo(Register title ,Register s)
     {
         try{
-         pts = conn.prepareStatement("DELETE FROM Dirigio \n"+
+         PreparedStatement temporalPts = conn.prepareStatement("DELETE FROM Actuo \n"+
+                 
+        "WHERE TitleID =? AND ArtistID=?"); 
+         temporalPts.setInt(1,title.getID()); 
+         temporalPts.setInt(2,s.getID()); 
+         listPts.add(temporalPts);
+         
+        }
+        catch(SQLException se){
+                 System.out.println(se);
+        } 
+    }
+     public void addDeleteRelacionDirigio(Register r ,Register s)
+    {
+        try{
+         PreparedStatement temporalPts = conn.prepareStatement("DELETE FROM Dirigio \n"+
         "WHERE TitleID =? AND DirectorID=?"); 
-         pts.setInt(1,r.getID()); 
-         pts.setInt(2,s.getID()); 
-        shouldSleep=false;
+         temporalPts.setInt(1,r.getID()); 
+         temporalPts.setInt(2,s.getID()); 
+         listPts.add(temporalPts);
         }
         catch(SQLException se){
                  System.out.println(se);
         } 
     }
      
-     public Person resloveArtistID(Person r){
+     public Person offResloveArtistID(Person r){
          
           
           
@@ -888,7 +974,7 @@ public class SQLThread extends Thread{
 
                 d =  java.sql.Date.valueOf(dateString);
             
-                good = new Person(personID, firstName,lastName,biogra,d);
+                good = new Person(personID, firstName,lastName,biogra,d,"Male");
                   
             }
             
@@ -917,7 +1003,7 @@ public class SQLThread extends Thread{
      }
        
                
-     public Person resolveDirectorID(Person r){
+     public Person offResolveDirectorID(Person r){
          
           
           
@@ -957,35 +1043,28 @@ public class SQLThread extends Thread{
 
                 d =  java.sql.Date.valueOf(dateString);
             
-                good = new Person(personID, firstName,lastName,biogra,d);
-                  
+                good = new Person(personID, firstName,lastName,biogra,d,"Male");
             }
-            
-            
-                 
-            
-                 
             } catch (SQLException ex) {
                        Logger.getLogger(SQLThread.class.getName()).log(Level.SEVERE, null, ex);
              
             }
-             finally{
-            
-            try{
-                if(pstmt!=null)
-                    pstmt.close();
-                
-            }catch(SQLException se2){  
-                
-            }
-             
+                     finally{
+
+                    try{
+                        if(pstmt!=null)
+                            pstmt.close();
+
+                    }catch(SQLException se2){  
+
+                    }
             }
              
              return good;
          
      }
 
-    public void prepareStatementAdvancedPeopleSearch(String firstName, String lastName, Date sqlDate1, Date sqlDate2, Person realPerson) {
+    public void selectArtistsAdvancedSearch(String firstName, String lastName, Date sqlDate1, Date sqlDate2, Person realPerson) {
         try{
                 String sql;
             {
@@ -1027,21 +1106,21 @@ public class SQLThread extends Thread{
                     }
                     
                     System.out.println(sql);
-               artistsPrepared = conn.prepareStatement(sql);
+               selectArtistsForTable = conn.prepareStatement(sql);
                
                if(firstName!=null){
-               artistsPrepared.setString(c++,firstName+"%"); 
+               selectArtistsForTable.setString(c++,firstName+"%"); 
                }
                if(lastName!=null)
-               artistsPrepared.setString(c++,lastName+"%"); 
+               selectArtistsForTable.setString(c++,lastName+"%"); 
                
                if(realPerson!=null)
                {
-                   artistsPrepared.setInt(c++,realPerson.getID()); 
+                   selectArtistsForTable.setInt(c++,realPerson.getID()); 
                    if(sqlDate1!=null && sqlDate2!=null){
-                       artistsPrepared.setString(c++,sqlDate1.toString()); 
+                       selectArtistsForTable.setString(c++,sqlDate1.toString()); 
 
-                       artistsPrepared.setString(c++,sqlDate2.toString()); 
+                       selectArtistsForTable.setString(c++,sqlDate2.toString()); 
                    }
                }
                
@@ -1055,6 +1134,70 @@ public class SQLThread extends Thread{
         catch(SQLException se){
                  System.out.println(se);
         } 
+    }
+
+    public Title offResolveTitleID(Title r) {
+         
+          
+         Title good =null;
+         ResultSet rs;
+         PreparedStatement pstmt=null;
+         PreparedStatement insertPST=null;
+         try {
+                  
+                    insertPST = conn.prepareStatement("INSERT INTO Titles (Name, Summary,ReleaseDate,Genere)\n" +
+        "VALUES (?,?,?,?)");   
+                    insertPST.setString(1,r.getName());
+                    insertPST.setString(2,r.getSummary());
+                    insertPST.setString(3,r.getReleaseDate().toString());
+                    insertPST.setString(4,r.getGenere());
+          
+                    insertPST.execute();
+                                
+                   pstmt = conn.prepareStatement("SELECT * FROM Titles WHERE Name=? ");
+                   pstmt.setString(1,r.getName()); 
+                   rs = pstmt.executeQuery();
+                   
+            while (rs.next()) {
+                
+                Integer ID = rs.getInt("TitleID");
+                String firstName = rs.getString("Name");
+                String summary = rs.getString("Summary");
+
+                String dateString = rs.getString("ReleaseDate");
+
+                java.sql.Date d;
+                d =  java.sql.Date.valueOf(dateString);
+
+                String genere = rs.getString("Genere");
+
+                  good  = new Title(ID, firstName,summary,d,genere);
+                  
+
+            }
+            
+            } catch (SQLException ex) {
+                       Logger.getLogger(SQLThread.class.getName()).log(Level.SEVERE, null, ex);
+             
+            }
+                     finally{
+
+                    try{
+                        if(pstmt!=null)
+                            pstmt.close();
+
+                    }catch(SQLException se2){  
+
+                    }
+            }
+             
+             return good;
+         
+     }
+
+    public void wakeQueue() {
+        this.shouldSleep = false;
+        
     }
     
 }

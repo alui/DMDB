@@ -186,9 +186,9 @@ public class MainViewController implements Initializable, RegisterDelegate,Searc
         choiceBox.getSelectionModel().selectFirst();
 //        
 //        
-        //The AdvanceSearchController should be loaded before hand, with the DBconneciton, and so its delegate.
-        //The ApplicationDelegate will be more focused on to dealing with the system.
-        //Code before this is to prepare independecy for the other methods.
+//        The AdvanceSearchController should be loaded before hand, with the DBconneciton, and so its delegate.
+//        The ApplicationDelegate will be more focused on to dealing with the system.
+//        Code before this is to prepare independecy for the other methods.
         //------------------------***------------------//
         
         
@@ -242,7 +242,9 @@ public class MainViewController implements Initializable, RegisterDelegate,Searc
             //Im thinking not to have a editing button in this controller.
             //But instead allow double clicking over table cells, to open a new/editing register.
         
-    
+        
+        //Show all
+        
     }
     
     public void delete(){
@@ -254,9 +256,10 @@ public class MainViewController implements Initializable, RegisterDelegate,Searc
                     titlesTable.getItems().removeAll(items);
                     
 //                    
-                    sqlThread.prepareMassiveDelete(sqlThread.prepareSQLDelete("Actuo", "Title", items));
-                    sqlThread.prepareMassiveDelete(sqlThread.prepareSQLDelete("Dirigio", "Title", items));
-                    sqlThread.prepareMassiveDelete(sqlThread.prepareSQLDelete("Titles", "Title", items));
+                    sqlThread.addDelete(SQLThread.prepareDelete("Actuo", "Title", items));
+                    sqlThread.addDelete(SQLThread.prepareDelete("Dirigio", "Title", items));
+                    sqlThread.addDelete(SQLThread.prepareDelete("Titles", "Title", items));
+                    sqlThread.wakeQueue();
                     titlesTable.getSelectionModel().clearSelection();
             
             
@@ -264,8 +267,9 @@ public class MainViewController implements Initializable, RegisterDelegate,Searc
             
                     List items =  new ArrayList (artistsTable.getSelectionModel().getSelectedItems());
                     artistsTable.getItems().removeAll(items);
-                    sqlThread.prepareMassiveDelete(sqlThread.prepareSQLDelete("Actuo", "Artist", items));
-                    sqlThread.prepareMassiveDelete(sqlThread.prepareSQLDelete("Artists", "Artist", items));
+                    sqlThread.addDelete(SQLThread.prepareDelete("Actuo", "Artist", items));
+                    sqlThread.addDelete(SQLThread.prepareDelete("Artists", "Artist", items));
+                    sqlThread.wakeQueue();
                     artistsTable.getSelectionModel().clearSelection();
                     
             
@@ -275,8 +279,9 @@ public class MainViewController implements Initializable, RegisterDelegate,Searc
                     List items =  new ArrayList (directorsTable.getSelectionModel().getSelectedItems());  
                     directorsTable.getItems().removeAll(items);
                     
-                    sqlThread.prepareMassiveDelete(sqlThread.prepareSQLDelete("Dirigio", "Director", items));
-                    sqlThread.prepareMassiveDelete(sqlThread.prepareSQLDelete("Directors", "Director", items));
+                    sqlThread.addDelete(SQLThread.prepareDelete("Dirigio", "Director", items));
+                    sqlThread.addDelete(SQLThread.prepareDelete("Directors", "Director", items));
+                    sqlThread.wakeQueue();
                     directorsTable.getSelectionModel().clearSelection();
         }
         
@@ -305,9 +310,9 @@ public class MainViewController implements Initializable, RegisterDelegate,Searc
                     tabPane.getTabs().add(tabDirectors);
                  
                 
-                sqlThread.prepareStatementSelectArtists(searchBox.getText());
-                sqlThread.prepareStatementSelectDirectors(searchBox.getText());
-                sqlThread.prepareStatementSelectTitles(searchBox.getText());
+                sqlThread.selectArtists(searchBox.getText());
+                sqlThread.selectDirectors(searchBox.getText());
+                sqlThread.selectTitles(searchBox.getText());
                 
                 break;
             case "Titles":
@@ -317,7 +322,7 @@ public class MainViewController implements Initializable, RegisterDelegate,Searc
                 tabPane.getTabs().remove(tabDirectors);
                 
                 
-                sqlThread.prepareStatementSelectTitles(searchBox.getText());
+                sqlThread.selectTitles(searchBox.getText());
                 
                 
                 break;
@@ -328,7 +333,7 @@ public class MainViewController implements Initializable, RegisterDelegate,Searc
                 tabPane.getTabs().remove(tabTitles);
                 tabPane.getTabs().remove(tabArtists);
                 
-                sqlThread.prepareStatementSelectDirectors(searchBox.getText());
+                sqlThread.selectDirectors(searchBox.getText());
                 
                 break;
             case "Artists":
@@ -337,7 +342,7 @@ public class MainViewController implements Initializable, RegisterDelegate,Searc
                     tabPane.getTabs().add(tabArtists);
                 tabPane.getTabs().remove(tabTitles);
                 tabPane.getTabs().remove(tabDirectors);
-                sqlThread.prepareStatementSelectArtists(searchBox.getText());
+                sqlThread.selectArtists(searchBox.getText());
 
                 
                 break;
@@ -488,8 +493,7 @@ public class MainViewController implements Initializable, RegisterDelegate,Searc
         NewTitleController controller = fxmlLoader.<NewTitleController>getController();
         controller.setRegisterDelegate(this);
         controller.setSQLThread(sqlThread);
-        if(t!=null)
-         controller.setTitle(t);
+        controller.setTitle(t);
         
 
         lastTemporaryNode = n;
@@ -548,6 +552,12 @@ public class MainViewController implements Initializable, RegisterDelegate,Searc
     private  AdvancedSearchViewController controller;
     public void advancedSearch() throws IOException{
         
+        
+        //The following code is a quick fix.. but very bad indeed.
+                sqlThread.selectArtists("!");
+                sqlThread.selectDirectors("!");
+                sqlThread.selectTitles("!");
+                
         if(searchView ==null){
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AdvancedSearchView.fxml"));     
 
@@ -558,8 +568,9 @@ public class MainViewController implements Initializable, RegisterDelegate,Searc
         controller.setDelegate(this);
         controller.setSQLThread(sqlThread);       
 //        
+        
        
-
+        
         lastTemporaryNode = searchView;
         mainPane.getChildren().remove(searchBorderPane);
         mainPane.getChildren().add(searchView);
@@ -599,10 +610,7 @@ public class MainViewController implements Initializable, RegisterDelegate,Searc
         mainPane.getChildren().add(searchBorderPane);
         
         
-//        sqlThread.setArtistsTable(artistsTable);
-//        sqlThread.setDirectorsTable(directorsTable);
-//        sqlThread.setTitlesTable(titlesTable);
-//        sqlThread.reload();
+        
     }
     
     
