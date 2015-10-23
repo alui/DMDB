@@ -17,4 +17,6 @@ public interface SearchDelegate {
 //    public void doneEditing(Register r); 
 //    
 //    public void createNewRegister(Register r);
+
+    public void artistSearch();
 }

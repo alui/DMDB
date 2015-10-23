@@ -39,16 +39,6 @@ public class SQLThread extends Thread{
     
     //Main Connection
      Connection conn;
-     
-//     
-//     //The thread will be mutable to define which table list will be updated.
-//     //For example, when I load another controller onto the main controller, it might have different artists list.
-//     //I am also thiking of reciving the list-to-update at run time.
-//    ObservableList<Person> artistsObsList;
-//    ObservableList<Person> directorsObsList;
-//    ObservableList<Person> titleObsList;
-//    
-//    //Setters for the mmutable
     
     
     public SQLThread(String user,String pass, String URLDb, String jdbc ){
@@ -121,393 +111,382 @@ public class SQLThread extends Thread{
     @Override
     public void run() {
          shouldSleep = true;
-         
-         listPts = new LinkedList<PreparedStatement>() {};
-         
+         listPts = new LinkedList<PreparedStatement>(){};
         
         try {
-            
-            //STEP 1: Register JDBC driver
-              Class.forName(DbJDBC);
-            
-            //STEP 2: Open a connection
-            System.out.println("Connecting to database in SQL Thread");
-            
-            conn = DriverManager.getConnection(DbURL, DbUser, DbPassword);
-            
-                
-        
-        }catch (ClassNotFoundException | SQLException ex) {
-               System.out.println(ex);
-        } 
-        
-                this.selectArtists("");
-                this.selectDirectors("");
-                this.selectTitles("");
+
+                //STEP 1: Register JDBC driver
+          Class.forName(DbJDBC);
+
+                //STEP 2: Open a connection
+          System.out.println("Connecting to database in SQL Thread");
+
+          conn = DriverManager.getConnection(DbURL, DbUser, DbPassword);
+        }catch(ClassNotFoundException | SQLException ex){
+        System.out.println(ex);
+        }
+
+        this.selectArtists("");
+        this.selectDirectors("");
+        this.selectTitles("");
         
         while(true){
-               try {
-                   
-               if(shouldSleep){
-                       SQLThread.sleep(100);
-                       continue;
-               }
-               } catch (InterruptedException ex) {
-                   Logger.getLogger(SQLThread.class.getName()).log(Level.SEVERE, null, ex);
-               }
-                
-          
-             
-             PreparedStatement p;
-             while( ( p = listPts.poll())!=null)
-             {
-               try {
-                   p.execute();
-               } catch (SQLException ex) {
-               }
-               finally{
-                    try{
-                        if(p!=null)
-                            p.close();
-                    }catch(SQLException se2){
-                    }
-                }
-                 
-             }
-             
-            if(selectTitlesForComboBox!=null){
-                 ObservableList<Title> innerObsk = FXCollections.observableArrayList();
+                try{
+                if(shouldSleep){
+                    SQLThread.sleep(100);
+                    continue;
+                } 
+
+            }
+                catch(InterruptedException ex){
+                Logger.getLogger(SQLThread.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+                PreparedStatement p;
+                while( ( p = listPts.poll())!=null){
+
+
+                    try {
+                        p.execute();
+                    }catch (SQLException ex){
+                    }finally{
+                        try{
+                            if(p!=null)
+                                p.close();
+                        }catch(SQLException se2){
+
+                        }
+                    }}
+            
+            
+                if(selectTitlesForComboBox!=null){
+                     ObservableList<Title> innerObsk = FXCollections.observableArrayList();
+                     ResultSet rs;
+                    try {
+                         rs = selectTitlesForComboBox.executeQuery();
+                        while (rs.next()) {
+
+                            Integer ID = rs.getInt("TitleID");
+                            String firstName = rs.getString("Name");
+                            String summary = rs.getString("Summary");
+
+                            String dateString = rs.getString("ReleaseDate");
+
+                            java.sql.Date d;
+                            d =  java.sql.Date.valueOf(dateString);
+
+                            String genere = rs.getString("Genere");
+
+                            Title r = new Title(ID, firstName,summary,d,genere);
+                            innerObsk.add(r);  
+                        }
+                        Platform.runLater(() -> {
+
+                            titlesComboBox.getItems().removeAll(titlesComboBox.getItems());
+                            innerObsk.removeAll(titlesTable.getItems());
+                            titlesComboBox.getItems().addAll(innerObsk);
+
+                             if(titlesComboBox.getItems().size()>0)
+                                    titlesComboBox.show();
+                                else
+                                    titlesComboBox.hide();
+
+                       });
+
+
+
+                     }
+                    catch (SQLException ex) {
+                         Logger.getLogger(SQLThread.class.getName()).log(Level.SEVERE, null, ex);}
+                    finally{
+
+                        try{
+                            if(selectTitlesForComboBox!=null)
+                                selectTitlesForComboBox.close();
+                            selectTitlesForComboBox=null;
+                        }catch(SQLException se2){  
+                            selectTitlesForComboBox=null;
+
+                        }
+                    }    
+                    
+            }
+
+                if(selectDirectorsForComboBox!=null){
+                 ObservableList<Person> innerObsk = FXCollections.observableArrayList();
                  ResultSet rs;
                  try {
-                     rs = selectTitlesForComboBox.executeQuery();
+                     rs = selectDirectorsForComboBox.executeQuery();
+                       
+                 
                     while (rs.next()) {
+                        Integer id;
+                        try{
+                            id = rs.getInt("ArtistID");
+                        }catch(SQLException e){
+                            id = rs.getInt("DirectorID");
+                        }
 
-                        Integer ID = rs.getInt("TitleID");
-                        String firstName = rs.getString("Name");
-                        String summary = rs.getString("Summary");
-
-                        String dateString = rs.getString("ReleaseDate");
-
-                        java.sql.Date d;
-                        d =  java.sql.Date.valueOf(dateString);
-
-                        String genere = rs.getString("Genere");
-
-                        Title r = new Title(ID, firstName,summary,d,genere);
-                        innerObsk.add(r);  
-                    }
-                    Platform.runLater(() -> {
-
-                        titlesComboBox.getItems().removeAll(titlesComboBox.getItems());
-                        innerObsk.removeAll(titlesTable.getItems());
-                        titlesComboBox.getItems().addAll(innerObsk);
-
-                         if(titlesComboBox.getItems().size()>0)
-                                titlesComboBox.show();
-                            else
-                                titlesComboBox.hide();
-
-                   });
-
-
-
-                } catch (SQLException ex) {
-                           Logger.getLogger(SQLThread.class.getName()).log(Level.SEVERE, null, ex);
-
-                }finally{
-
-                    try{
-                        if(selectTitlesForComboBox!=null)
-                            selectTitlesForComboBox.close();
-                        selectTitlesForComboBox=null;
-                    }catch(SQLException se2){  
-                        selectTitlesForComboBox=null;
-
-                    }
-                }    
-                
-            }
-            
-            if(selectDirectorsForComboBox!=null)
-            {
-             ObservableList<Person> innerObsk = FXCollections.observableArrayList();
-             ResultSet rs;
-             try {
-                 rs = selectDirectorsForComboBox.executeQuery();
-                   
-             
-                while (rs.next()) {
-                    Integer id;
-                    try{
-                        id = rs.getInt("ArtistID");
-                    }catch(SQLException e){
-                        id = rs.getInt("DirectorID");
-                    }
-
-                    String firstName = rs.getString("FirstName");
-                    String lastName = rs.getString("LastName");
-                    String biogra = rs.getString("Biography");
-                    String dateString = rs.getString("BirthDate");
-                    java.sql.Date d;
-
-
-                    d =  java.sql.Date.valueOf(dateString);
-                    Person r = new Person(id, firstName,lastName,biogra,d,"Male");
-                     innerObsk.add(r);   
-                }
-                Platform.runLater(() -> {
-                    
-                    directorComboBox.getItems().removeAll(directorComboBox.getItems());
-                    innerObsk.removeAll(directorsTable.getItems());
-                    directorComboBox.getItems().addAll(innerObsk);
-
-                     if(directorComboBox.getItems().size()>0)
-                            directorComboBox.show();
-                        else
-                            directorComboBox.hide();
-
-                   });
-                } catch (SQLException ex) {
-                           Logger.getLogger(SQLThread.class.getName()).log(Level.SEVERE, null, ex);
-
-                }finally{
-
-                    try{
-                        if(selectDirectorsForComboBox!=null)
-                            selectDirectorsForComboBox.close();
-                        selectDirectorsForComboBox=null;
-                    }catch(SQLException se2){  
-                        selectDirectorsForComboBox=null;
-
-                    }
-                }    
-                
-            }
-            //personComboPrepared
-            if(selectArtistsForComboBox!=null)
-            {
-                 ObservableList<Person> innerObsk = FXCollections.observableArrayList();
-             ResultSet rs;
-             try {
-                 rs = selectArtistsForComboBox.executeQuery();
-                   
-             
-                while (rs.next()) {
-                    Integer id;
-                    try{
-                        id = rs.getInt("ArtistID");
-                    }catch(SQLException e){
-                        id = rs.getInt("DirectorID");
-                    }
-
-                    String firstName = rs.getString("FirstName");
-                    String lastName = rs.getString("LastName");
-                    String biogra = rs.getString("Biography");
-                    String dateString = rs.getString("BirthDate");
-                    java.sql.Date d;
-
-
-                    d =  java.sql.Date.valueOf(dateString);
-                    Person r = new Person(id, firstName,lastName,biogra,d,"Male");
-                     innerObsk.add(r);   
-                }
-                Platform.runLater(() -> {
-
-                    artistsComboBox.getItems().removeAll(artistsComboBox.getItems());
-                    
-                    innerObsk.removeAll(artistsTable.getItems());
-                    artistsComboBox.getItems().addAll(innerObsk);
-
-                     if(artistsComboBox.getItems().size()>0)
-                            artistsComboBox.show();
-                        else
-                            artistsComboBox.hide();
-
-                   });
-                } catch (SQLException ex) {
-                           Logger.getLogger(SQLThread.class.getName()).log(Level.SEVERE, null, ex);
-
-                }finally{
-
-                    try{
-                        if(selectArtistsForComboBox!=null)
-                            selectArtistsForComboBox.close();
-                        selectArtistsForComboBox=null;
-                    }catch(SQLException se2){  
-                        selectArtistsForComboBox=null;
-
-                    }
-                }    
-                
-            }
-            
-            if(selectArtistsForTable!=null){
-             ObservableList<Person> innerObs = FXCollections.observableArrayList();
-             ResultSet rs;
-                try {  
-                    rs = selectArtistsForTable.executeQuery();
-                    while (rs.next()) {
-
-                        Integer personID = rs.getInt("ArtistID");
                         String firstName = rs.getString("FirstName");
                         String lastName = rs.getString("LastName");
                         String biogra = rs.getString("Biography");
                         String dateString = rs.getString("BirthDate");
                         java.sql.Date d;
+
+
                         d =  java.sql.Date.valueOf(dateString);
-                        Person r = new Person(personID, firstName,lastName,biogra,d,"Male");
-                         innerObs.add(r);  
+                        Person r = new Person(id, firstName,lastName,biogra,d,"Male");
+                         innerObsk.add(r);   
                     }
                     Platform.runLater(() -> {
-                        artistsTable.getSelectionModel().clearSelection();
-                        artistsTable.getItems().removeAll(artistsTable.getItems());       
-                        artistsTable.getItems().addAll(innerObs);
-                        artistsTable.setDisable(false);
+                        
+                        directorComboBox.getItems().removeAll(directorComboBox.getItems());
+                        innerObsk.removeAll(directorsTable.getItems());
+                        directorComboBox.getItems().addAll(innerObsk);
+
+                         if(directorComboBox.getItems().size()>0)
+                                directorComboBox.show();
+                            else
+                                directorComboBox.hide();
+
                        });
+                    } catch (SQLException ex) {
+                               Logger.getLogger(SQLThread.class.getName()).log(Level.SEVERE, null, ex);
+
+                    }finally{
+
+                        try{
+                            if(selectDirectorsForComboBox!=null)
+                                selectDirectorsForComboBox.close();
+                            selectDirectorsForComboBox=null;
+                        }catch(SQLException se2){  
+                            selectDirectorsForComboBox=null;
+
+                        }
+                    }    
+                    
+                }
+            
+                if(selectArtistsForComboBox!=null){
+                     ObservableList<Person> innerObsk = FXCollections.observableArrayList();
+                 ResultSet rs;
+                 try {
+                     rs = selectArtistsForComboBox.executeQuery();
+                       
+                 
+                    while (rs.next()) {
+                        Integer id;
+                        try{
+                            id = rs.getInt("ArtistID");
+                        }catch(SQLException e){
+                            id = rs.getInt("DirectorID");
+                        }
+
+                        String firstName = rs.getString("FirstName");
+                        String lastName = rs.getString("LastName");
+                        String biogra = rs.getString("Biography");
+                        String dateString = rs.getString("BirthDate");
+                        java.sql.Date d;
+
+
+                        d =  java.sql.Date.valueOf(dateString);
+                        Person r = new Person(id, firstName,lastName,biogra,d,"Male");
+                         innerObsk.add(r);   
+                    }
+                    Platform.runLater(() -> {
+
+                        artistsComboBox.getItems().removeAll(artistsComboBox.getItems());
+                        
+                        innerObsk.removeAll(artistsTable.getItems());
+                        artistsComboBox.getItems().addAll(innerObsk);
+
+                         if(artistsComboBox.getItems().size()>0)
+                                artistsComboBox.show();
+                            else
+                                artistsComboBox.hide();
+
+                       });
+                    } catch (SQLException ex) {
+                               Logger.getLogger(SQLThread.class.getName()).log(Level.SEVERE, null, ex);
+
+                    }finally{
+
+                        try{
+                            if(selectArtistsForComboBox!=null)
+                                selectArtistsForComboBox.close();
+                            selectArtistsForComboBox=null;
+                        }catch(SQLException se2){  
+                            selectArtistsForComboBox=null;
+
+                        }
+                    }    
+                    
+                }
                 
+                if(selectArtistsForTable!=null){
+                 ObservableList<Person> innerObs = FXCollections.observableArrayList();
+                 ResultSet rs;
+                    try {  
+                        rs = selectArtistsForTable.executeQuery();
+                        while (rs.next()) {
+    //                        for(int i =0;i<10000;i++)
+    //                        {f
+    //                            System.out.println(i);
+    //                        }
+
+                            Integer personID = rs.getInt("ArtistID");
+                            String firstName = rs.getString("FirstName");
+                            String lastName = rs.getString("LastName");
+                            String biogra = rs.getString("Biography");
+                            String dateString = rs.getString("BirthDate");
+                            java.sql.Date d;
+                            d =  java.sql.Date.valueOf(dateString);
+                            Person r = new Person(personID, firstName,lastName,biogra,d,"Male");
+                             innerObs.add(r);  
+                        }
+                        Platform.runLater(() -> {
+                            artistsTable.getSelectionModel().clearSelection();
+                            artistsTable.getItems().removeAll(artistsTable.getItems());       
+                            artistsTable.getItems().addAll(innerObs);
+                            artistsTable.setDisable(false);
+                           });
+                    
+                    } catch (SQLException ex) {
+                               Logger.getLogger(SQLThread.class.getName()).log(Level.SEVERE, null, ex);
+
+                    }finally{
+
+                        try{
+                            if(selectArtistsForTable!=null)
+                                selectArtistsForTable.close();
+                            selectArtistsForTable=null;
+                        }catch(SQLException se2){  
+                            selectArtistsForTable=null;
+
+                        }
+                 
+                }
+                }
+            
+                if(selectDirectorsForTable!=null){
+                    
+                    
+                 ObservableList<Person> innerDirObs = FXCollections.observableArrayList();
+                 
+                 
+                 ResultSet rsDir;
+                 try {
+                      
+                           
+                           rsDir = selectDirectorsForTable.executeQuery();
+                       
+                 
+                while (rsDir.next()) {
+                    
+                    Integer personID = rsDir.getInt("DirectorID");
+                    String firstName = rsDir.getString("FirstName");
+                    String lastName = rsDir.getString("LastName");
+                    String biogra = rsDir.getString("Biography");
+                    String dateString = rsDir.getString("BirthDate");
+                    java.sql.Date d;
+
+
+                    d =  java.sql.Date.valueOf(dateString);
+                
+                    
+                    Person r = new Person(personID, firstName,lastName,biogra,d,"Male");
+                    innerDirObs.add(r);  
+                }
+                
+                
+                     
+                
+                        Platform.runLater(() -> {
+                            directorsTable.getSelectionModel().clearSelection();
+                            directorsTable.getItems().removeAll(directorsTable.getItems());       
+                            directorsTable.getItems().addAll(innerDirObs);
+                            
+                            directorsTable.setDisable(false);
+                           });
+                    
+                     
+                     
                 } catch (SQLException ex) {
                            Logger.getLogger(SQLThread.class.getName()).log(Level.SEVERE, null, ex);
-
-                }finally{
-
-                    try{
-                        if(selectArtistsForTable!=null)
-                            selectArtistsForTable.close();
-                        selectArtistsForTable=null;
-                    }catch(SQLException se2){  
-                        selectArtistsForTable=null;
-
-                    }
-             
-            }
-        
-              
-             
-            if(selectDirectorsForTable!=null)
-            {
-             ObservableList<Person> innerDirObs = FXCollections.observableArrayList();
-             
-             
-             ResultSet rsDir;
-             try {
-                  
-                       
-                       rsDir = selectDirectorsForTable.executeQuery();
-                   
-             
-            while (rsDir.next()) {
+                 
+                }
+                 finally{
                 
-                Integer personID = rsDir.getInt("DirectorID");
-                String firstName = rsDir.getString("FirstName");
-                String lastName = rsDir.getString("LastName");
-                String biogra = rsDir.getString("Biography");
-                String dateString = rsDir.getString("BirthDate");
+                try{
+                    if(selectDirectorsForTable!=null)
+                        selectDirectorsForTable.close();
+                    selectDirectorsForTable=null;
+                }catch(SQLException se2){  
+                    selectDirectorsForTable=null;
+                    
+                }
+                    }    
+                    
+                }
+            
+                if(selectTitlesForTable!=null){
+                 ObservableList<Title> innerObsk = FXCollections.observableArrayList();
+                 
+                 
+                 ResultSet rs;
+                 try {
+                      
+                           
+                           rs = selectTitlesForTable.executeQuery();
+                       
+                 
+                while (rs.next()) {
+                    
+                Integer ID = rs.getInt("TitleID");
+                String firstName = rs.getString("Name");
+                String summary = rs.getString("Summary");
+                
+                String dateString = rs.getString("ReleaseDate");
+                
                 java.sql.Date d;
-
-
                 d =  java.sql.Date.valueOf(dateString);
-            
                 
-                Person r = new Person(personID, firstName,lastName,biogra,d,"Male");
-                innerDirObs.add(r);  
-            }
-            
-            
+                String genere = rs.getString("Genere");
+                
+                  Title r = new Title(ID, firstName,summary,d,genere);
+                  innerObsk.add(r);  
+                }
+                
+                
+                     
+                
+                        Platform.runLater(() -> {
+                            titlesTable.getSelectionModel().clearSelection();
+                            titlesTable.getItems().removeAll(titlesTable.getItems());
+                            titlesTable.getItems().addAll(innerObsk);
+                            
+                            titlesTable.setDisable(false);
+                           });
+                    
+                     
+                     
+                } catch (SQLException ex) {
+                           Logger.getLogger(SQLThread.class.getName()).log(Level.SEVERE, null, ex);
                  
-            
-                    Platform.runLater(() -> {
-                        directorsTable.getSelectionModel().clearSelection();
-                        directorsTable.getItems().removeAll(directorsTable.getItems());       
-                        directorsTable.getItems().addAll(innerDirObs);
-                        
-                        directorsTable.setDisable(false);
-                       });
+                }
+                 finally{
                 
-                 
-                 
-            } catch (SQLException ex) {
-                       Logger.getLogger(SQLThread.class.getName()).log(Level.SEVERE, null, ex);
-             
-            }
-             finally{
-            
-            try{
-                if(selectDirectorsForTable!=null)
-                    selectDirectorsForTable.close();
-                selectDirectorsForTable=null;
-            }catch(SQLException se2){  
-                selectDirectorsForTable=null;
-                
-            }
-                }    
-                
-            }
-            }
-                
-            
-                
-            if(selectTitlesForTable!=null)
-            {
-             ObservableList<Title> innerObsk = FXCollections.observableArrayList();
-             
-             
-             ResultSet rs;
-             try {
-                  
-                       
-                       rs = selectTitlesForTable.executeQuery();
-                   
-             
-            while (rs.next()) {
-                
-            Integer ID = rs.getInt("TitleID");
-            String firstName = rs.getString("Name");
-            String summary = rs.getString("Summary");
-            
-            String dateString = rs.getString("ReleaseDate");
-            
-            java.sql.Date d;
-            d =  java.sql.Date.valueOf(dateString);
-            
-            String genere = rs.getString("Genere");
-            
-              Title r = new Title(ID, firstName,summary,d,genere);
-              innerObsk.add(r);  
-            }
-            
-            
-                 
-            
-                    Platform.runLater(() -> {
-                        titlesTable.getSelectionModel().clearSelection();
-                        titlesTable.getItems().removeAll(titlesTable.getItems());
-                        titlesTable.getItems().addAll(innerObsk);
-                        
-                        titlesTable.setDisable(false);
-                       });
-                
-                 
-                 
-            } catch (SQLException ex) {
-                       Logger.getLogger(SQLThread.class.getName()).log(Level.SEVERE, null, ex);
-             
-            }
-             finally{
-            
-            try{
-                if(selectTitlesForTable!=null)
-                    selectTitlesForTable.close();
-                selectTitlesForTable=null;
-            }catch(SQLException se2){  
-                selectTitlesForTable=null;
-                
-            }
-                }    
-                
-            }
-                
-              //Simple executeo
-           
+                try{
+                    if(selectTitlesForTable!=null)
+                        selectTitlesForTable.close();
+                    selectTitlesForTable=null;
+                }catch(SQLException se2){  
+                    selectTitlesForTable=null;
+                    
+                }
+                    }    
+                    
+                }
             
                 shouldSleep= true;
             }
@@ -643,16 +622,15 @@ public class SQLThread extends Thread{
     }
     public void selectDirectors(String search){
            r_directorsPrepared  =search;
+            
         try{
         
             selectDirectorsForTable = conn.prepareStatement("SELECT * FROM Directors WHERE FirstName LIKE ? OR LastName LIKE ? ");                   
                     selectDirectorsForTable.setString(1,search+"%"); 
                     selectDirectorsForTable.setString(2,search+"%");
-                 
-                    
-              
-                    
-        this.shouldSleep = false;
+            
+            this.shouldSleep = false;
+            
         }
         catch(SQLException se){
                  System.out.println(se);
@@ -666,7 +644,6 @@ public class SQLThread extends Thread{
                     selectArtistsForTable.setString(1,search+"%"); 
                     selectArtistsForTable.setString(2,search+"%");
                     
-                
            
         this.shouldSleep = false;
         }
@@ -1105,7 +1082,6 @@ public class SQLThread extends Thread{
                 
                     }
                     
-                    System.out.println(sql);
                selectArtistsForTable = conn.prepareStatement(sql);
                
                if(firstName!=null){
@@ -1114,7 +1090,7 @@ public class SQLThread extends Thread{
                if(lastName!=null)
                selectArtistsForTable.setString(c++,lastName+"%"); 
                
-               if(realPerson!=null)
+              if(realPerson!=null)
                {
                    selectArtistsForTable.setInt(c++,realPerson.getID()); 
                    if(sqlDate1!=null && sqlDate2!=null){

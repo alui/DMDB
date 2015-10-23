@@ -12,7 +12,7 @@
    <children>
       <BorderPane prefHeight="546.0" prefWidth="562.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
-            <ToolBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="52.0" prefWidth="605.0" BorderPane.alignment="CENTER">
+            <ToolBar nodeOrientation="RIGHT_TO_LEFT" prefHeight="20.0" prefWidth="643.0" BorderPane.alignment="CENTER">
               <items>
                   <Button mnemonicParsing="false" onAction="#save" prefHeight="26.0" prefWidth="56.0" text="Save" />
                 <Button mnemonicParsing="false" onAction="#cancel" prefHeight="26.0" prefWidth="72.0" text="Cancel" GridPane.columnIndex="1" />
@@ -25,8 +25,26 @@
             </ToolBar>
          </top>
          <center>
-            <VBox BorderPane.alignment="CENTER">
+            <AnchorPane BorderPane.alignment="CENTER">
                <children>
+                  <TableView fx:id="titlesTable" layoutY="315.0" prefHeight="261.0" prefWidth="643.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="319.0">
+                     <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
+                     <columns>
+                        <TableColumn prefWidth="75.0" text="Image" />
+                        <TableColumn fx:id="t_nameCol" prefWidth="172.0" text="Title" />
+                        <TableColumn fx:id="t_genereCol" prefWidth="112.0" text="Genere" />
+                        <TableColumn fx:id="t_relDateCol" prefWidth="122.0" text="Released Date" />
+                        <TableColumn fx:id="t_summaryCol" prefWidth="125.0" text="Summary" />
+                     </columns>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </TableView>
                   <HBox>
                      <children>
                         <AnchorPane prefHeight="248.0" prefWidth="249.0">
@@ -64,7 +82,7 @@
                         </VBox>
                      </children>
                   </HBox>
-                  <HBox layoutX="10.0" layoutY="337.0" GridPane.rowIndex="2">
+                  <HBox layoutX="10.0" layoutY="278.0" GridPane.rowIndex="2">
                      <children>
                         <Label prefHeight="25.0" prefWidth="57.0" text="Movies" GridPane.columnIndex="1">
                            <opaqueInsets>
@@ -82,26 +100,8 @@
                         <Insets left="10.0" right="10.0" top="10.0" />
                      </VBox.margin>
                   </HBox>
-                  <TableView fx:id="titlesTable" prefHeight="242.0" prefWidth="673.0">
-                     <columnResizePolicy>
-                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                     </columnResizePolicy>
-                     <columns>
-                        <TableColumn prefWidth="75.0" text="Image" />
-                        <TableColumn fx:id="t_nameCol" prefWidth="172.0" text="Title" />
-                        <TableColumn fx:id="t_genereCol" prefWidth="112.0" text="Genere" />
-                        <TableColumn fx:id="t_relDateCol" prefWidth="122.0" text="Released Date" />
-                        <TableColumn fx:id="t_summaryCol" prefWidth="125.0" text="Summary" />
-                     </columns>
-                     <opaqueInsets>
-                        <Insets />
-                     </opaqueInsets>
-                     <VBox.margin>
-                        <Insets top="10.0" />
-                     </VBox.margin>
-                  </TableView>
                </children>
-            </VBox>
+            </AnchorPane>
          </center>
       </BorderPane>
    </children>

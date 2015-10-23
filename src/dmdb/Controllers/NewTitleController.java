@@ -118,7 +118,14 @@ public class NewTitleController implements Initializable {
         
     }
     
-    public void save(){
+    
+    public void save (){
+        synchronized(sqlThread){
+            innerSave();
+            
+        }
+    }
+    private void innerSave(){
         
         LocalDate ld = date.getValue();
         

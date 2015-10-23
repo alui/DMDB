@@ -33,7 +33,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.SelectionMode;
-//import javafx.scene.control.MenuButton;
 
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -101,6 +100,8 @@ public class MainViewController implements Initializable, RegisterDelegate,Searc
     private TableColumn<Person,String> a_birthDateCol;
     @FXML
     private TableColumn<Person,String> a_bioCol;
+
+
 //
 //    
     @FXML
@@ -137,21 +138,6 @@ public class MainViewController implements Initializable, RegisterDelegate,Searc
     
     
     private SQLThread sqlThread;
-    
-//    //Conneciton to the main Data Base.
-//    private  Connection DBConnection;
-
-    
-    
-        // JDBC driver name and database URL
-//        static final String JDBC_DRIVER = "org.sqlite.JDBC";
-//        static final String DB_URL = "jdbc:sqlite:movie.db";
-//        
-//        //  Database credentials
-//        static final String USER = "username";
-//        static final String PASS = "password";
-    
-    
     
     //Esto no deberia estar aqui... pero me ahorra tiempo.
     static final protected String DbURL = "jdbc:sqlite:movie.db";
@@ -245,10 +231,13 @@ public class MainViewController implements Initializable, RegisterDelegate,Searc
         
         //Show all
         
+        
     }
-    
+    private void hello(String g, String h){}
     public void delete(){
-        this.deleteRowsFromCurrentVisibleTable();
+//        synchronized(sqlThread){
+         this.deleteRowsFromCurrentVisibleTable();
+//        }
     }
     private void deleteRowsFromCurrentVisibleTable(){
         if(tabTitles.isSelected()){
@@ -259,6 +248,7 @@ public class MainViewController implements Initializable, RegisterDelegate,Searc
                     sqlThread.addDelete(SQLThread.prepareDelete("Actuo", "Title", items));
                     sqlThread.addDelete(SQLThread.prepareDelete("Dirigio", "Title", items));
                     sqlThread.addDelete(SQLThread.prepareDelete("Titles", "Title", items));
+                    
                     sqlThread.wakeQueue();
                     titlesTable.getSelectionModel().clearSelection();
             
@@ -288,15 +278,11 @@ public class MainViewController implements Initializable, RegisterDelegate,Searc
     }
     
 //    SearchDirectorsTask
-    public void performSimpleSearch(){
+    private void performSearch(){
         
-//                    
-//                        artistsTable.setDisable(true);
-//                        
-//                        directorsTable.setDisable(true);
-//                        
-//                        titlesTable.setDisable(true);
-         
+//        
+//        artistsTable.setDisable(true);
+//         tabPane.setDisable(true);
         String s = (String) choiceBox.getSelectionModel().selectedItemProperty().get();
         ObservableList<Tab> tabs =  tabPane.getTabs();
         switch (s) {
@@ -347,11 +333,11 @@ public class MainViewController implements Initializable, RegisterDelegate,Searc
                 
                 break;
         }
-//            
-        
-            
-        
-        
+    }
+    public void performSimpleSearch(){
+//        synchronized(sqlThread){
+            this.performSearch();
+//        }
         
     }
     
@@ -554,9 +540,9 @@ public class MainViewController implements Initializable, RegisterDelegate,Searc
         
         
         //The following code is a quick fix.. but very bad indeed.
-                sqlThread.selectArtists("!");
+//                sqlThread.selectArtists("!");
                 sqlThread.selectDirectors("!");
-                sqlThread.selectTitles("!");
+//                sqlThread.selectTitles("!");
                 
         if(searchView ==null){
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AdvancedSearchView.fxml"));     
@@ -566,10 +552,7 @@ public class MainViewController implements Initializable, RegisterDelegate,Searc
         controller = fxmlLoader.<AdvancedSearchViewController>getController();
         } 
         controller.setDelegate(this);
-        controller.setSQLThread(sqlThread);       
-//        
-        
-       
+        controller.setSQLThread(sqlThread);   
         
         lastTemporaryNode = searchView;
         mainPane.getChildren().remove(searchBorderPane);
@@ -595,7 +578,10 @@ public class MainViewController implements Initializable, RegisterDelegate,Searc
         sqlThread.setArtistsTable(artistsTable);
         sqlThread.setDirectorsTable(directorsTable);
         sqlThread.setTitlesTable(titlesTable);
-        sqlThread.reload();
+        
+//        synchronized(sqlThread){
+            sqlThread.reload();
+//        }
 
     }
     @Override 
@@ -612,6 +598,18 @@ public class MainViewController implements Initializable, RegisterDelegate,Searc
         
         
     }
+
+    @Override
+    public void artistSearch() {
+        
+        choiceBox.getSelectionModel().select("Artists");
+        ObservableList<Tab> tabs =  tabPane.getTabs();
+                if (!tabs.contains(tabArtists))
+                    tabPane.getTabs().add(tabArtists);
+                tabPane.getTabs().remove(tabTitles);
+                tabPane.getTabs().remove(tabDirectors);
+                
+     }
     
     
 }

@@ -23,10 +23,11 @@ public class ApplicationDelegate extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Views/MainView.fxml"));     
 
         Parent root = (Parent)fxmlLoader.load();          
-//    MainViewController controller = fxmlLoader.<MainViewController>getController();
 
         Scene scene = new Scene(root);
         stage.setScene(scene);
+        stage.setTitle("DMDB");
+        
         stage.show();
     }
 

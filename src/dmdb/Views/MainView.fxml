@@ -16,7 +16,8 @@
               <items>
                   <ChoiceBox fx:id="choiceBox" prefHeight="26.0" prefWidth="107.0" />
                   <TextField fx:id="searchBox" onAction="#performSimpleSearch" onKeyReleased="#performSimpleSearch" prefHeight="26.0" prefWidth="201.0" promptText="Search for movies and more!" />
-                  <Separator prefHeight="29.0" prefWidth="224.0" />
+                  <Separator prefHeight="29.0" prefWidth="72.0" />
+                  <Button mnemonicParsing="false" onAction="#advancedSearch" prefHeight="27.0" prefWidth="140.0" text="Advanced Search" />
                   <MenuButton mnemonicParsing="false" text="New">
                     <items>
                       <MenuItem mnemonicParsing="false" onAction="#newArtistRegister" text="Artist" />
@@ -83,13 +84,6 @@
                </tabs>
             </TabPane>
          </center>
-         <bottom>
-            <ToolBar prefHeight="40.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-               <items>
-                  <Button mnemonicParsing="false" onAction="#advancedSearch" prefHeight="26.0" prefWidth="127.0" text="Advanced Search" />
-               </items>
-            </ToolBar>
-         </bottom>
       </BorderPane>
    </children>
 </AnchorPane>

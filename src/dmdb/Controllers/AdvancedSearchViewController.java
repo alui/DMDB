@@ -77,6 +77,7 @@ public class AdvancedSearchViewController implements Initializable {
         }
                 
         sqlThread.selectArtistsAdvancedSearch(firstName,lastName,sqlDate1,sqlDate2,realPerson);
+        delegate.artistSearch();
         cancel();
         
     }
