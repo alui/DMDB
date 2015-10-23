@@ -5,6 +5,8 @@
  */
 package dmdb.Controllers;
 
+import dmdb.Registers.Register;
+
 /**
  *
  * @author Alfonso
@@ -13,6 +15,18 @@ public interface RegisterDelegate {
     
     //When the New Register Window should close.
     public void close();
+    
+    public void newDirector(Register r);
+    public void newArtist(Register r);
+    
+    public void newMovie(Register r);
+    
+    public void editedDirector(Register r);
+    
+    public void editedArtist(Register r);
+    
+    public void editedMovie(Register r) ;
+   
 //    
 //    public void doneEditing(Register r); 
 //    

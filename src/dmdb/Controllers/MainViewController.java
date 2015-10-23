@@ -8,6 +8,7 @@ package dmdb.Controllers;
 
 
 import dmdb.Registers.Person;
+import dmdb.Registers.Register;
 import dmdb.Registers.Title;
 import dmdb.Thread.SQLThread;
 
@@ -105,7 +106,7 @@ public class MainViewController implements Initializable, RegisterDelegate,Searc
 //
 //    
     @FXML
-    private TableView titlesTable;
+    private TableView<Title> titlesTable;
     
              @FXML 
              private TableColumn<Title,String> t_nameCol;
@@ -476,10 +477,10 @@ public class MainViewController implements Initializable, RegisterDelegate,Searc
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("NewTitle.fxml"));     
 
         AnchorPane n = (AnchorPane)fxmlLoader.load(); 
-        NewTitleController controller = fxmlLoader.<NewTitleController>getController();
-        controller.setRegisterDelegate(this);
-        controller.setSQLThread(sqlThread);
-        controller.setTitle(t);
+        NewTitleController controllerT = fxmlLoader.<NewTitleController>getController();
+        controllerT.setRegisterDelegate(this);
+        controllerT.setSQLThread(sqlThread);
+        controllerT.setTitle(t);
         
 
         lastTemporaryNode = n;
@@ -497,11 +498,11 @@ public class MainViewController implements Initializable, RegisterDelegate,Searc
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("NewPerson.fxml"));     
 
         AnchorPane n = (AnchorPane)fxmlLoader.load(); 
-        NewPersonController controller = fxmlLoader.<NewPersonController>getController();
-        controller.setDelegate(this);
-        controller.setSQLThread(sqlThread);        
-        controller.setIsDirector(isDirector);
-        controller.setPerson(p);
+        NewPersonController controllerP = fxmlLoader.<NewPersonController>getController();
+        controllerP.setDelegate(this);
+        controllerP.setSQLThread(sqlThread);        
+        controllerP.setIsDirector(isDirector);
+        controllerP.setPerson(p);
         
 
         lastTemporaryNode = n;
@@ -564,6 +565,56 @@ public class MainViewController implements Initializable, RegisterDelegate,Searc
 
     
     //Methods from newController
+    
+//    @Override
+    @Override
+    public void newDirector(Register r) {
+        directorsTable.getItems().add((Person)r);
+    }
+    @Override
+    public void newArtist(Register r) {
+        
+        artistsTable.getItems().add((Person)r);
+    }
+    @Override
+    public void newMovie(Register r) {
+        
+        titlesTable.getItems().add((Title)r);
+    }
+    @Override
+    public void editedDirector(Register r) {
+        ObservableList<Person> list = directorsTable.getItems();
+        int i = list.indexOf((Person)r);
+        list.set(i, (Person)r);
+         directorsTable.getColumns().get(0).setVisible(false);
+        directorsTable.getColumns().get(0).setVisible(true);
+        
+        
+        
+        
+    }
+    @Override
+    public void editedArtist(Register r) {
+        
+        int i = artistsTable.getItems().indexOf((Person)r);
+        
+        artistsTable.getItems().set(i, (Person)r);
+        
+         artistsTable.getColumns().get(0).setVisible(false);
+        artistsTable.getColumns().get(0).setVisible(true);
+    }
+    
+    @Override
+    public void editedMovie(Register r) {
+        
+        int i = titlesTable.getItems().indexOf((Title)r);
+        
+        titlesTable.getItems().set(i, (Title)r);
+        titlesTable.getColumns().get(0).setVisible(false);
+        titlesTable.getColumns().get(0).setVisible(true);
+        
+    }
+    
     @Override
     public void close() {
         
@@ -580,7 +631,7 @@ public class MainViewController implements Initializable, RegisterDelegate,Searc
         sqlThread.setTitlesTable(titlesTable);
         
 //        synchronized(sqlThread){
-            sqlThread.reload();
+//            sqlThread.reload();
 //        }
 
     }

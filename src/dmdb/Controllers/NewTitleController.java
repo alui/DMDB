@@ -120,15 +120,13 @@ public class NewTitleController implements Initializable {
     
     
     public void save (){
-        synchronized(sqlThread){
-            innerSave();
-            
-        }
+        this.innerSave();
+        
+        
     }
     private void innerSave(){
         
         LocalDate ld = date.getValue();
-        
         if(name.getText()==null || name.getText().equals("") || ld == null)
              return;
 
@@ -145,11 +143,12 @@ public class NewTitleController implements Initializable {
            
             t= new Title(0,name.getText(),biography.getText(),sqlDate,genereString);             
             t = sqlThread.offResolveTitleID(t);
+            delegate.newMovie(t);
             
        }else{
             t = new Title(oldTitle.getTitleID(),name.getText(),biography.getText(),sqlDate,genereString);    
             sqlThread.addUpdateTitle(t);
-            
+            delegate.editedMovie(t);
        }
        
        for(Person director : directorsObs)

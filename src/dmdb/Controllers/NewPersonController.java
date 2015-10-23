@@ -58,21 +58,21 @@ public class NewPersonController implements Initializable {
     @FXML
     private TableView titlesTable;
     
-             @FXML 
-             private TableColumn<Title,String> t_nameCol;
-             @FXML 
-             private TableColumn<Title,String> t_relDateCol;
-             
-             @FXML 
-             private TableColumn<Title,String> t_summaryCol;
-             
-             @FXML 
-             private TableColumn<Title,String> t_genereCol;
-    
-    
-             private ObservableList<Title> titlesObs;
-             private ObservableList<Title> toDeleteTitlesObs;
-             private boolean isNewPerson;
+    @FXML 
+    private TableColumn<Title,String> t_nameCol;
+    @FXML 
+    private TableColumn<Title,String> t_relDateCol;
+
+    @FXML 
+    private TableColumn<Title,String> t_summaryCol;
+
+    @FXML 
+    private TableColumn<Title,String> t_genereCol;
+
+
+    private ObservableList<Title> titlesObs;
+    private ObservableList<Title> toDeleteTitlesObs;
+    private boolean isNewPerson;
              
     @FXML
     private ComboBox<Title> titlesComboBox;
@@ -111,9 +111,11 @@ public class NewPersonController implements Initializable {
             p = new Person(0 ,firstName.getText(),lastName.getText(),biography.getText(),sqlDate,"Male"); 
             if(isDirector){
                 p = sqlThread.offResolveDirectorID(p);
+                delegate.newDirector(p);
             }
             else{
                 p = sqlThread.offResloveArtistID(p);
+                delegate.newArtist(p);
             
             }
         }
@@ -121,24 +123,48 @@ public class NewPersonController implements Initializable {
         {
 
             p = new Person(oldPerson.getID() ,firstName.getText(),lastName.getText(),biography.getText(),sqlDate,"Male"); 
-           String kindName = "Artist";
+           
            if(isDirector)
-               kindName = "Director";
+           {
+               
+               
+                sqlThread.addUpdatePersonOfKind(p,"Director");
+                delegate.editedDirector(p);
+           }else
+           {
+               
+                sqlThread.addUpdatePersonOfKind(p,"Artist");
+                delegate.editedArtist(p);
+           }
 
-            sqlThread.addUpdatePersonOfKind(p,kindName);
+            
         }
       
-       
-       for(Title title : titlesObs)
-           sqlThread.addRelacionActuo(p,title );
-       
-       
-       for(Title title : toDeleteTitlesObs)
-           sqlThread.addDeleteRelacionActuo(title, p);
+       if(isDirector)
+       {
+           
+           for(Title title : titlesObs)
+               sqlThread.addRelacionDirigio(p,title );
+
+
+           for(Title title : toDeleteTitlesObs)
+               sqlThread.addDeleteRelacionDirigio(title, p);
+       }else
+       {
+           
+           for(Title title : titlesObs)
+               sqlThread.addRelacionActuo(p,title );
+
+
+           for(Title title : toDeleteTitlesObs)
+               sqlThread.addDeleteRelacionActuo(title, p);
+           
+       }
        
        sqlThread.wakeQueue();
        
 
+       
          
         if(delegate!=null)
             delegate.close();   
@@ -235,7 +261,7 @@ public class NewPersonController implements Initializable {
     
     
 
-    void setPerson(Person p) {
+    public void setPerson(Person p) {
         
         if(p==null){
             isNewPerson = true;

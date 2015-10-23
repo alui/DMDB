@@ -653,17 +653,17 @@ public class SQLThread extends Thread{
         
         
     }
-    public void reload() {
-        
-        if(r_artistsPrepared!=null)
-            selectArtists(r_artistsPrepared);
-        if(r_directorsPrepared!=null)
-            selectDirectors(r_directorsPrepared);
-        if(r_titlesPrepared!=null)
-            selectTitles(r_titlesPrepared);
-        
-               
-    }
+//    public void reload() {
+//        
+//        if(r_artistsPrepared!=null)
+//            selectArtists(r_artistsPrepared);
+//        if(r_directorsPrepared!=null)
+//            selectDirectors(r_directorsPrepared);
+//        if(r_titlesPrepared!=null)
+//            selectTitles(r_titlesPrepared);
+//        
+//               
+//    }
     public void addRelacionActuo(Register art, Register title){
          try{
     
@@ -705,8 +705,6 @@ public class SQLThread extends Thread{
 
                     pstmt.setString(4,r.getBirthDate().toString());
                     
-//          pstmt.execute();
-//                    shouldSleep=false;
                     listPts.add(pstmt);
         }
         catch(SQLException se){
