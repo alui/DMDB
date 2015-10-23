@@ -10,9 +10,6 @@ doc/
 !junit.jar
 !hamcrest-core.jar
 !sqlite-jdbc.jar
-*.jar
-
-*.db
 
 #System dependent.
 .DS_Store
