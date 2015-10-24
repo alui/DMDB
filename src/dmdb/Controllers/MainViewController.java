@@ -1,9 +1,4 @@
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package dmdb.Controllers;
 
 
@@ -48,6 +43,18 @@ import javafx.scene.layout.BorderPane;
 /**
  *
  * @author Alfonso
+ */
+
+/**
+ * <p>Esta clase el el controlador primario de toda la aplicacion, se encarga de presntar las tablas
+ *  de conectarse con el hilo de ejecucion que relizara las consultas.
+ *  Y permite agregar otros controladores sobre el mismo.
+ * delegando funcionalidad.
+ * Todos los metodos publicos son de interfaces o eventos que son generados por la interfaz grafica.
+ * Por eso no tienen pruebas unitarias.
+ *
+ * </p>
+ *
  */
 public class MainViewController implements Initializable, RegisterDelegate,SearchDelegate {
     
@@ -537,35 +544,16 @@ public class MainViewController implements Initializable, RegisterDelegate,Searc
     
     private AnchorPane searchView;
     private  AdvancedSearchViewController controller;
-    public void advancedSearch() throws IOException{
-        
-        
-        //The following code is a quick fix.. but very bad indeed.
-//                sqlThread.selectArtists("!");
-                sqlThread.selectDirectors("!");
-//                sqlThread.selectTitles("!");
-                
-        if(searchView ==null){
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AdvancedSearchView.fxml"));     
-
-        searchView = (AnchorPane)fxmlLoader.load(); 
-//        
-        controller = fxmlLoader.<AdvancedSearchViewController>getController();
-        } 
-        controller.setDelegate(this);
-        controller.setSQLThread(sqlThread);   
-        
-        lastTemporaryNode = searchView;
-        mainPane.getChildren().remove(searchBorderPane);
-        mainPane.getChildren().add(searchView);
-        
-    }
+    
     
   
 
     
-    //Methods from newController
     
+    /*
+     *Los metodos publicos son de las interfaces de java, que permiten a los controladores comunicarse.
+     *
+     */
 //    @Override
     @Override
     public void newDirector(Register r) {
@@ -661,6 +649,29 @@ public class MainViewController implements Initializable, RegisterDelegate,Searc
                 tabPane.getTabs().remove(tabDirectors);
                 
      }
+    public void advancedSearch() throws IOException{
+        
+        
+        //The following code is a quick fix.. but very bad indeed.
+        //                sqlThread.selectArtists("!");
+        sqlThread.selectDirectors("!");
+        //                sqlThread.selectTitles("!");
+        
+        if(searchView ==null){
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("AdvancedSearchView.fxml"));
+            
+            searchView = (AnchorPane)fxmlLoader.load();
+            //
+            controller = fxmlLoader.<AdvancedSearchViewController>getController();
+        }
+        controller.setDelegate(this);
+        controller.setSQLThread(sqlThread);
+        
+        lastTemporaryNode = searchView;
+        mainPane.getChildren().remove(searchBorderPane);
+        mainPane.getChildren().add(searchView);
+        
+    }
     
     
 }

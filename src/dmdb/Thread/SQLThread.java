@@ -25,6 +25,30 @@ import javafx.scene.control.TableView;
 /**
  *
  * @author Alfonso
+ *
+ *
+ *  <p>
+ *  Este hilo de ejecicion es inicializado con los datos que permiten conectar a la base de datos.
+ * El mecanismo del hilo, es tener un ciclo infinito con un semaforo que define si necesita prodecer a hacer consultar sql.
+ * Tiens 3 principales tipos de consulta.
+ *  Las que no regresan informacion y solo se ejecutan.
+ *  Las que actualizan las tablas de la interfaz grafica.
+ *  Las que actualizan las listas de las barras de busqeuda.
+ *
+ *  En particular del primer tipo de consultas, estas se acumulan en un queue.
+ *  Y son ejecutadas en orden que llegaron. 
+ *   USO: this.add() this.add() this.add() this.wakeQueue();
+ *  Si se usa algun metodo que inicia con select, tambien se van a ejecutar todas las del queue.
+ 
+ *   USO: this.add() this.add() this.add() this.select();
+ 
+ 
+ *
+ *
+ * Finalmente existen casos especificos que se comunicaan con la base de datos.
+ * Que iniciaan como SQLThread.off(), significa que seran ejecutadas desde el hilo que la llame.
+ *
+ *  </p>
  */
 public class SQLThread extends Thread{
     
@@ -849,25 +873,7 @@ public class SQLThread extends Thread{
 //        } 
 //               
 //    }
-    
-    static public String prepareDelete(String tableName, String column ,List<Register> s){
-        
-            
-            String preSQL = "DELETE FROM "+tableName+" \n"+
-        "WHERE ";
-            String middleSQL ="";
-            
-            Register last = null;
-            for(Register r : s)
-            {
-
-                middleSQL+= (column +"ID ="+r.getID()+" OR ");
-                last = r;   
-            }
-            middleSQL+=(column +"ID ="+last.getID() +";\n" );
-            
-        return (preSQL+middleSQL);
-    }
+  
     public void addDelete(String pp)
     {
             PreparedStatement del = null;
@@ -1174,8 +1180,27 @@ public class SQLThread extends Thread{
         
     }
     
-}
+    static public String prepareDelete(String tableName, String column ,List<Register> s){
         
+        
+        String preSQL = "DELETE FROM "+tableName+" \n"+
+        "WHERE ";
+        String middleSQL ="";
+        
+        Register last = null;
+        for(Register r : s)
+        {
+            
+            middleSQL+= (column +"ID ="+r.getID()+" OR ");
+            last = r;
+        }
+        middleSQL+=(column +"ID ="+last.getID() +";\n" );
+        
+        return (preSQL+middleSQL);
+    }
     
+}
+
+
 
  
